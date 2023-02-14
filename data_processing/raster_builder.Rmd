@@ -1,0 +1,12 @@
+---
+title: "Raster builder"
+author: "Nick McManus"
+date: "2023-02-14"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This is where we will process raw rasters and export them in the resolution and spatial extent needed for the shiny app. 
