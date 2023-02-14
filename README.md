@@ -5,8 +5,6 @@ This Shiny app explores projections of cropland abandonment both globally and in
 
 Data sources:
 
-Data files used in this analysis are too large to push to GitHub and must be saved locally. You'll find links to access all data files below:
-
 **LULC:**
 Data from Chen et al. (2022) is publically available and can be accessed here: https://zenodo.org/record/4584775#.YuMq8nbMK5c
 
