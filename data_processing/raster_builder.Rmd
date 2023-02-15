@@ -114,7 +114,7 @@ Our global abandonment layers are currently at 1km resolution. For processing sp
 ```{r}
 # create function that finds the mean abandonment across 50km,
 # then changes 0 values to NA for better viz
-agg_func <- function(ssp) {
+agg_crop_func <- function(ssp) {
   ssp_50k <- terra::aggregate(ssp, fact = 50, fun = 'mean') %>% 
     terra::project('epsg:4326')
 
@@ -123,11 +123,11 @@ agg_func <- function(ssp) {
 }
 
 # use function on each SSP
-ssp1_50k <- agg_func(diff_ssp1_2050)
-ssp2_50k <- agg_func(diff_ssp2_2050)
-ssp3_50k <- agg_func(diff_ssp3_2050)
-ssp4_50k <- agg_func(diff_ssp4_2050)
-ssp5_50k <- agg_func(diff_ssp5_2050)
+ssp1_50k <- agg_crop_func(diff_ssp1_2050)
+ssp2_50k <- agg_crop_func(diff_ssp2_2050)
+ssp3_50k <- agg_crop_func(diff_ssp3_2050)
+ssp4_50k <- agg_crop_func(diff_ssp4_2050)
+ssp5_50k <- agg_crop_func(diff_ssp5_2050)
 ```
 
 
@@ -155,13 +155,42 @@ writeRaster(ssp5_50k,
 
 # BIODIVERSITY
 
+[Info on biodiversity data]. 
+```{r}
+# read in raw biodiversity file
+bio <- rast(here('data', 'raw', 'sparc_conservationPriorities.tif'))
 
+# lower resolution to 25km
+bio_25k <- aggregate(bio, fact = 5, fun = 'mean', na.rm = TRUE) %>% 
+    project(y = crs(ssp1_50k))
 
-
+# export raster
+writeRaster(bio_25k, 
+            here('data','processed','global','biodiversity_global_25km.tif'),
+            overwrite = TRUE)
+```
 
 
 
 # CARBON
+
+This dataset, originally created by Cook-Patton et al. and updated by Global Forest Watch, estimates the rate of carbon sequestration in aboveground and belowground live biomass during the first 30 years of natural forest regeneration. Spatial sequestration estimates include all forest and savanna biomes in units of MgC/ha/yr at a ~1 km resolution. 
+
+Source: https://data.globalforestwatch.org/documents/gfw::carbon-accumulation-potential-from-natural-forest-regrowth-in-forest-and-savanna-biomes/about
+
+```{r}
+# read in raw carbon file
+carbon <- rast(here('data','raw','sequestration_rate_mean_aboveground_full_extent_Mg_C_ha_yr.tif'))
+
+# lower resolution to 25km
+carbon_25k <- aggregate(carbon, fact = 25, fun = 'mean', na.rm = TRUE) %>% 
+  project(y = crs(ssp1_50k))
+
+# export raster
+writeRaster(carbon_25k, 
+            here('data','processed','global','carbon_global_25km.tif'),
+            overwrite = TRUE)
+```
 
 
 
