@@ -7,111 +7,53 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(terra)      #GIS
-library(tidyverse)  #always
-library(here)       #reading/writing data easier
+library(terra)     #GIS
+library(geobr)     #administrative boundaries for Brazil
+library(tidyverse) #always
+library(here)      #reading/writing data easier
 ```
 
 # OVERVIEW:
+***
 
-This markdown serves to first calculated global cropland abandonment, then change the spatial extent and resolution of the cropland abandonment, global biodiversity, and global carbon layers. This produces new GeoTifs in the `data/processed` folder to be called on in the Shiny App. 
+This code generates the rasters needed as inputs for the Shiny app. This include rasters of projected cropland abandonment, biodiversity, and carbon, both globally and for Brazil. The resolution and spatial extent of all global rasters must match each other (as well as the Brazilian layers) to generate proper zonal statistics and visual overlay. Global rasters are all at 50km resolution, while Brazilian rasters are at 1km in a projection better suited for the country.
 
-
-
-# CROPLAND ABANDONMENT:
-
-This section find areas of projected cropland abandonment in 2050 using land use and land cover (LULC) data from Chen et al. 2022. This source includes both projected LULC under different shared socioeconomic pathways (SSPs) as well as a baseline LULC data from 2015. The outputs from this code, rasters containing pixels of projected global cropland abandonment in 2050 for a given SSP, will be utilized for further analysis into conservation optimization. More information on the source data can be found in the project README.md file. 
-
-Source: Chen, G., Li, X., & Liu, X. (2022). Global land projection based on plant functional types with a 1-km resolution under socio-climatic scenarios. Scientific Data, 9(1), 125. https://doi.org/10.1038/s41597-022-01208-6
+This markdown is broken down into GLOBAL and BRAZIL sections, where the respective rasters are generated. These processed rasters are populated in the `data/processed` directory of this repository. More information regarding data sources can be found within this repo's README file.
 
 
-### Read in and reclassify data
+
+# GLOBAL:
+***
+
+## CROPLAND ABANDONMENT
+
+The code that generates projected cropland abandonment globally in 2050 is found in the `abandoned-cropland` repository. The outputs from this code will be read in and reclassified here. 
+
+### Read in data
 
 First read in projected 2050 LULC from Chen et al. for each SSP.
 ```{r}
-# read in "baseline" 2015 LULC
-PFT_2015 <- rast(here('data', 'raw', 'lulc', 'global_PFT_2015.tif'))
-
 # SSP1
-ssp1_PFT_2050 <- rast(here('data', 'raw', 'lulc', 'global_PFT_SSP1_RCP26_2050.tif'))
+ssp1_crop_2050 <- rast(here('data','raw','abandoned_crop','SSP1_abandoned_cropland_2050_global.tif'))
 # SSP2
-ssp2_PFT_2050 <- rast(here('data', 'raw', 'lulc', 'global_PFT_SSP2_RCP45_2050.tif'))
+ssp2_crop_2050 <- rast(here('data','raw','abandoned_crop','SSP2_abandoned_cropland_2050_global.tif'))
 # SSP3  
-ssp3_PFT_2050 <- rast(here('data', 'raw', 'lulc', "global_PFT_SSP3_RCP70_2050.tif"))  
+ssp3_crop_2050 <- rast(here('data','raw','abandoned_crop','SSP3_abandoned_cropland_2050_global.tif')) 
 # SSP4
-ssp4_PFT_2050 <- rast(here('data', 'raw', 'lulc', "global_PFT_SSP4_RCP60_2050.tif")) 
+ssp4_crop_2050 <- rast(here('data','raw','abandoned_crop','SSP4_abandoned_cropland_2050_global.tif'))
 # SSP5
-ssp5_PFT_2050 <- rast(here('data', 'raw', 'lulc', "global_PFT_SSP5_RCP85_2050.tif"))
+ssp5_crop_2050 <- rast(here('data','raw','abandoned_crop','SSP5_abandoned_cropland_2050_global.tif'))
 ```
 
-
-We are only interested in keeping values for pixels that reflect cropland and urban. Each layer will be reclassified to make all other variables 0.
-```{r}
-# create matrix for reclassification
-reclass_df <- c(1, 0,	  #Water
-                2, 0,	  #Broadleaf evergreen tree, tropical
-                3, 0,	  #Broadleaf evergreen tree, temperate
-                4, 0,	  #Broadleaf deciduous tree, tropical
-                5, 0,	  #Broadleaf deciduous tree, temperate
-                6, 0,	  #Broadleaf deciduous tree, boreal
-                7, 0,	  #Needleleaf evergreen tree, temperate
-                8, 0,	  #Needleleaf evergreen tree, boreal
-                9, 0,	  #Needleleaf deciduous tree
-                10, 0,	#Broadleaf evergreen shrub, temperate
-                11, 0,	#Broadleaf deciduous shrub, temperate
-                12, 0,	#Broadleaf deciduous shrub, boreal
-                13, 0,	#C3 grass, arctic
-                14, 0,	#C3 grass
-                15, 0,	#C4 grass
-                16, 0,	#Mixed C3/C4 grass
-                17, 0,	#Barren
-                18, 1,	#Cropland
-                19, 10,	#Urban
-                20, 0,  #Permanent snow and ice
-                128, 0)	#N/A values
-
-reclass_m <- matrix(reclass_df, ncol=2, byrow=TRUE)
-
-# reclassify 2015 layer
-crop_urban_2015 <- classify(PFT_2015, reclass_m)
-
-# reclassify the rest of the projected layers
-ssp1_2050_crop_urban <- classify(ssp1_PFT_2050, reclass_m)
-ssp2_2050_crop_urban <- classify(ssp2_PFT_2050, reclass_m)
-ssp3_2050_crop_urban <- classify(ssp3_PFT_2050, reclass_m)
-ssp4_2050_crop_urban <- classify(ssp4_PFT_2050, reclass_m)
-ssp5_2050_crop_urban <- classify(ssp5_PFT_2050, reclass_m)
-```
-
-
-### Calculate abandonment
-
-Now that we've isolated layers of interest cropland, we want to determine where current cropland is projected to become "abandoned" in the future. This will be done with a simple raster calculation, subtracting the future cropland raster from the current cropland raster. Values of 0 indicate land that either remained cropland (1-1), remained urban (10-10), or remained non-cropland (0-0). Values of -1 indicate new future cropland (0-1) and values of -10 indicate areas of new urban (0-10). Values of 1 indicate abandoned cropland (1-0) that did not become urban, which are our pixels of interest! We will isolate these areas by reclassifying all non-one values to 0.
-```{r}
-# raster calculation between 2015 and 2050 LULC for each SSP
-diff_ssp1_2050 <- crop_urban_2015 - ssp1_2050_crop_urban 
-diff_ssp2_2050 <- crop_urban_2015 - ssp2_2050_crop_urban 
-diff_ssp3_2050 <- crop_urban_2015 - ssp3_2050_crop_urban 
-diff_ssp4_2050 <- crop_urban_2015 - ssp4_2050_crop_urban 
-diff_ssp5_2050 <- crop_urban_2015 - ssp5_2050_crop_urban 
-
-# all values that aren't 1 become 0
-diff_ssp1_2050[diff_ssp1_2050 != 1] <- 0
-diff_ssp2_2050[diff_ssp2_2050 != 1] <- 0
-diff_ssp3_2050[diff_ssp3_2050 != 1] <- 0
-diff_ssp4_2050[diff_ssp4_2050 != 1] <- 0
-diff_ssp5_2050[diff_ssp5_2050 != 1] <- 0
-```
 
 
 ### Change resolution
 
 Our global abandonment layers are currently at 1km resolution. For processing speed and ease of visualization, we will change the resolution to 50km. These new 50km cells will represent "proportion of abandonment". 
-
 ```{r}
 # create function that finds the mean abandonment across 50km,
 # then changes 0 values to NA for better viz
-agg_crop_func <- function(ssp) {
+agg_crop_fxn <- function(ssp) {
   ssp_50k <- terra::aggregate(ssp, fact = 50, fun = 'mean') %>% 
     terra::project('epsg:4326')
 
@@ -120,11 +62,11 @@ agg_crop_func <- function(ssp) {
 }
 
 # use function on each SSP
-ssp1_50k <- agg_crop_func(diff_ssp1_2050)
-ssp2_50k <- agg_crop_func(diff_ssp2_2050)
-ssp3_50k <- agg_crop_func(diff_ssp3_2050)
-ssp4_50k <- agg_crop_func(diff_ssp4_2050)
-ssp5_50k <- agg_crop_func(diff_ssp5_2050)
+ssp1_50k <- agg_crop_fxn(ssp1_crop_2050)
+ssp2_50k <- agg_crop_fxn(ssp2_crop_2050)
+ssp3_50k <- agg_crop_fxn(ssp3_crop_2050)
+ssp4_50k <- agg_crop_fxn(ssp4_crop_2050)
+ssp5_50k <- agg_crop_fxn(ssp5_crop_2050)
 ```
 
 
@@ -149,7 +91,7 @@ writeRaster(ssp5_50k,
 
 
 
-# BIODIVERSITY
+## BIODIVERSITY
 
 [Info on biodiversity data]. 
 ```{r}
@@ -175,7 +117,7 @@ writeRaster(bio_50k,
 
 
 
-# CARBON
+## CARBON
 
 This dataset, originally created by Cook-Patton et al. and updated by Global Forest Watch, estimates the rate of carbon sequestration in aboveground and belowground live biomass during the first 30 years of natural forest regeneration. Spatial sequestration estimates include all forest and savanna biomes in units of MgC/ha/yr at a ~1 km resolution. 
 
@@ -207,7 +149,158 @@ writeRaster(carbon_50k,
 
 
 
+# BRAZIL:
+***
 
+
+## CROPLAND ABANDONMENT
+
+The code that generates projected Brazilian cropland abandonment by 2050 is found in the `abandoned-cropland` repository. The outputs from this code will be read in and reclassified here. These are already in the correct resolution and spatial extent. They are used as reference for the biodiversity and carbon layers.
+
+```{r}
+# read in the cropland abandonment
+ssp1_brazil <- rast(here('data','raw','abandoned_crop','SSP1_abandoned_cropland_brazil.tif'))
+ssp2_brazil <- rast(here('data','raw','abandoned_crop','SSP2_abandoned_cropland_brazil.tif'))
+ssp3_brazil <- rast(here('data','raw','abandoned_crop','SSP3_abandoned_cropland_brazil.tif'))
+ssp4_brazil <- rast(here('data','raw','abandoned_crop','SSP4_abandoned_cropland_brazil.tif'))
+ssp5_brazil <- rast(here('data','raw','abandoned_crop','SSP5_abandoned_cropland_brazil.tif'))
+```
+
+
+## BRAZIL BOUNDARIES
+
+The boundary information for Brazilian biomes is read-in using the geobr package. Biome polygons are sourced from the Brazilian Institute of Geography and Statistics (IBGE). This dataset uses 2019 IBGE data at scale 1:250.000. Because carbon data for the Pantanal biome in Brazil is missing, this biome has been excluded from other rasters for restoration prioritization. 
+
+Source: https://www.ibge.gov.br/geociencias/cartas-e-mapas/informacoes-ambientais/15842-biomas.html?=&t=acesso-ao-produto
+
+```{r}
+# read in biome boundaries from geobr package
+biomes <- read_biomes(
+  year = 2019,         #the most recent data available
+  simplified = FALSE   #full resolution for boundaries
+)
+
+# create vector for whole of Brazil
+biomes_vect <- biomes[-7, ] %>%  #remove coastal system biome
+  st_transform(crs = crs(ssp1_brazil)) %>% #change crs to match other rasters
+  vect()  #turn sf into vector; easier to crop rasts with
+
+# create vector for Pantanal biome
+pantanal <- biomes %>% 
+  filter(code_biome == 6) %>% 
+  st_transform(crs = crs(ssp1_brazil)) %>% 
+  vect()
+
+```
+
+
+## BIODIVERSITY
+
+After reading in the global layer, we will crop it to Brazil and resample to match the resolution of the planning units. Then, we will reclassify the layer to extinction risk values; this will help set tangible goals of minimizing extinction risk. 
+
+```{r}
+# read in global biodiversity data
+bio_global <- rast(here("data","raw","sparc_conservationPriorities.tif"))
+
+
+#temporarily change biome crs to crop/mask biodiversity data
+#faster than changing crs of global raster
+brazil_trans <- biomes_vect %>% 
+  project(y = crs(bio_global))
+
+
+# crop biodiversity layer to Brazil
+bio_crop <- bio_global %>% 
+  crop(brazil_trans) %>% 
+  mask(brazil_trans) %>% 
+  #change crs back to match other rasters
+  terra::project(y = crs(biomes_vect))
+
+
+# change resolution of biodiversity layer (4.72km) to match other rasters (1km)
+# first use terra:disagg()
+bio_disagg <- disagg(bio_crop, 
+                     fact = 5,  
+                     method = "bilinear")  
+
+# resample higher res biodiversity to ensure same res and geometries 
+# (fine-tuning the res)
+bio_brazil <- resample(bio_disagg, ssp1_brazil, method = "bilinear")
+
+# remove Pantanal biome from biodiversity layer
+bio_brazil <- mask(bio_brazil, pantanal, inverse = TRUE, updatevalue = NA)
+
+# change the name saved within raster for easier recall
+# after stacking feature rasters
+names(bio_brazil) <- "biodiversity_brazil"
+```
+
+Now reclassify Brazilian biodiversity according to extinction risk
+```{r}
+## read in values
+extrisk <- read_csv(here("data", "raw", "globalverts_extrisk_scale.csv"))
+
+## make three columns for a "from to" reclass
+extrisk_df <- extrisk %>%
+  # bring rasterval from previous row down as lower bound
+  mutate(from = lag(rasterval), .before = 1) %>% 
+  # rename rasterval to indicate upper bound
+  rename(to = rasterval) %>% 
+  # remove resulting na
+  drop_na 
+
+# turn csv into matrix
+extrisk_m <- data.matrix(extrisk_df, rownames.force = NA)
+
+# reclassify raster to extrisk matrix
+bio_ext_brazil <- classify(bio_brazil, extrisk_m, right = TRUE)
+
+## save new raster
+writeRaster(bio_ext_brazil, 
+            here("data","processed","brazil","biodiversity_extrisk_brazil.tif"),
+            overwrite = TRUE)
+```
+
+
+## CARBON
+
+Global carbon sequestration rates will be cropped and masked to Brazil, then resampled to ensure the same spatial extent as the cropland abandonment rasters. 
+```{r}
+# read in carbon layer
+carbon_global <- rast(here("data", "raw", "sequestration_rate_mean_aboveground_full_extent_Mg_C_ha_yr.tif"))
+
+#cannot crop/mask carbon data when biomes are different crs
+#change biome crs because it's faster than changing crs of global raster
+brazil_trans <- biomes_vect %>% 
+  project(y = crs(carbon_global))
+
+# crop carbon data to Brazil
+carbon_brazil <- carbon_global %>% 
+  crop(brazil_trans) %>% 
+  mask(brazil_trans) %>%  
+  #change crs back to match other rasters
+  terra::project(y = crs(biomes_vect)) 
+
+# default resolution of carbon layer is 898.8m
+# change resolution to match other rasters (1km)
+carbon_brazil <- resample(carbon_brazil, ssp1_brazil, method = "bilinear")
+
+# remove Panatnal biome from carbon layer
+carbon_brazil <- mask(carbon_brazil, pantanal, inverse = TRUE, updatevalue = NA, touches = TRUE)
+
+# change the name saved within raster for easier recall
+# after stacking feature rasters
+names(carbon_brazil) <- "carbon_brazil"
+
+# test plot to visualize results
+plot(carbon_brazil)
+plot(biomes_vect, add = TRUE)
+
+# export 
+writeRaster(carbon_brazil, 
+            here("data","processed","brazil","carbon_seq_rate_Brazil_noPant.tif"), 
+            overwrite = TRUE)
+```
 
 
 
