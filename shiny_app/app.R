@@ -75,7 +75,7 @@ ui <- fluidPage(
                                                    "SSP 3" = "ssp3_global",
                                                    "SSP 4" = "ssp4_global",
                                                    "SSP 5" = "ssp5_global"),
-                                       selected = "SSP 1"),
+                                       selected = "ssp1_global"),
                           sliderInput("abandon_slide", label = h3("Abandonment"), 
                                       min = 0, 
                                       max = 1, 
