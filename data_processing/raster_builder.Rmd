@@ -160,10 +160,6 @@ The code that generates projected Brazilian cropland abandonment by 2050 is foun
 ```{r}
 # read in the cropland abandonment
 ssp1_brazil <- rast(here('data','raw','abandoned_crop','SSP1_abandoned_cropland_brazil.tif'))
-ssp2_brazil <- rast(here('data','raw','abandoned_crop','SSP2_abandoned_cropland_brazil.tif'))
-ssp3_brazil <- rast(here('data','raw','abandoned_crop','SSP3_abandoned_cropland_brazil.tif'))
-ssp4_brazil <- rast(here('data','raw','abandoned_crop','SSP4_abandoned_cropland_brazil.tif'))
-ssp5_brazil <- rast(here('data','raw','abandoned_crop','SSP5_abandoned_cropland_brazil.tif'))
 ```
 
 
@@ -202,12 +198,10 @@ After reading in the global layer, we will crop it to Brazil and resample to mat
 # read in global biodiversity data
 bio_global <- rast(here("data","raw","sparc_conservationPriorities.tif"))
 
-
 #temporarily change biome crs to crop/mask biodiversity data
 #faster than changing crs of global raster
 brazil_trans <- biomes_vect %>% 
   project(y = crs(bio_global))
-
 
 # crop biodiversity layer to Brazil
 bio_crop <- bio_global %>% 
@@ -257,7 +251,7 @@ bio_ext_brazil <- classify(bio_brazil, extrisk_m, right = TRUE)
 
 ## save new raster
 writeRaster(bio_ext_brazil, 
-            here("data","processed","brazil","biodiversity_extrisk_brazil.tif"),
+            here("data","processed","brazil","biodiversity_extrisk_brazil_noPant.tif"),
             overwrite = TRUE)
 ```
 
@@ -298,7 +292,7 @@ plot(biomes_vect, add = TRUE)
 
 # export 
 writeRaster(carbon_brazil, 
-            here("data","processed","brazil","carbon_seq_rate_Brazil_noPant.tif"), 
+            here("data","processed","brazil","carbon_brazil_noPant.tif"), 
             overwrite = TRUE)
 ```
 
