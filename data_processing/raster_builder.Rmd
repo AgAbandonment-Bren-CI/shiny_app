@@ -9,8 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(terra)      #GIS
 library(tidyverse)  #always
-library(here)       #reading in data easily
-library(tmap)       #some viz
+library(here)       #reading/writing data easier
 ```
 
 # OVERVIEW:
@@ -19,9 +18,7 @@ This markdown serves to first calculated global cropland abandonment, then chang
 
 
 
-
-
-# CROPLAND ABANDONMENT
+# CROPLAND ABANDONMENT:
 
 This section find areas of projected cropland abandonment in 2050 using land use and land cover (LULC) data from Chen et al. 2022. This source includes both projected LULC under different shared socioeconomic pathways (SSPs) as well as a baseline LULC data from 2015. The outputs from this code, rasters containing pixels of projected global cropland abandonment in 2050 for a given SSP, will be utilized for further analysis into conservation optimization. More information on the source data can be found in the project README.md file. 
 
@@ -132,7 +129,6 @@ ssp5_50k <- agg_crop_func(diff_ssp5_2050)
 
 
 ### Export Rasters
-
 ```{r}
 writeRaster(ssp1_50k, 
             here('data', 'processed', 'global', 'ssp1_abandonment_global_50km.tif'), 
@@ -157,16 +153,23 @@ writeRaster(ssp5_50k,
 
 [Info on biodiversity data]. 
 ```{r}
-# read in raw biodiversity file
-bio <- rast(here('data', 'raw', 'sparc_conservationPriorities.tif'))
+### read in raw biodiversity file
+bio <- rast(here('data', 'raw', 'sparc_conservationPriorities.tif')) %>% 
+  project(y = crs(ssp1_50k))
 
-# lower resolution to 25km
-bio_25k <- aggregate(bio, fact = 5, fun = 'mean', na.rm = TRUE) %>% 
-    project(y = crs(ssp1_50k))
+### change resolution and spatial extent to match abandonment
+# to figure out factor that gets res closest to target raster, use this:
+factor <- ceiling(res(ssp1_50k)[1]/res(bio)[1])
 
-# export raster
-writeRaster(bio_25k, 
-            here('data','processed','global','biodiversity_global_25km.tif'),
+# get res as close as possible with factor
+bio_agg <- aggregate(bio, fact = 4, fun = 'mean', na.rm = TRUE)
+
+# use resample to make resolutions/spat extent EXACTLY the same
+bio_50k <- resample(bio_agg, ssp1_50k, method = 'bilinear')
+
+### export raster
+writeRaster(bio_50k, 
+            here('data','processed','global','biodiversity_global_50km.tif'),
             overwrite = TRUE)
 ```
 
@@ -179,16 +182,22 @@ This dataset, originally created by Cook-Patton et al. and updated by Global For
 Source: https://data.globalforestwatch.org/documents/gfw::carbon-accumulation-potential-from-natural-forest-regrowth-in-forest-and-savanna-biomes/about
 
 ```{r}
-# read in raw carbon file
-carbon <- rast(here('data','raw','sequestration_rate_mean_aboveground_full_extent_Mg_C_ha_yr.tif'))
-
-# lower resolution to 25km
-carbon_25k <- aggregate(carbon, fact = 25, fun = 'mean', na.rm = TRUE) %>% 
+### read in raw carbon file
+carbon <- rast(here('data','raw','sequestration_rate_mean_aboveground_full_extent_Mg_C_ha_yr.tif')) %>% 
   project(y = crs(ssp1_50k))
 
+# find factor for aggregation
+factor <- ceiling(res(ssp1_50k)[1]/res(carbon)[1])
+
+# lower resolution to 25km
+carbon_agg <- aggregate(carbon, fact = 23, fun = 'mean', na.rm = TRUE)
+
+# match spatial extent exactly
+carbon_50k <- resample(carbon_agg, ssp1_50k, method = 'bilinear')
+
 # export raster
-writeRaster(carbon_25k, 
-            here('data','processed','global','carbon_global_25km.tif'),
+writeRaster(carbon_50k, 
+            here('data','processed','global','carbon_global_50km.tif'),
             overwrite = TRUE)
 ```
 
