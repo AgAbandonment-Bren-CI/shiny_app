@@ -21,8 +21,8 @@ carbon_global <- rast(here('data','processed','global','carbon_global_50km.tif')
 bio_global <- rast(here('data','processed','global','biodiversity_global_50km.tif'))
 
 #reading in total abandonment CSV
-#abandonment_total <- read_csv(here("data", "csv", "total_abandonment.csv")) 
-#vec <- c("ssp1", "ssp2", "ssp3", "ssp4", "ssp5")
+abandonment_total <- read_csv(here('data','processed','global','total_abandonment.csv')) 
+vec <- c("ssp1", "ssp2", "ssp3", "ssp4", "ssp5")
 
 
 
