@@ -22,7 +22,7 @@ bio_global <- rast(here('data','processed','global','biodiversity_global_50km.ti
 
 #reading in total abandonment CSV
 abandonment_total <- read_csv(here('data','processed','global','total_abandonment.csv')) 
-vec <- c("ssp1", "ssp2", "ssp3", "ssp4", "ssp5")
+vec <- c("ssp1_global", "ssp2_global", "ssp3_global", "ssp4_global", "ssp5_global")
 
 
 
@@ -75,7 +75,7 @@ ui <- fluidPage(
                                                    "SSP 3" = "ssp3_global",
                                                    "SSP 4" = "ssp4_global",
                                                    "SSP 5" = "ssp5_global"),
-                                       selected = "ssp1"),
+                                       selected = "SSP 1"),
                           sliderInput("abandon_slide", label = h3("Abandonment"), 
                                       min = 0, 
                                       max = 1, 
@@ -162,13 +162,13 @@ server <- function(input, output) {
   output$ab_tmap2 <- renderTmap({
     req(input$ssp_global_radio)
     message(input$ssp_global_radio)
-    tm_shape(shp = ssp1) + # *** need to find a way to make this reactive to different rasters input$ssp_global_radio
+    tm_shape(shp = ssp1_global) + # *** need to find a way to make this reactive to different rasters input$ssp_global_radio
       tm_raster(title = "Proportion abandoned", 
                 col = "global_PFT_2015", 
                 palette = "Reds", 
                 style = "cont", 
                 alpha = input$abandon_slide) +
-      tm_shape(bd, raster.downsample = FALSE) +
+      tm_shape(bio_global, raster.downsample = FALSE) +
       tm_raster(title = "Conservation Priorities",
                 col = "sparc_conservationPriorities",
                 palette = "Greens",
