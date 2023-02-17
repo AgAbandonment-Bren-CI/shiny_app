@@ -130,12 +130,14 @@ ui <- fluidPage(
 server <- function(input, output) {
   
   ssp_reactive <- reactive({
-    switch(input$ssp_global_radio,
+    x = switch(input$ssp_global_radio,
            "ssp1_global" = ssp1_global,
            "ssp2_global" = ssp2_global,
            "ssp3_global" = ssp3_global,
            "ssp4_global" = ssp4_global,
            "ssp5_global" = ssp5_global)
+    message('in ssp reactive, raster name = ', names(x))
+    return(x)
   })
   
   # TMAP 1 front page
@@ -144,13 +146,13 @@ server <- function(input, output) {
     message(input$ssp_global_radio)
     tm_shape(shp = ssp_reactive()) + # *** need to find a way to make this reactive to different rasters input$ssp_radio
       tm_raster(title = "Proportion abandoned", 
-                col = "global_PFT_2015", 
+                col = "ssp1_abandonment_global_50km.tif", 
                 palette = "Reds", 
                 style = "cont", 
                 alpha = input$abandon_slide) +
       tm_shape(carbon_global, raster.downsample = FALSE) +
       tm_raster(title = "C seq. (mg/ha/yr)", 
-                col = "sequestration_rate_mean_aboveground_full_extent_Mg_C_ha_yr", 
+                col = "carbon_global_50km.tif", 
                 palette = "Blues", 
                 style = "cont", 
                 alpha = input$carbon_slide) # + need to figure out what's going on with this downsampling - abandonment map comes up blank when max.raster is expanded
@@ -164,13 +166,13 @@ server <- function(input, output) {
     message(input$ssp_global_radio)
     tm_shape(shp = ssp1_global) + # *** need to find a way to make this reactive to different rasters input$ssp_global_radio
       tm_raster(title = "Proportion abandoned", 
-                col = "global_PFT_2015", 
+                col = "ssp1_abandonment_global_50km.tif", 
                 palette = "Reds", 
                 style = "cont", 
                 alpha = input$abandon_slide) +
       tm_shape(bio_global, raster.downsample = FALSE) +
       tm_raster(title = "Conservation Priorities",
-                col = "sparc_conservationPriorities",
+                col = "biodiversity_global_50km.tif",
                 palette = "Greens",
                 style = "cont",
                 alpha = input$bd_slide)
