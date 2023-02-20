@@ -164,15 +164,15 @@ server <- function(input, output) {
   output$ab_tmap2 <- renderTmap({
     req(input$ssp_global_radio)
     message(input$ssp_global_radio)
-    tm_shape(shp = ssp1_global) + # *** need to find a way to make this reactive to different rasters input$ssp_global_radio
+    tm_shape(shp = ssp_reactive()) + # *** need to find a way to make this reactive to different rasters input$ssp_global_radio
       tm_raster(title = "Proportion abandoned", 
-                col = "ssp1_abandonment_global_50km.tif", 
+                col = "global_PFT_2015", 
                 palette = "Reds", 
                 style = "cont", 
                 alpha = input$abandon_slide) +
       tm_shape(bio_global, raster.downsample = FALSE) +
       tm_raster(title = "Conservation Priorities",
-                col = "biodiversity_global_50km.tif",
+                col = "sparc_conservationPriorities",
                 palette = "Greens",
                 style = "cont",
                 alpha = input$bd_slide)
