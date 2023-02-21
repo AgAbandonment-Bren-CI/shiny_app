@@ -27,13 +27,13 @@ vec <- c("ssp1_global", "ssp2_global", "ssp3_global", "ssp4_global", "ssp5_globa
 
 
 ## Brazil:
-ssp1_brazil <- rast(here('data','raw','abandoned_crop','SSP1_abandoned_cropland_brazil.tif'))
-ssp2_brazil <- rast(here('data','raw','abandoned_crop','SSP2_abandoned_cropland_brazil.tif'))
-ssp3_brazil <- rast(here('data','raw','abandoned_crop','SSP3_abandoned_cropland_brazil.tif'))
-ssp4_brazil <- rast(here('data','raw','abandoned_crop','SSP4_abandoned_cropland_brazil.tif'))
-ssp5_brazil <- rast(here('data','raw','abandoned_crop','SSP5_abandoned_cropland_brazil.tif'))
-carbon_brazil <- rast(here('data','processed','brazil','carbon_brazil_noPant.tif'))
-bio_brazil <- rast(here('data','processed','brazil','biodiversity_extrisk_brazil_noPant.tif'))
+ssp1_brazil <- rast(here('data/processed/brazil/ssp1_abandoned_cropland_brazil.tif'))
+ssp2_brazil <- rast(here('data/processed/brazil/ssp2_abandoned_cropland_brazil.tif'))
+ssp3_brazil <- rast(here('data/processed/brazil/ssp3_abandoned_cropland_brazil.tif'))
+ssp4_brazil <- rast(here('data/processed/brazil/ssp4_abandoned_cropland_brazil.tif'))
+ssp5_brazil <- rast(here('data/processed/brazil/ssp5_abandoned_cropland_brazil.tif'))
+carbon_brazil <- rast(here('data/processed/brazil/carbon_brazil_noPant.tif'))
+bio_brazil <- rast(here('data/processed/brazil/biodiversity_extrisk_brazil_noPant.tif'))
 
 
 
