@@ -114,8 +114,25 @@ ui <- fluidPage(
              ## THIRD TAB ##
              tabPanel("Brazil",  icon = icon("flag"),
                       titlePanel("Abandonment by country"),
-                      mainPanel(width = 10, strong("Directions")
-                      ) # end main panel of tab 3
+                      sidebarLayout(
+                        sidebarPanel(
+                          radioButtons(inputId = "ssp_brazil_radio", 
+                                       label = h3("Abandonment by climate scenario"), 
+                                       choices = c("SSP 1" = "ssp1_brazil", 
+                                                   "SSP 2" = "ssp2_brazil", 
+                                                   "SSP 3" = "ssp3_brazil",
+                                                   "SSP 4" = "ssp4_brazil",
+                                                   "SSP 5" = "ssp5_brazil"),
+                                       selected = "ssp1_brazil")
+                        ), # end sidebar panel
+                        
+                        mainPanel(width = 10, strong("Directions"),
+                                  p("Select your Shared Socioeconomic Pathway of interest."),
+                                  h3("Carbon Sequestration"),
+                                  tmapOutput(outputId = "ab_brazil_tmap")
+                        ) # end main panel of tab 3
+                      ) #end sidebar layout
+             
              ) # END TAB 3
   ) # end navbarpage
 ) # end UI
@@ -146,13 +163,11 @@ server <- function(input, output) {
     message(input$ssp_global_radio)
     tm_shape(shp = ssp_reactive()) + # *** need to find a way to make this reactive to different rasters input$ssp_radio
       tm_raster(title = "Proportion abandoned", 
-                col = "ssp1_abandonment_global_50km.tif", 
                 palette = "Reds", 
                 style = "cont", 
                 alpha = input$abandon_slide) +
-      tm_shape(carbon_global, raster.downsample = FALSE) +
+      tm_shape(carbon_global) +
       tm_raster(title = "C seq. (mg/ha/yr)", 
-                col = "carbon_global_50km.tif", 
                 palette = "Blues", 
                 style = "cont", 
                 alpha = input$carbon_slide) # + need to figure out what's going on with this downsampling - abandonment map comes up blank when max.raster is expanded
@@ -165,14 +180,12 @@ server <- function(input, output) {
     req(input$ssp_global_radio)
     message(input$ssp_global_radio)
     tm_shape(shp = ssp_reactive()) + # *** need to find a way to make this reactive to different rasters input$ssp_global_radio
-      tm_raster(title = "Proportion abandoned", 
-                col = "global_PFT_2015", 
+      tm_raster(title = "Proportion abandoned",
                 palette = "Reds", 
                 style = "cont", 
                 alpha = input$abandon_slide) +
       tm_shape(bio_global, raster.downsample = FALSE) +
       tm_raster(title = "Conservation Priorities",
-                col = "sparc_conservationPriorities",
                 palette = "Greens",
                 style = "cont",
                 alpha = input$bd_slide)
@@ -202,7 +215,38 @@ server <- function(input, output) {
       theme(legend.position = "none") +
       scale_fill_gradientn(colors = c("deepskyblue3", "deepskyblue4"))
   })
+  
+  
+  
+  # START THIRD TAB
+  
+  # radio buttons
+  ssp_brazil_reactive <- reactive({
+    x = switch(input$ssp_brazil_radio,
+               "ssp1_brazil" = ssp1_brazil,
+               "ssp2_brazil" = ssp2_brazil,
+               "ssp3_brazil" = ssp3_brazil,
+               "ssp4_brazil" = ssp4_brazil,
+               "ssp5_brazil" = ssp5_brazil)
+    message('in ssp reactive, raster name = ', names(x))
+    return(x)
+  })
+  
+  # TMAP 1 brazil
+  output$ab_brazil_tmap <- renderTmap({
+    req(input$ssp_brazil_radio)
+    message(input$ssp_brazil_radio)
+    tm_shape(shp = ssp_brazil_reactive()) + # *** need to find a way to make this reactive to different rasters input$ssp_radio
+      tm_raster(title = "Proportion abandoned",
+                palette = "Reds", 
+                style = "cont", 
+                alpha = input$abandon_slide)
+      # + need to figure out what's going on with this downsampling - abandonment map comes up blank when max.raster is expanded
+    #  tmap_options(max.raster = c(plot = 1e10, view = 1e10)) 
+  }) # end tmap 1
+  
 }
+
 
 
 # Run the application 
