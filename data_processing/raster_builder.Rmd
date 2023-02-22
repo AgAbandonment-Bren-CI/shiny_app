@@ -155,13 +155,39 @@ writeRaster(carbon_50k,
 
 ## CROPLAND ABANDONMENT
 
-The code that generates projected Brazilian cropland abandonment by 2050 is found in the `abandoned-cropland` repository. The outputs from this code will be read in and reclassified here. These are already in the correct resolution and spatial extent. They are used as reference for the biodiversity and carbon layers.
+The code that generates projected Brazilian cropland abandonment by 2050 is found in the `abandoned-cropland` repository. The outputs from this code will be read in and reclassified here. These are already in the correct resolution and spatial extent, but will be reclassified so that all cells contain a value of 1.
 
 ```{r}
 # read in the cropland abandonment
-ssp1_brazil <- rast(here('data','raw','abandoned_crop','SSP1_abandoned_cropland_brazil.tif'))
+ssp1_brazil <- rast(here('data/raw/abandoned_crop/SSP1_abandoned_cropland_brazil.tif'))
+ssp2_brazil <- rast(here('data/raw/abandoned_crop/SSP2_abandoned_cropland_brazil.tif'))
+ssp3_brazil <- rast(here('data/raw/abandoned_crop/SSP3_abandoned_cropland_brazil.tif'))
+ssp4_brazil <- rast(here('data/raw/abandoned_crop/SSP4_abandoned_cropland_brazil.tif'))
+ssp5_brazil <- rast(here('data/raw/abandoned_crop/SSP5_abandoned_cropland_brazil.tif'))
 ```
 
+
+```{r}
+# reclassify and save rasters
+
+# matrix that turns values between 1-7 to just 1
+reclass_m <- matrix(c(1,7,1), ncol = 3, byrow = TRUE)
+
+# now reclassify all 
+ssp1_brazil_rcl <- classify(ssp1_brazil, reclass_m)
+ssp2_brazil_rcl <- classify(ssp2_brazil, reclass_m)
+ssp3_brazil_rcl <- classify(ssp3_brazil, reclass_m)
+ssp4_brazil_rcl <- classify(ssp4_brazil, reclass_m)
+ssp5_brazil_rcl <- classify(ssp5_brazil, reclass_m)
+
+
+# export rasters
+writeRaster(ssp1_brazil_rcl, here('data/processed/brazil/ssp1_abandoned_cropland_brazil.tif'))
+writeRaster(ssp2_brazil_rcl, here('data/processed/brazil/ssp2_abandoned_cropland_brazil.tif'))
+writeRaster(ssp3_brazil_rcl, here('data/processed/brazil/ssp3_abandoned_cropland_brazil.tif'))
+writeRaster(ssp4_brazil_rcl, here('data/processed/brazil/ssp4_abandoned_cropland_brazil.tif'))
+writeRaster(ssp5_brazil_rcl, here('data/processed/brazil/ssp5_abandoned_cropland_brazil.tif'))
+```
 
 ## BRAZIL BOUNDARIES
 
