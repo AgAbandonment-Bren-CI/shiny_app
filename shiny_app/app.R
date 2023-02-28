@@ -58,7 +58,7 @@ ui <- fluidPage(
                                                "Lucas Boyd |", 
                                                "Michelle Geldin |", 
                                                "Shayan Kaveh"),
-                                p(HTML("This R Shiny web application presents projected abandoned cropland overlaid with carbon sequestration and biodiversity data to visualize major abandonment trends. For global biodiversity, we used Conservation International’s <a href='http://www.sparc-website.org/'>SPARC Conservation Priorities spatial data</a>. To estimate the carbon sequestration potential of abandoned lands, we used potential accumulation rates, a measure of how much carbon an area can sequester in 30 years of reforestation following anthropogenic disturbance (<a href='https://data.globalforestwatch.org/documents/gfw::carbon-accumulation-potential-from-natural-forest-regrowth-in-forest-and-savanna-biomes/about'>carbon accumulation potential data</a>).")),
+                                p(HTML("This R Shiny web application presents projected abandoned cropland overlaid with carbon sequestration and biodiversity data to visualize major abandonment trends. First, we visualize global projections of abandoned croplands under five SSP scenarios in 2050 to examine the implications of abandonment to biodiversity and carbon sequestration. This analysis was performed at a global scale with the intent of identifying regions where abandoned lands are projected to overlap with areas of high importance for biodiversity and carbon storage. Next, we focus on Brazil and identify parcels of projected abandonment that could offer the highest benefits to biodiversity and carbon sequestration if actively restored.")),
                                 img(src = "here/ag.jpeg"),
                                 tableOutput('data_table')
     #                             tags$style(".data_table th, .data_table td {
@@ -171,14 +171,22 @@ ui <- fluidPage(
 server <- function(input, output) {
   
   ## Data table:
+  
+  link_land <- "<a href='https://zenodo.org/record/4584775#.Y_58_uzMJJV'>Chen et al., 2021</a>"
+  link_carbon <- "<a href='https://data.globalforestwatch.org/documents/gfw::carbon-accumulation-potential-from-natural-forest-regrowth-in-forest-and-savanna-biomes/about'>Cook-Patton et al., 2020</a>"
+  link_bd <- "<a href='http://www.sparc-website.org/'>SPARC Conservation Priorities</a>"
+  
   data_info <- data.frame(
     Data_Name = c("Future global land cover", "Carbon accumulation potential", "Biodiversity"),
-    Source = c("Chen et al., 2021", "Cook-Patton et al., 2020", "SPARC Conservation Priorities"),
+    Source = c(link_land, link_carbon, link_bd),
     Description = c("Future land cover at 1-km resolution based on the SSP-RCP scenarios, classified by plant functional types (PFTs),  including a “cropland” designation, which was the focus of this analysis.", "Global carbon accumulation potential from natural forest regrowth at 1-km. This dataset was used to visualize carbon sequestration potential from restoration.", "Global spatial dataset at 5km resolution displaying rank-ordered areas of high importance to biodiversity preservation. The rank order of importance was determined by examining current and future ranges of 17,000 vertebrate species and their relative extinction risks.") 
   )
   
-  output$data_table <- renderTable(data_info)
+  data_info$Source <- as.character(data_info$Source) # convert factor to character
+  data_info$Source <- gsub("[\n]", "", data_info$Source) # remove line breaks
   
+  output$data_table <- renderTable(data_info, sanitize.text.function = function(x) x)
+
   ssp_reactive <- reactive({
     x = switch(input$ssp_global_radio,
            "ssp1_global" = ssp1_global,
