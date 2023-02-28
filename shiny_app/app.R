@@ -59,7 +59,7 @@ ui <- fluidPage(
                                                "Michelle Geldin |", 
                                                "Shayan Kaveh"),
                                 p(HTML("This R Shiny web application presents projected abandoned cropland overlaid with carbon sequestration and biodiversity data to visualize major abandonment trends. For global biodiversity, we used Conservation International’s <a href='http://www.sparc-website.org/'>SPARC Conservation Priorities spatial data</a>. To estimate the carbon sequestration potential of abandoned lands, we used potential accumulation rates, a measure of how much carbon an area can sequester in 30 years of reforestation following anthropogenic disturbance (<a href='https://data.globalforestwatch.org/documents/gfw::carbon-accumulation-potential-from-natural-forest-regrowth-in-forest-and-savanna-biomes/about'>carbon accumulation potential data</a>).")),
-                                img(src = "ag.jpeg")
+                                img(src = "here/ag.jpeg")
                       )), #END TAB 1
              
              

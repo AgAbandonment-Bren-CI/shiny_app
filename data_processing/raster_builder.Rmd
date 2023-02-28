@@ -11,6 +11,7 @@ library(terra)     #GIS
 library(geobr)     #administrative boundaries for Brazil
 library(tidyverse) #always
 library(here)      #reading/writing data easier
+library(sf)
 ```
 
 # OVERVIEW:
