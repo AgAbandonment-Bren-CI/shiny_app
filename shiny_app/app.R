@@ -59,8 +59,15 @@ ui <- fluidPage(
                                                "Michelle Geldin |", 
                                                "Shayan Kaveh"),
                                 p(HTML("This R Shiny web application presents projected abandoned cropland overlaid with carbon sequestration and biodiversity data to visualize major abandonment trends. For global biodiversity, we used Conservation International’s <a href='http://www.sparc-website.org/'>SPARC Conservation Priorities spatial data</a>. To estimate the carbon sequestration potential of abandoned lands, we used potential accumulation rates, a measure of how much carbon an area can sequester in 30 years of reforestation following anthropogenic disturbance (<a href='https://data.globalforestwatch.org/documents/gfw::carbon-accumulation-potential-from-natural-forest-regrowth-in-forest-and-savanna-biomes/about'>carbon accumulation potential data</a>).")),
-                                img(src = "here/ag.jpeg")
-                      )), #END TAB 1
+                                img(src = "here/ag.jpeg"),
+                                tableOutput('data_table')
+    #                             tags$style(".data_table th, .data_table td {
+    #   border: 1px solid #ddd;
+    #   padding: 8px;
+    #   text-align: left;
+    # }"
+                                )), #END TAB 1
+               
              
              
              
@@ -148,6 +155,15 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
+  
+  ## Data table:
+  data_info <- data.frame(
+    Data_Name = c("Future global land cover", "Carbon accumulation potential", "Biodiversity"),
+    Source = c("Chen et al., 2021", "Cook-Patton et al., 2020", "SPARC Conservation Priorities"),
+    Description = c("Future land cover at 1-km resolution based on the SSP-RCP scenarios, classified by plant functional types (PFTs),  including a “cropland” designation, which was the focus of this analysis.", "Global carbon accumulation potential from natural forest regrowth at 1-km. This dataset was used to visualize carbon sequestration potential from restoration.", "Global spatial dataset at 5km resolution displaying rank-ordered areas of high importance to biodiversity preservation. The rank order of importance was determined by examining current and future ranges of 17,000 vertebrate species and their relative extinction risks.") 
+  )
+  
+  output$data_table <- renderTable(data_info)
   
   ssp_reactive <- reactive({
     x = switch(input$ssp_global_radio,
