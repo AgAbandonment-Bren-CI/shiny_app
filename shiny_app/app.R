@@ -115,25 +115,39 @@ ui <- fluidPage(
              
              
              ## THIRD TAB ##
-             tabPanel("Brazil",  icon = icon("flag"),
-                      titlePanel("Abandonment by country"),
+             tabPanel("Brazil",  icon = icon("seedling"),
+                      titlePanel("Brazil Abandonment & Restoration"),
+                      fluidRow("Here, we investigate which areas of Brazilian cropland abandonment should be prioritized for restoration. This is based on benefits to biodiversity and carbon. More information will go into this section. Follow the instructions on the left side panel."),
                       sidebarLayout(
-                        sidebarPanel(
-                          radioButtons(inputId = "ssp_brazil_radio", 
-                                       label = h3("Abandonment by climate scenario"), 
+                        sidebarPanel(h2("Prioritization Model"),
+                                     hr(),
+                                     radioButtons(inputId = "ssp_brazil_radio", 
+                                       label = h3("Step 1: Select a climate scenario"),
                                        choices = c("SSP 1" = "ssp1_brazil", 
                                                    "SSP 2" = "ssp2_brazil", 
                                                    "SSP 3" = "ssp3_brazil",
                                                    "SSP 4" = "ssp4_brazil",
                                                    "SSP 5" = "ssp5_brazil"),
-                                       selected = "ssp1_brazil")
+                                       selected = "ssp1_brazil"),
+                                     h3("Step 2: Select feature weights"),
+                                     sliderInput("bd_slide_brazil", 
+                                                 label = h4("Biodiversity"), 
+                                                 min = 0, 
+                                                 max = 3, 
+                                                 value = 1),
+                                     sliderInput("carbon_slide_brazil", 
+                                                 label = h4("Carbon"), 
+                                                 min = 0, 
+                                                 max = 3, 
+                                                 value = 1),
+                                     h3("Step 3: Select budget scenario")
                         ), # end sidebar panel
                         
-                        mainPanel(width = 10, strong("Directions"),
-                                  p("Select your Shared Socioeconomic Pathway of interest."),
-                                  h3("Carbon Sequestration"),
+                        mainPanel(h3("Carbon Sequestration"),
                                   tmapOutput(outputId = "ab_brazil_tmap")
-                        ) # end main panel of tab 3
+                        ), # end main panel of tab 3
+                        position = c('left', 'right'),
+                        fluid = TRUE
                       ) #end sidebar layout
              
              ) # END TAB 3
