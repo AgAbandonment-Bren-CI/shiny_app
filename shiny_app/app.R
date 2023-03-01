@@ -28,13 +28,22 @@ vec <- c("ssp1_global", "ssp2_global", "ssp3_global", "ssp4_global", "ssp5_globa
 
 
 ## Brazil:
-ssp1_brazil <- rast(here('data/processed/brazil/ssp1_abandoned_cropland_brazil.tif'))
-ssp2_brazil <- rast(here('data/processed/brazil/ssp2_abandoned_cropland_brazil.tif'))
-ssp3_brazil <- rast(here('data/processed/brazil/ssp3_abandoned_cropland_brazil.tif'))
-ssp4_brazil <- rast(here('data/processed/brazil/ssp4_abandoned_cropland_brazil.tif'))
-ssp5_brazil <- rast(here('data/processed/brazil/ssp5_abandoned_cropland_brazil.tif'))
-carbon_brazil <- rast(here('data/processed/brazil/carbon_brazil_noPant.tif'))
-bio_brazil <- rast(here('data/processed/brazil/biodiversity_extrisk_brazil_noPant.tif'))
+ssp1_brazil <- rast(here('data/processed/brazil',
+                         'ssp1_abandoned_cropland_brazil.tif')) %>% 
+  trim()
+ssp2_brazil <- rast(here('data/processed/brazil',
+                         'ssp2_abandoned_cropland_brazil.tif'))
+ssp3_brazil <- rast(here('data/processed/brazil',
+                         'ssp3_abandoned_cropland_brazil.tif'))
+ssp4_brazil <- rast(here('data/processed/brazil',
+                         'ssp4_abandoned_cropland_brazil.tif'))
+ssp5_brazil <- rast(here('data/processed/brazil',
+                         'ssp5_abandoned_cropland_brazil.tif'))
+
+carbon_brazil <- rast(here('data/processed/brazil',
+                           'carbon_brazil_noPant.tif'))
+bio_brazil <- rast(here('data/processed/brazil',
+                        'biodiversity_extrisk_brazil_noPant.tif'))
 
 
 
@@ -59,7 +68,7 @@ ui <- fluidPage(
                                                "Michelle Geldin |", 
                                                "Shayan Kaveh"),
                                 p(HTML("This R Shiny web application presents projected abandoned cropland overlaid with carbon sequestration and biodiversity data to visualize major abandonment trends. First, we visualize global projections of abandoned croplands under five SSP scenarios in 2050 to examine the implications of abandonment to biodiversity and carbon sequestration. This analysis was performed at a global scale with the intent of identifying regions where abandoned lands are projected to overlap with areas of high importance for biodiversity and carbon storage. Next, we focus on Brazil and identify parcels of projected abandonment that could offer the highest benefits to biodiversity and carbon sequestration if actively restored.")),
-                                img(src = "here/ag.jpeg"),
+                                img(src = 'ag.jpeg'),
                                 tableOutput('data_table')
     #                             tags$style(".data_table th, .data_table td {
     #   border: 1px solid #ddd;
@@ -150,8 +159,7 @@ ui <- fluidPage(
                                      h3("Step 3: Select budget scenario")
                         ), # end sidebar panel
                         
-                        mainPanel(h3("Carbon Sequestration"),
-                                  tmapOutput(outputId = "ab_brazil_tmap")
+                        mainPanel(tmapOutput(outputId = "ab_brazil_tmap", height = 700)
                         ), # end main panel of tab 3
                         position = c('left', 'right'),
                         fluid = TRUE
@@ -273,15 +281,19 @@ server <- function(input, output) {
     return(x)
   })
   
-  # TMAP 1 brazil
+  # TMAP Brazil
   output$ab_brazil_tmap <- renderTmap({
-    req(input$ssp_brazil_radio)
-    message(input$ssp_brazil_radio)
-    tm_shape(shp = ssp_brazil_reactive()) + # *** need to find a way to make this reactive to different rasters input$ssp_radio
+    tmap_mode('view')
+    
+    # req(input$ssp_brazil_radio)
+    # message(input$ssp_brazil_radio)
+    tm_shape(shp = ssp_brazil_reactive(), raster.downsample = TRUE) + ##make downsample true for now
       tm_raster(title = "Proportion abandoned",
                 palette = "Reds", 
-                style = "cont", 
-                alpha = input$abandon_slide)
+                style = "cont") +
+    tm_scale_bar(position = c('right', 'bottom'))
+      # tm_view(set.view = c(-50, -11.6, 3))
+      #tm_view(set.zoom.limits = c(10,20))
       # + need to figure out what's going on with this downsampling - abandonment map comes up blank when max.raster is expanded
     #  tmap_options(max.raster = c(plot = 1e10, view = 1e10)) 
   }) # end tmap 1
