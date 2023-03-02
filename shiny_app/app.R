@@ -8,6 +8,8 @@ library(terra)
 library(shinythemes)
 library(shinyjs)
 library(htmltools)
+library(cowplot)
+library(magick)
 
 
 ### READ IN DATA ###
@@ -68,7 +70,7 @@ ui <- fluidPage(
                                                "Michelle Geldin |", 
                                                "Shayan Kaveh"),
                                 p(HTML("This R Shiny web application presents projected abandoned cropland overlaid with carbon sequestration and biodiversity data to visualize major abandonment trends. First, we visualize global projections of abandoned croplands under five SSP scenarios in 2050 to examine the implications of abandonment to biodiversity and carbon sequestration. This analysis was performed at a global scale with the intent of identifying regions where abandoned lands are projected to overlap with areas of high importance for biodiversity and carbon storage. Next, we focus on Brazil and identify parcels of projected abandonment that could offer the highest benefits to biodiversity and carbon sequestration if actively restored.")),
-                                img(src = 'ag.jpeg'),
+                                plotOutput('intropic'),
                                 tableOutput('data_table')
     #                             tags$style(".data_table th, .data_table td {
     #   border: 1px solid #ddd;
@@ -177,6 +179,12 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
+  
+  ## intro tab image
+  output$intropic <- renderPlot({
+    ggdraw ()+
+      draw_image(here("ag.jpeg"))
+  })
   
   ## Data table:
   
