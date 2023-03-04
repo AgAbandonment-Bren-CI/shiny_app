@@ -14,7 +14,7 @@ library(magick)
 
 ### READ IN DATA ###
 
-## Global:
+### Global:
 ssp1_global <- rast(here('data','processed','global','ssp1_abandonment_global_50km.tif'))
 ssp2_global <- rast(here('data','processed','global','ssp2_abandonment_global_50km.tif'))
 ssp3_global <- rast(here('data','processed','global','ssp3_abandonment_global_50km.tif'))
@@ -29,10 +29,9 @@ vec <- c("ssp1_global", "ssp2_global", "ssp3_global", "ssp4_global", "ssp5_globa
 
 
 
-## Brazil:
+### Brazil:
 ssp1_brazil <- rast(here('data/processed/brazil',
-                         'ssp1_abandoned_cropland_brazil.tif')) %>% 
-  trim()
+                         'ssp1_abandoned_cropland_brazil.tif'))
 ssp2_brazil <- rast(here('data/processed/brazil',
                          'ssp2_abandoned_cropland_brazil.tif'))
 ssp3_brazil <- rast(here('data/processed/brazil',
@@ -47,7 +46,16 @@ carbon_brazil <- rast(here('data/processed/brazil',
 bio_brazil <- rast(here('data/processed/brazil',
                         'biodiversity_extrisk_brazil_noPant.tif'))
 
-
+ssp1_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
+                           'ssp1_solution_country.tif'))
+ssp2_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
+                           'ssp2_solution_country.tif'))
+ssp3_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
+                           'ssp3_solution_country.tif'))
+ssp4_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
+                           'ssp4_solution_country.tif'))
+ssp5_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
+                           'ssp5_solution_country.tif'))
 
 
 
@@ -139,6 +147,7 @@ ui <- fluidPage(
                       sidebarLayout(
                         sidebarPanel(h2("Prioritization Model"),
                                      hr(),
+                                     ## SSP radio buttons:
                                      radioButtons(inputId = "ssp_brazil_radio", 
                                        label = h3("Step 1: Select a climate scenario"),
                                        choices = c("SSP 1" = "ssp1_brazil", 
@@ -147,6 +156,8 @@ ui <- fluidPage(
                                                    "SSP 4" = "ssp4_brazil",
                                                    "SSP 5" = "ssp5_brazil"),
                                        selected = "ssp1_brazil"),
+                                     
+                                     ## Feature sliders:
                                      h3("Step 2: Select feature weights"),
                                      sliderInput("bd_slide_brazil", 
                                                  label = h4("Biodiversity"), 
@@ -158,7 +169,13 @@ ui <- fluidPage(
                                                  min = 0, 
                                                  max = 3, 
                                                  value = 1),
-                                     h3("Step 3: Select budget scenario")
+                                     
+                                     ## Budget radio buttons:
+                                     radioButtons(inputId = "budget",
+                                                  label = h3("Step 1: Select a climate scenario"),
+                                                  choices = c("Low" = "low_budget", 
+                                                              "High" = "high_budget"),
+                                                  selected = "ssp1_brazil"),
                         ), # end sidebar panel
                         
                         mainPanel(tmapOutput(outputId = "ab_brazil_tmap", height = 700)
@@ -280,11 +297,11 @@ server <- function(input, output) {
   # radio buttons
   ssp_brazil_reactive <- reactive({
     x = switch(input$ssp_brazil_radio,
-               "ssp1_brazil" = ssp1_brazil,
-               "ssp2_brazil" = ssp2_brazil,
-               "ssp3_brazil" = ssp3_brazil,
-               "ssp4_brazil" = ssp4_brazil,
-               "ssp5_brazil" = ssp5_brazil)
+               "ssp1_brazil" = ssp1_solution$ssp1_highBud_c,
+               "ssp2_brazil" = ssp2_solution$ssp2_highBud_c,
+               "ssp3_brazil" = ssp3_solution$ssp3_highBud_c,
+               "ssp4_brazil" = ssp4_solution$ssp4_highBud_c,
+               "ssp5_brazil" = ssp5_solution$ssp5_highBud_c)
     message('in ssp reactive, raster name = ', names(x))
     return(x)
   })
