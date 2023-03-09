@@ -79,18 +79,24 @@ ui <- fluidPage(
                                                "Shayan Kaveh"),
                                 p(HTML("This R Shiny web application presents projected abandoned cropland overlaid with carbon sequestration and biodiversity data to visualize major abandonment trends. First, we visualize global projections of abandoned croplands under five SSP scenarios in 2050 to examine the implications of abandonment to biodiversity and carbon sequestration. This analysis was performed at a global scale with the intent of identifying regions where abandoned lands are projected to overlap with areas of high importance for biodiversity and carbon storage. Next, we focus on Brazil and identify parcels of projected abandonment that could offer the highest benefits to biodiversity and carbon sequestration if actively restored.")),
                                 plotOutput('intropic'),
-                                tableOutput('data_table')
-    #                             tags$style(".data_table th, .data_table td {
-    #   border: 1px solid #ddd;
-    #   padding: 8px;
-    #   text-align: left;
-    # }"
                                 )), #END TAB 1
                
              
+            ## SECOND TAB ##
+            tabPanel("Background/Data", icon = icon("info-circle"),
+                     titlePanel("Background"),
+                     mainPanel(width = 10,
+                               p(HTML("SSP info")),
+                               tableOutput('data_table')
+                               #                             tags$style(".data_table th, .data_table td {
+                               #   border: 1px solid #ddd;
+                               #   padding: 8px;
+                               #   text-align: left;
+                               # }"
+                     )), #END TAB 2
              
              
-             ## SECOND TAB ##
+             ## THIRD TAB ##
              tabPanel("Global", icon = icon("globe"),
                       titlePanel("Major Trends in Projected Global Cropland Abandonment"),
                       sidebarLayout(
@@ -135,12 +141,12 @@ ui <- fluidPage(
                                   p(strong("Figure 2:"), "Total abandoned cropland globally in 2050 (km^2) by climate scenario. Percentages indicate the proportion of total cropland that is projected to be abandoned.")
                         ) # end main panel tab 1
                       ) # end sidebarlayout
-             ), # END TAB 2
+             ), # END TAB 3
              
              
              
              
-             ## THIRD TAB ##
+             ## FOURTH TAB ##
              tabPanel("Brazil",  icon = icon("seedling"),
                       titlePanel("Brazil Abandonment & Restoration"),
                       fluidRow("Here, we investigate which areas of Brazilian cropland abandonment should be prioritized for restoration. This is based on benefits to biodiversity and carbon. More information will go into this section. Follow the instructions on the left side panel."),
@@ -184,7 +190,7 @@ ui <- fluidPage(
                         fluid = TRUE
                       ) #end sidebar layout
              
-             ) # END TAB 3
+             ) # END TAB 4
   ) # end navbarpage
 ) # end UI
 
@@ -197,11 +203,16 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   
+  # START TAB 1
+  
   ## intro tab image
   output$intropic <- renderPlot({
     ggdraw ()+
       draw_image(here("ag.jpeg"))
   })
+  
+  # START SECOND TAB
+  
   
   ## Data table:
   
@@ -220,6 +231,8 @@ server <- function(input, output) {
   
   output$data_table <- renderTable(data_info, sanitize.text.function = function(x) x)
 
+  # START THIRD TAB
+  
   ssp_reactive <- reactive({
     x = switch(input$ssp_global_radio,
            "ssp1_global" = ssp1_global,
@@ -292,7 +305,7 @@ server <- function(input, output) {
   
   
   
-  # START THIRD TAB
+  # START FOURTH TAB
   
   # radio buttons
   ssp_brazil_reactive <- reactive({
