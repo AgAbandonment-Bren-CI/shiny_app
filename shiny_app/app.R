@@ -24,7 +24,16 @@ carbon_global <- rast(here('data','processed','global','carbon_global_50km.tif')
 bio_global <- rast(here('data','processed','global','biodiversity_global_50km.tif'))
 
 #reading in total abandonment CSV
-abandonment_total <- read_csv(here('data','processed','global','total_abandonment.csv')) 
+abandonment_total <- read_csv(here('data/processed/global/total_abandonment.csv')) %>% 
+  janitor::clean_names() %>% 
+  mutate(total_abandonment_mil_km2 = total_abandonment_km2/1000000,
+         new_cropland_mil_km2 = new_cropland_km2/1000000) %>% 
+  ## remove variables that aren't plotted
+  select(!c(1, 3:7)) %>% 
+  ## pivot longer for graphable format
+  pivot_longer(2:3, names_to = 'statistic', values_to = 'amount')
+
+
 vec <- c("ssp1_global", "ssp2_global", "ssp3_global", "ssp4_global", "ssp5_global")
 
 
@@ -281,26 +290,16 @@ server <- function(input, output) {
   
   # total abandonment ggplot panel 1
   output$total_abandonment_plot <- renderPlot({
-    ggplot(data = abandonment_total, 
-           aes(x = ssp, y = abandonment_millions_km2, 
-               fill = abandonment_millions_km2), 
-           alpha = 0.9) +
-      geom_col() +
-      theme_minimal(14) + 
-      labs(x = element_blank(), y = "Global abandonment (millions km^2)") +
-      theme(axis.text.x = element_text(
-        vjust = 5, 
-        size = 16), 
-        axis.text.y = element_text(
-          size = 16
-        )) + 
-      geom_text(aes(x = ssp, 
-                    y = abandonment_millions_km2 + .2, 
-                    label = paste(percent, "%")), 
-                color = "black", 
-                size = 7) +
-      theme(legend.position = "none") +
-      scale_fill_gradientn(colors = c("deepskyblue3", "deepskyblue4"))
+    ggplot(data = abandonment_total, aes(x = ssp, y = amount)) +
+      geom_bar(aes(fill = statistic), 
+               stat = 'identity', position = 'dodge', 
+               alpha = 0.8,
+               color = 'grey20') +
+      theme_minimal() + 
+      labs(x = element_blank(),
+           y = "Millions km^2)")  +
+      # theme(legend.position = "none") +
+      scale_fill_manual(values = c("forestgreen", "deepskyblue4"))
   })
   
   
