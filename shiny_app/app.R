@@ -169,14 +169,20 @@ ui <- fluidPage(
              
              ## FOURTH TAB ##
              tabPanel("Brazil",  icon = icon("seedling"),
-                      titlePanel("Brazil Abandonment & Restoration"),
-                      fluidRow("Here, we investigate which areas of Brazilian cropland abandonment should be prioritized for restoration. This is based on benefits to biodiversity and carbon. More information will go into this section. Follow the instructions on the left side panel."),
+                      h1("Brazil Abandonment & Restoration"),
+                      fluidRow("Here, we turn our attention to the abandoned cropland in Brazil. As a country, Brazil stands out as a crucial contributor to climate resilience due to its vast carbon storage capacity and significance to biodiversity. To support global efforts aimed at safeguarding critical regions like the Amazon, we have singled out Brazil as the ideal location to pinpoint areas of projected abandonment that hold the potential for maximum benefits in terms of carbon sequestration and biodiversity if actively restored. Furthermore, President Da Silva's commitment to halting deforestation in Brazil by 2030 further amplifies the importance of this tool, as it enables the identification of regions that are most suitable for restoration under budgetary constraints. Follow the steps with the left side panel to generate a map identifying which parcels should be prioritized for restoration."),
+                      fluidRow(column = 5, ### to make box align with text above but now header off....
+                      headerPanel(""), ## add vertical space
                       sidebarLayout(
-                        sidebarPanel(h2("Prioritization Model"),
-                                     hr(),
+                        sidebarPanel(h2("Prioritization Model:"),
+                                     hr(style = 'border-top: 2px solid #000000'),
+                                     
                                      ## SSP radio buttons:
+                                     h3(strong("Step 1: Climate scenario")),
+                                     h5("Choose one of the six climate scenarios below. The first five options correspond with SSPs 1 through 5, while the sixth option represents parcels consistently projected to become abandoned in all five SSPs."),
+                                     br(),
                                      radioButtons(inputId = "ssp_brazil_radio", 
-                                       label = h3("Step 1: Select a climate scenario"),
+                                       label = NULL,
                                        choices = c("SSP 1" = "ssp1_brazil", 
                                                    "SSP 2" = "ssp2_brazil", 
                                                    "SSP 3" = "ssp3_brazil",
@@ -184,9 +190,12 @@ ui <- fluidPage(
                                                    "SSP 5" = "ssp5_brazil",
                                                    "SSP Overlap" = "ssp_all_brazil"),
                                        selected = "ssp1_brazil"),
+                                     hr(style = 'border-top: 1px solid #000000'),
                                      
                                      ## Feature sliders:
-                                     h3("Step 2: Select feature weights"),
+                                     h3(strong("Step 2: Feature weights")),
+                                     h5(em("Use the sliders to weigh the relative importance of biodiversity and carbon, respectively.")),
+                                     br(),
                                      sliderInput("bd_slide_brazil", 
                                                  label = h4("Biodiversity"), 
                                                  min = 0, 
@@ -197,20 +206,25 @@ ui <- fluidPage(
                                                  min = 0, 
                                                  max = 3, 
                                                  value = 1),
+                                     hr(style = 'border-top: 1px solid #000000'),
                                      
                                      ## Budget radio buttons:
+                                     h3(strong("Step 3: Budget")),
+                                     h5(em("Select a low or high end budget scenario for restoration. The low budget is based on historical trend of unused money allocated to Brazil's Ministry of the Environment management budget. The high budget is based on the current balance of the Amazon Fund.")),
+                                     br(),
                                      radioButtons(inputId = "budget",
-                                                  label = h3("Step 1: Select a climate scenario"),
-                                                  choices = c("Low" = "low_budget", 
-                                                              "High" = "high_budget"),
-                                                  selected = "ssp1_brazil"),
+                                                  label = NULL,
+                                                  choices = c("Low (455 million BRL)" = "low_budget", 
+                                                              "High (3.4 billion BRL)" = "high_budget"),
+                                                  selected = "low_budget"),
                         ), # end sidebar panel
                         
-                        mainPanel(tmapOutput(outputId = "ab_brazil_tmap", height = 700)
+                        mainPanel(tmapOutput(outputId = "ab_brazil_tmap", height = 800),
+                                  p(strong("Figure 1:"),"Parcels projected to be abandoned between 2020-2050. Orange pixels represent parcels prioritized for restoration under based on user inputs, while blue pixels remain unselected abandoned parcels."),
                         ), # end main panel of tab 3
                         position = c('left', 'right'),
                         fluid = TRUE
-                      ) #end sidebar layout
+                      )) #end sidebar layout
              
              ) # END TAB 4
   ) # end navbarpage
