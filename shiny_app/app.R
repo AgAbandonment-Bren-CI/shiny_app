@@ -12,18 +12,21 @@ library(cowplot)
 library(magick)
 
 
-### READ IN DATA ###
+##### READ IN DATA #####
 
-### Global:
-ssp1_global <- rast(here('data','processed','global','ssp1_abandonment_global_50km.tif'))
-ssp2_global <- rast(here('data','processed','global','ssp2_abandonment_global_50km.tif'))
-ssp3_global <- rast(here('data','processed','global','ssp3_abandonment_global_50km.tif'))
-ssp4_global <- rast(here('data','processed','global','ssp4_abandonment_global_50km.tif'))
-ssp5_global <- rast(here('data','processed','global','ssp5_abandonment_global_50km.tif'))
-carbon_global <- rast(here('data','processed','global','carbon_global_50km.tif'))
-bio_global <- rast(here('data','processed','global','biodiversity_global_50km.tif'))
+### GLOBAL:  --------------------------------------------------------
+## Cropland abandonment:
+ssp1_global <- rast(here('data/processed/global/ssp1_abandonment_global_50km.tif'))
+ssp2_global <- rast(here('data/processed/global/ssp2_abandonment_global_50km.tif'))
+ssp3_global <- rast(here('data/processed/global/ssp3_abandonment_global_50km.tif'))
+ssp4_global <- rast(here('data/processed/global/ssp4_abandonment_global_50km.tif'))
+ssp5_global <- rast(here('data/processed/global/ssp5_abandonment_global_50km.tif'))
+ssp_all_global <- rast(here('data/processed/global/ssp_all_abandonment_global_50km.tif'))
+## Biodiversitya and carbon:
+carbon_global <- rast(here('data/processed/global/carbon_global_50km.tif'))
+bio_global <- rast(here('data/processed/global/biodiversity_global_50km.tif'))
 
-#reading in total abandonment CSV
+## Total abandonment CSV
 abandonment_total <- read_csv(here('data/processed/global/total_abandonment.csv')) %>% 
   janitor::clean_names() %>% 
   mutate(total_abandonment_mil_km2 = total_abandonment_km2/1000000,
@@ -33,12 +36,12 @@ abandonment_total <- read_csv(here('data/processed/global/total_abandonment.csv'
   ## pivot longer for graphable format
   pivot_longer(2:3, names_to = 'statistic', values_to = 'amount')
 
-
+## ////I DON'T KNOW WHAT THIS IS FOR?? - NM/////////
 vec <- c("ssp1_global", "ssp2_global", "ssp3_global", "ssp4_global", "ssp5_global")
 
 
-
-### Brazil:
+### BRAZIL:  ------------------------------------------------------
+## Cropland abandonment
 ssp1_brazil <- rast(here('data/processed/brazil',
                          'ssp1_abandoned_cropland_brazil.tif'))
 ssp2_brazil <- rast(here('data/processed/brazil',
@@ -49,12 +52,16 @@ ssp4_brazil <- rast(here('data/processed/brazil',
                          'ssp4_abandoned_cropland_brazil.tif'))
 ssp5_brazil <- rast(here('data/processed/brazil',
                          'ssp5_abandoned_cropland_brazil.tif'))
+ssp_all_brazil <- rast(here('data/processed/brazil',
+                         'ssp_all_abandoned_cropland_brazil.tif'))
 
+## Carbon and biodiversity data
 carbon_brazil <- rast(here('data/processed/brazil',
                            'carbon_brazil_noPant.tif'))
 bio_brazil <- rast(here('data/processed/brazil',
                         'biodiversity_extrisk_brazil_noPant.tif'))
 
+## Prioritizr solution rasters
 ssp1_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
                            'ssp1_solution_country.tif'))
 ssp2_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
@@ -65,10 +72,14 @@ ssp4_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
                            'ssp4_solution_country.tif'))
 ssp5_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
                            'ssp5_solution_country.tif'))
+ssp_all_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
+                              'ssp_all_solution_country.tif'))
 
 
 
-### BEGIN UI ###
+
+
+##### BEGIN UI ##### 
 
 ui <- fluidPage(
   navbarPage(theme = shinytheme("flatly"),
@@ -118,7 +129,8 @@ ui <- fluidPage(
                                                    "SSP 2" = "ssp2_global", 
                                                    "SSP 3" = "ssp3_global",
                                                    "SSP 4" = "ssp4_global",
-                                                   "SSP 5" = "ssp5_global"),
+                                                   "SSP 5" = "ssp5_global",
+                                                   "SSP Overlap" = "ssp_all_global"),
                                        selected = "ssp1_global"),
                           sliderInput("abandon_slide", label = h3("Abandonment"), 
                                       min = 0, 
@@ -169,7 +181,8 @@ ui <- fluidPage(
                                                    "SSP 2" = "ssp2_brazil", 
                                                    "SSP 3" = "ssp3_brazil",
                                                    "SSP 4" = "ssp4_brazil",
-                                                   "SSP 5" = "ssp5_brazil"),
+                                                   "SSP 5" = "ssp5_brazil",
+                                                   "SSP Overlap" = "ssp_all_brazil"),
                                        selected = "ssp1_brazil"),
                                      
                                      ## Feature sliders:
@@ -207,7 +220,7 @@ ui <- fluidPage(
 
 
 
-### BEGIN SERVER ###
+##### BEGIN SERVER #####
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
@@ -248,7 +261,8 @@ server <- function(input, output) {
            "ssp2_global" = ssp2_global,
            "ssp3_global" = ssp3_global,
            "ssp4_global" = ssp4_global,
-           "ssp5_global" = ssp5_global)
+           "ssp5_global" = ssp5_global,
+           "ssp_all_global" = ssp_all_global)
     message('in ssp reactive, raster name = ', names(x))
     return(x)
   })
@@ -313,7 +327,8 @@ server <- function(input, output) {
                "ssp2_brazil" = ssp2_solution$ssp2_highBud_c,
                "ssp3_brazil" = ssp3_solution$ssp3_highBud_c,
                "ssp4_brazil" = ssp4_solution$ssp4_highBud_c,
-               "ssp5_brazil" = ssp5_solution$ssp5_highBud_c)
+               "ssp5_brazil" = ssp5_solution$ssp5_highBud_c,
+               "ssp_all_brazil" = ssp_all_solution$ssp_all_highBud_c)
     message('in ssp reactive, raster name = ', names(x))
     return(x)
   })
