@@ -34,26 +34,39 @@ The code that generates projected cropland abandonment globally in 2050 is found
 
 First read in projected 2050 LULC from Chen et al. for each SSP.
 ```{r}
-# SSP1
+## SSP1
 ssp1_crop_2050 <- rast(here('data','raw','abandoned_crop','SSP1_abandoned_cropland_2050_global.tif'))
-# SSP2
+## SSP2
 ssp2_crop_2050 <- rast(here('data','raw','abandoned_crop','SSP2_abandoned_cropland_2050_global.tif'))
-# SSP3  
+## SSP3  
 ssp3_crop_2050 <- rast(here('data','raw','abandoned_crop','SSP3_abandoned_cropland_2050_global.tif')) 
-# SSP4
+## SSP4
 ssp4_crop_2050 <- rast(here('data','raw','abandoned_crop','SSP4_abandoned_cropland_2050_global.tif'))
-# SSP5
+## SSP5
 ssp5_crop_2050 <- rast(here('data','raw','abandoned_crop','SSP5_abandoned_cropland_2050_global.tif'))
 ```
 
+Additionally, we also want to figure out which parcels of abandoned cropland are present in every SSP scenario. To solve this, we'll first add each SSP abandonment layer into one combined raster. Then, we'll only keep pixels that were present in every SSP (value 5).
+```{r}
+### combine rasters
+ssp_all_crop_2050 <- (ssp1_crop_2050 + ssp2_crop_2050 + ssp3_crop_2050 + ssp4_crop_2050 + ssp5_crop_2050)
+
+### create matrix that assigns values 0-4 to 0 and values of 5 to 1
+reclass_df <- c(0,4,0,
+                4,5,1)
+reclass_m <- matrix(reclass_df, ncol = 3, byrow = TRUE)
+
+### reclassify to new values
+ssp_all_crop_2050_recl <- classify(ssp_all_crop_2050, reclass_m, right = TRUE, include.lowest = TRUE)
+```
 
 
 ### Change resolution
 
 Our global abandonment layers are currently at 1km resolution. For processing speed and ease of visualization, we will change the resolution to 50km. These new 50km cells will represent "proportion of abandonment". 
 ```{r}
-# create function that finds the mean abandonment across 50km,
-# then changes 0 values to NA for better viz
+### create function that finds the mean abandonment across 50km,
+### then changes 0 values to NA for better viz
 agg_crop_fxn <- function(ssp) {
   ssp_50k <- terra::aggregate(ssp, fact = 50, fun = 'mean') %>% 
     terra::project('epsg:4326')
@@ -62,31 +75,35 @@ agg_crop_fxn <- function(ssp) {
   return(ssp_50k)
 }
 
-# use function on each SSP
+### use function on each SSP
 ssp1_50k <- agg_crop_fxn(ssp1_crop_2050)
 ssp2_50k <- agg_crop_fxn(ssp2_crop_2050)
 ssp3_50k <- agg_crop_fxn(ssp3_crop_2050)
 ssp4_50k <- agg_crop_fxn(ssp4_crop_2050)
 ssp5_50k <- agg_crop_fxn(ssp5_crop_2050)
+ssp_all_50k <- agg_crop_fxn(ssp_all_crop_2050_recl)
 ```
 
 
 ### Export Rasters
 ```{r}
 writeRaster(ssp1_50k, 
-            here('data', 'processed', 'global', 'ssp1_abandonment_global_50km.tif'), 
+            here('data/processed/global/ssp1_abandonment_global_50km.tif'), 
             overwrite = TRUE)
 writeRaster(ssp2_50k, 
-            here('data', 'processed', 'global', 'ssp2_abandonment_global_50km.tif'), 
+            here('data/processed/global/ssp2_abandonment_global_50km.tif'), 
             overwrite = TRUE)
 writeRaster(ssp3_50k,
-            here('data', 'processed', 'global', 'ssp3_abandonment_global_50km.tif'), 
+            here('data/processed/global/ssp3_abandonment_global_50km.tif'), 
             overwrite = TRUE)
 writeRaster(ssp4_50k, 
-            here('data', 'processed', 'global', 'ssp4_abandonment_global_50km.tif'),
+            here('data/processed/global/ssp4_abandonment_global_50km.tif'),
             overwrite = TRUE)
 writeRaster(ssp5_50k, 
-            here('data', 'processed', 'global', 'ssp5_abandonment_global_50km.tif'), 
+            here('data/processed/global/ssp5_abandonment_global_50km.tif'), 
+            overwrite = TRUE)
+writeRaster(ssp_all_50k,
+            here('data/processed/global/ssp_all_abandonment_global_50km.tif'),
             overwrite = TRUE)
 ```
 
@@ -167,27 +184,35 @@ ssp4_brazil <- rast(here('data/raw/abandoned_crop/SSP4_abandoned_cropland_brazil
 ssp5_brazil <- rast(here('data/raw/abandoned_crop/SSP5_abandoned_cropland_brazil.tif'))
 ```
 
+Same as with the global dataset, we want to produce a sixth raster that includes parcels which overlap in every SSP.
 
 ```{r}
-# reclassify and save rasters
+### reclassify with matrix
+reclass_m2 <- matrix(c(1, 7, 1), ncol = 3, byrow = T)
 
-# matrix that turns values between 1-7 to just 1
-reclass_m <- matrix(c(1,7,1), ncol = 3, byrow = TRUE)
+ssp1_brazil_rcl <- classify(ssp1_brazil, reclass_m2)
+ssp2_brazil_rcl <- classify(ssp2_brazil, reclass_m2)
+ssp3_brazil_rcl <- classify(ssp3_brazil, reclass_m2)
+ssp4_brazil_rcl <- classify(ssp4_brazil, reclass_m2)
+ssp5_brazil_rcl <- classify(ssp5_brazil, reclass_m2)
 
-# now reclassify all 
-ssp1_brazil_rcl <- classify(ssp1_brazil, reclass_m)
-ssp2_brazil_rcl <- classify(ssp2_brazil, reclass_m)
-ssp3_brazil_rcl <- classify(ssp3_brazil, reclass_m)
-ssp4_brazil_rcl <- classify(ssp4_brazil, reclass_m)
-ssp5_brazil_rcl <- classify(ssp5_brazil, reclass_m)
+### Add together and only keep planning units that overlap in all SSPs.
+### For some reason this automatically only keeps overlapping (value 5).
+### Not entirely sure why, maybe because they were first reclassified?
+ssp_all_brazil <- ssp1_brazil_rcl + ssp2_brazil_rcl + ssp3_brazil_rcl + ssp4_brazil_rcl + ssp5_brazil_rcl
 
+### now reassign value of 5 to 1
+ssp_all_brazil[ssp_all_brazil == 5] <- 1
+```
 
-# export rasters
+Now we'll export the rasters
+```{r}
 writeRaster(ssp1_brazil_rcl, here('data/processed/brazil/ssp1_abandoned_cropland_brazil.tif'))
 writeRaster(ssp2_brazil_rcl, here('data/processed/brazil/ssp2_abandoned_cropland_brazil.tif'))
 writeRaster(ssp3_brazil_rcl, here('data/processed/brazil/ssp3_abandoned_cropland_brazil.tif'))
 writeRaster(ssp4_brazil_rcl, here('data/processed/brazil/ssp4_abandoned_cropland_brazil.tif'))
 writeRaster(ssp5_brazil_rcl, here('data/processed/brazil/ssp5_abandoned_cropland_brazil.tif'))
+writeRaster(ssp_all_brazil, here('data/processed/brazil/ssp_all_abandoned_cropland_brazil.tif'))
 ```
 
 ## BRAZIL BOUNDARIES
