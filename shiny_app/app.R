@@ -22,7 +22,7 @@ ssp3_global <- rast(here('data/processed/global/ssp3_abandonment_global_50km.tif
 ssp4_global <- rast(here('data/processed/global/ssp4_abandonment_global_50km.tif'))
 ssp5_global <- rast(here('data/processed/global/ssp5_abandonment_global_50km.tif'))
 ssp_all_global <- rast(here('data/processed/global/ssp_all_abandonment_global_50km.tif'))
-## Biodiversitya and carbon:
+## Biodiversity and carbon:
 carbon_global <- rast(here('data/processed/global/carbon_global_50km.tif'))
 bio_global <- rast(here('data/processed/global/biodiversity_global_50km.tif'))
 
@@ -118,13 +118,22 @@ ui <- fluidPage(
              
              ## THIRD TAB ##
              tabPanel("Global", icon = icon("globe"),
-                      titlePanel("Major Trends in Projected Global Cropland Abandonment"),
+                      h1("Trends in Projected Global Cropland Abandonment"),
+                      fluidRow("Description"),
+                      headerPanel(""), ## add vertical space
+                      
                       sidebarLayout(
                         sidebarPanel(
+                          h2("Global Overlays of Cropland Abandonment, Biodiversity, and Carbon Sequestration:"),
+                          h5("Map layers can be toggled on and off using the layer icon on the map"),
+                          hr(style = 'border-top: 2px solid #000000'),
                           
+                          h3(strong("Climate scenario")),
+                          h5("Choose one of the six options below to project abandoned cropland under a particular climate scenario. The first five options correspond with SSPs 1 through 5, while the sixth option represents parcels consistently projected to become abandoned in all five SSPs."),
+                          br(),
                           # define alpha sliders for tmap 
                           radioButtons(inputId = "ssp_global_radio", 
-                                       label = h3("Abandonment by climate scenario"), 
+                                       label = NULL,
                                        choices = c("SSP 1" = "ssp1_global", 
                                                    "SSP 2" = "ssp2_global", 
                                                    "SSP 3" = "ssp3_global",
@@ -132,31 +141,28 @@ ui <- fluidPage(
                                                    "SSP 5" = "ssp5_global",
                                                    "SSP Overlap" = "ssp_all_global"),
                                        selected = "ssp1_global"),
-                          sliderInput("abandon_slide", label = h3("Abandonment"), 
+                                       hr(style = 'border-top: 2px solid #000000'),
+                          h3(strong("Layer transparency")),
+                          h5("Use the sliders below to adjust the transparency of individual map layers"),
+                          sliderInput("abandon_slide", label = h4("Abandonment"), 
                                       min = 0, 
                                       max = 1, 
                                       value = 0.8),
-                          sliderInput("carbon_slide", label = h3("Carbon Sequestration Potential"), 
+                          sliderInput("carbon_slide", label = h4("Carbon Sequestration Potential"), 
                                       min = 0, 
                                       max = 1, 
                                       value = 0.5),
-                          sliderInput("bd_slide", label = h3("Biodiversity"), 
+                          sliderInput("bd_slide", label = h4("Biodiversity"), 
                                       min = 0, 
                                       max = 1, 
                                       value = 0.5) 
                         ), # end sidebar panel
                         
                         # A plot of biodiversity/carbon/abandonment in the main panel
-                        mainPanel(strong("Directions"), # small title at the top of the main panel
-                                  p("Select your Shared Socioeconomic Pathway of interest, then adjust the carbon and biodiversity sliders to visualize your indicator of interest."),
-                                  h3("Overlays of Abandonment, Biodiversity, and Carbon Sequestration"),
+                        mainPanel(
                                   tmapOutput(outputId = "ab_tmap"),
-                                  p(strong("Figure 1:"),"Red indicates projected proportion of agricultural abandonment in a given pixel (square kilometers of abandonment/square kilometers in a pixel). Darker colors signal more abandonment in a given pixel. The blue represents carbon sequestration potential of land for 30 years following human disturbance."),
-                                  p("Data Source:", a(href = "https://data.globalforestwatch.org/documents/gfw::carbon-accumulation-potential-from-natural-forest-regrowth-in-forest-and-savanna-biomes/about ", "Carbon Accumulation Potential"), ""),
-                                  # h3("Biodiversity - Conservation Priorities"),
-                                  # tmapOutput(outputId = "ab_tmap2"),
-                                  # p(strong("Figure 1:"),"Red indicates projected proportion of agricultural abandonment in a given pixel (square kilometers of abandonment/square kilometers in a pixel). Darker colors signal more abandonment in a given pixel. The green represents biodiversity, with darker colors indicating a higher level of priority for conservation."),
-                                  # p("Data Source:", a(href = "http://www.sparc-website.org/", "SPARC Conservation Priorities"), ""),
+                                  p(strong("Figure 1:"),"Red indicates projected proportion of agricultural abandonment in a given pixel (square kilometers of abandonment/square kilometers in a pixel). Darker colors signal more abandonment in a given pixel. The blue represents carbon sequestration potential of land for 30 years following human disturbance. The green represents biodiversity, with darker colors indicating a higher level of priority for conservation."),
+                                  p("Data Sources:", a(href = "https://data.globalforestwatch.org/documents/gfw::carbon-accumulation-potential-from-natural-forest-regrowth-in-forest-and-savanna-biomes/about ", "Carbon Accumulation Potential, "), a(href = "http://www.sparc-website.org/", "SPARC Conservation Priorities"), ""),
                                   h3("Total Abandonment by Climate Scenario"),
                                   plotOutput(outputId = "total_abandonment_plot"),
                                   p(strong("Figure 2:"), "Total abandoned cropland globally in 2050 (km^2) by climate scenario. Percentages indicate the proportion of total cropland that is projected to be abandoned.")
@@ -305,7 +311,7 @@ server <- function(input, output, session) {
                 palette = "Greens",
                 style = "cont",
                 alpha = input$bd_slide) 
-      # tmap_options(max.raster = c(plot = 1e10, view = 1e10))
+    #  tmap_options(max.raster = c(plot = 1e10, view = 1e10))
   }) # end tmap 1
   
     
