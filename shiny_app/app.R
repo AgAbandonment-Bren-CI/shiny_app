@@ -146,10 +146,10 @@ ui <- fluidPage(
                                       value = 0.5) 
                         ), # end sidebar panel
                         
-                        # A plot of biodiversity in the main panel
+                        # A plot of biodiversity/carbon/abandonment in the main panel
                         mainPanel(strong("Directions"), # small title at the top of the main panel
                                   p("Select your Shared Socioeconomic Pathway of interest, then adjust the carbon and biodiversity sliders to visualize your indicator of interest."),
-                                  h3("Carbon Sequestration"),
+                                  h3("Overlays of Abandonment, Biodiversity, and Carbon Sequestration"),
                                   tmapOutput(outputId = "ab_tmap"),
                                   p(strong("Figure 1:"),"Red indicates projected proportion of agricultural abandonment in a given pixel (square kilometers of abandonment/square kilometers in a pixel). Darker colors signal more abandonment in a given pixel. The blue represents carbon sequestration potential of land for 30 years following human disturbance."),
                                   p("Data Source:", a(href = "https://data.globalforestwatch.org/documents/gfw::carbon-accumulation-potential-from-natural-forest-regrowth-in-forest-and-savanna-biomes/about ", "Carbon Accumulation Potential"), ""),
@@ -304,29 +304,14 @@ server <- function(input, output, session) {
       tm_raster(title = "Conservation Priorities",
                 palette = "Greens",
                 style = "cont",
-                alpha = input$bd_slide)
+                alpha = input$bd_slide) 
+      # tmap_options(max.raster = c(plot = 1e10, view = 1e10))
+  }) # end tmap 1
+  
     
     # + need to figure out what's going on with this downsampling - abandonment map comes up blank when max.raster is expanded
     #  tmap_options(max.raster = c(plot = 1e10, view = 1e10)) 
-  }) # end tmap 1
   
-  
-  # ## TMAP 2: Biodiversity
-  # output$ab_tmap2 <- renderTmap({
-  #   req(input$ssp_global_radio)
-  #   message(input$ssp_global_radio)
-  #   tm_shape(shp = ssp_reactive()) + # *** need to find a way to make this reactive to different rasters input$ssp_global_radio
-  #     tm_raster(title = "Proportion abandoned",
-  #               palette = "Reds", 
-  #               style = "cont", 
-  #               alpha = input$abandon_slide) +
-  #     tm_shape(bio_global, raster.downsample = TRUE) +
-  #     tm_raster(title = "Conservation Priorities",
-  #               palette = "Greens",
-  #               style = "cont",
-  #               alpha = input$bd_slide)
-  #   
-  # }) # end tmap 2
   
   # total abandonment ggplot panel 1
   output$total_abandonment_plot <- renderPlot({
