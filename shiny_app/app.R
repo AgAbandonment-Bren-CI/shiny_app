@@ -348,15 +348,13 @@ server <- function(input, output, session) {
   
   # radio buttons
   ssp_brazil_reactive <- reactive({
-    x = switch(input$ssp_brazil_radio,
+    switch(input$ssp_brazil_radio,
                "ssp1_brazil" = ssp1_solution$ssp1_highBud_c,
                "ssp2_brazil" = ssp2_solution$ssp2_highBud_c,
                "ssp3_brazil" = ssp3_solution$ssp3_highBud_c,
                "ssp4_brazil" = ssp4_solution$ssp4_highBud_c,
                "ssp5_brazil" = ssp5_solution$ssp5_highBud_c,
                "ssp_all_brazil" = ssp_all_solution$ssp_all_highBud_c)
-    message('in ssp reactive, raster name = ', names(x))
-    return(x)
   })
   
   # TMAP Brazil
@@ -376,7 +374,8 @@ server <- function(input, output, session) {
     #  tmap_options(max.raster = c(plot = 1e10, view = 1e10)) 
   }) # end tmap 1
   
-  parcels_avail <- reactive({terra::global(ssp_brazil_reactive, fun = 'sum', na.rm = TRUE)})
+  parcels_avail <- reactive({req(input$ssp_brazil_reactive$x)})
+  parcels_avail2 <- reactive({terra::global(parcels_avail, fun = 'sum', na.rm = TRUE)})
     
   # return stuff for restoration scenario
   output$scenario <- renderText({
