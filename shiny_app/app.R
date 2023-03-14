@@ -22,7 +22,7 @@ ssp3_global <- rast(here('data/processed/global/ssp3_abandonment_global_50km.tif
 ssp4_global <- rast(here('data/processed/global/ssp4_abandonment_global_50km.tif'))
 ssp5_global <- rast(here('data/processed/global/ssp5_abandonment_global_50km.tif'))
 ssp_all_global <- rast(here('data/processed/global/ssp_all_abandonment_global_50km.tif'))
-## Biodiversitya and carbon:
+## Biodiversity and carbon:
 carbon_global <- rast(here('data/processed/global/carbon_global_50km.tif'))
 bio_global <- rast(here('data/processed/global/biodiversity_global_50km.tif'))
 
@@ -221,7 +221,8 @@ ui <- fluidPage(
                         
                         mainPanel(tmapOutput(outputId = "ab_brazil_tmap", height = 800),
                                   p(strong("Figure 1:"),"Parcels projected to be abandoned between 2020-2050. Orange pixels represent parcels prioritized for restoration under based on user inputs, while blue pixels remain unselected abandoned parcels."),
-                                  textOutput('scenario')
+                                  br(),
+                                  htmlOutput('scenario')
                         ), # end main panel of tab 3
                         position = c('left', 'right'),
                         fluid = TRUE
@@ -295,7 +296,7 @@ server <- function(input, output, session) {
                 palette = "Reds", 
                 style = "cont", 
                 alpha = input$abandon_slide) +
-      tm_shape(carbon_global) +
+      tm_shape(carbon_global, raster.downsample = TRUE) +
       tm_raster(title = "C seq. (mg/ha/yr)", 
                 palette = "Blues", 
                 style = "cont", 
@@ -329,17 +330,63 @@ server <- function(input, output, session) {
   
   
   
-  # START FOURTH TAB
+  ### START FOURTH TAB ###
   
-  # radio buttons
-  ssp_brazil_reactive <- reactive({
-    switch(input$ssp_brazil_radio,
-               "ssp1_brazil" = ssp1_solution$ssp1_highBud_c,
-               "ssp2_brazil" = ssp2_solution$ssp2_highBud_c,
-               "ssp3_brazil" = ssp3_solution$ssp3_highBud_c,
-               "ssp4_brazil" = ssp4_solution$ssp4_highBud_c,
-               "ssp5_brazil" = ssp5_solution$ssp5_highBud_c,
-               "ssp_all_brazil" = ssp_all_solution$ssp_all_highBud_c)
+  ## Reactive Prioritizr model outputs (for map and figure)
+  budget_reactive <- reactive({
+    ## first choose which raster stack is selected
+    x = switch(input$ssp_brazil_radio,
+               "ssp1_brazil" = ssp1_solution,
+               "ssp2_brazil" = ssp2_solution,
+               "ssp3_brazil" = ssp3_solution,
+               "ssp4_brazil" = ssp4_solution,
+               "ssp5_brazil" = ssp5_solution,
+               "ssp_all_brazil" = ssp_all_solution)
+    
+    ## then choose the layer based on budget
+    y = switch(input$budget,
+               "low_budget" = x$lowBud,
+               "high_budget" = x$highBud)
+    
+    ## return the specific layer for map and figure
+    return(y)
+  })
+
+  
+  ## How many parcels are projected to be abandoned?
+  parcels_avail_brazil <- reactive({
+    x = switch(input$ssp_brazil_radio,
+               "ssp1_brazil" = ssp1_solution,
+               "ssp2_brazil" = ssp2_solution,
+               "ssp3_brazil" = ssp3_solution,
+               "ssp4_brazil" = ssp4_solution,
+               "ssp5_brazil" = ssp5_solution,
+               "ssp_all_brazil" = ssp_all_solution)
+    y = switch(input$budget,
+               "low_budget" = x$lowBud,
+               "high_budget" = x$highBud)
+    
+    ## return the total number of parcels
+    z = sum(freq(y)[3])
+    return(z)
+  })
+  
+  ## How many parcels should be restored?
+  parcels_selected_brazil <- reactive({
+    x = switch(input$ssp_brazil_radio,
+               "ssp1_brazil" = ssp1_solution,
+               "ssp2_brazil" = ssp2_solution,
+               "ssp3_brazil" = ssp3_solution,
+               "ssp4_brazil" = ssp4_solution,
+               "ssp5_brazil" = ssp5_solution,
+               "ssp_all_brazil" = ssp_all_solution)
+    y = switch(input$budget,
+               "low_budget" = x$lowBud,
+               "high_budget" = x$highBud)
+    
+    ## return sum of value 1 parcels (selected)
+    z = terra::global(y, fun = 'sum', na.rm = TRUE)
+    return(z)
   })
   
   # TMAP Brazil
@@ -348,7 +395,7 @@ server <- function(input, output, session) {
     
     # req(input$ssp_brazil_radio)
     # message(input$ssp_brazil_radio)
-    tm_shape(shp = ssp_brazil_reactive(), raster.downsample = TRUE) + ##make downsample true for now
+    tm_shape(shp = budget_reactive(), raster.downsample = TRUE) + ##make downsample true for now
       tm_raster(title = "Proportion abandoned",
                 palette = "Reds", 
                 style = "cont") +
@@ -358,13 +405,10 @@ server <- function(input, output, session) {
       # + need to figure out what's going on with this downsampling - abandonment map comes up blank when max.raster is expanded
     #  tmap_options(max.raster = c(plot = 1e10, view = 1e10)) 
   }) # end tmap 1
-  
-  parcels_avail <- reactive({req(input$ssp_brazil_reactive$x)})
-  parcels_avail2 <- reactive({terra::global(parcels_avail, fun = 'sum', na.rm = TRUE)})
     
   # return stuff for restoration scenario
   output$scenario <- renderText({
-    paste("This scenario contains", parcels_avail)
+    paste("In this selected scenario, a total of", "<b>",parcels_avail_brazil(), "km", tags$sup("2"),"</b>", " are projected to be abandoned by 2050. Of those,", "<b>",parcels_selected_brazil(), "km", tags$sup("2"),"</b>", " were prioritized for restoration.")
   })
   
 }
