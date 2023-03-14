@@ -222,7 +222,9 @@ ui <- fluidPage(
                         mainPanel(tmapOutput(outputId = "ab_brazil_tmap", height = 800),
                                   p(strong("Figure 1:"),"Parcels projected to be abandoned between 2020-2050. Orange pixels represent parcels prioritized for restoration under based on user inputs, while blue pixels remain unselected abandoned parcels."),
                                   br(),
-                                  htmlOutput('scenario')
+                                  htmlOutput('scenario_text'),
+                                  br(),
+                                  plotOutput('biome_stats_plot')
                         ), # end main panel of tab 3
                         position = c('left', 'right'),
                         fluid = TRUE
@@ -333,7 +335,7 @@ server <- function(input, output, session) {
   ### START FOURTH TAB ###
   
   ## Reactive Prioritizr model outputs (for map and figure)
-  budget_reactive <- reactive({
+  raster_layer <- reactive({
     ## first choose which raster stack is selected
     x = switch(input$ssp_brazil_radio,
                "ssp1_brazil" = ssp1_solution,
@@ -353,63 +355,51 @@ server <- function(input, output, session) {
   })
 
   
+  # TMAP Brazil
+  output$ab_brazil_tmap <- renderTmap({
+    tmap_mode('view')
+    tm_shape(shp = raster_layer(), raster.downsample = TRUE) + ##make downsample true for now
+      tm_raster(title = "Proportion abandoned",
+                palette = "Reds", 
+                style = "cont") +
+      tm_scale_bar(position = c('right', 'bottom'))
+    # tm_view(set.view = c(-50, -11.6, 3))
+    #tm_view(set.zoom.limits = c(10,20))
+    # + need to figure out what's going on with this downsampling - abandonment map comes up blank when max.raster is expanded
+    #  tmap_options(max.raster = c(plot = 1e10, view = 1e10)) 
+  }) # end tmap 1
+  
+  
   ## How many parcels are projected to be abandoned?
-  parcels_avail_brazil <- reactive({
-    x = switch(input$ssp_brazil_radio,
-               "ssp1_brazil" = ssp1_solution,
-               "ssp2_brazil" = ssp2_solution,
-               "ssp3_brazil" = ssp3_solution,
-               "ssp4_brazil" = ssp4_solution,
-               "ssp5_brazil" = ssp5_solution,
-               "ssp_all_brazil" = ssp_all_solution)
-    y = switch(input$budget,
-               "low_budget" = x$lowBud,
-               "high_budget" = x$highBud)
-    
+  parcels_avail <- reactive({
+    ## grab specific raster layer
+    x = raster_layer()
     ## return the total number of parcels
-    z = sum(freq(y)[3])
+    z = sum(freq(x)[3])
     return(z)
   })
   
   ## How many parcels should be restored?
-  parcels_selected_brazil <- reactive({
-    x = switch(input$ssp_brazil_radio,
-               "ssp1_brazil" = ssp1_solution,
-               "ssp2_brazil" = ssp2_solution,
-               "ssp3_brazil" = ssp3_solution,
-               "ssp4_brazil" = ssp4_solution,
-               "ssp5_brazil" = ssp5_solution,
-               "ssp_all_brazil" = ssp_all_solution)
-    y = switch(input$budget,
-               "low_budget" = x$lowBud,
-               "high_budget" = x$highBud)
-    
+  parcels_selected <- reactive({
+    ## grab specific raster layer
+    x = raster_layer()
     ## return sum of value 1 parcels (selected)
-    z = terra::global(y, fun = 'sum', na.rm = TRUE)
+    z = terra::global(x, fun = 'sum', na.rm = TRUE)
     return(z)
   })
+    
   
-  # TMAP Brazil
-  output$ab_brazil_tmap <- renderTmap({
-    tmap_mode('view')
-    
-    # req(input$ssp_brazil_radio)
-    # message(input$ssp_brazil_radio)
-    tm_shape(shp = budget_reactive(), raster.downsample = TRUE) + ##make downsample true for now
-      tm_raster(title = "Proportion abandoned",
-                palette = "Reds", 
-                style = "cont") +
-    tm_scale_bar(position = c('right', 'bottom'))
-      # tm_view(set.view = c(-50, -11.6, 3))
-      #tm_view(set.zoom.limits = c(10,20))
-      # + need to figure out what's going on with this downsampling - abandonment map comes up blank when max.raster is expanded
-    #  tmap_options(max.raster = c(plot = 1e10, view = 1e10)) 
-  }) # end tmap 1
-    
-  # return stuff for restoration scenario
-  output$scenario <- renderText({
-    paste("In this selected scenario, a total of", "<b>",parcels_avail_brazil(), "km", tags$sup("2"),"</b>", " are projected to be abandoned by 2050. Of those,", "<b>",parcels_selected_brazil(), "km", tags$sup("2"),"</b>", " were prioritized for restoration.")
+  ## return text for restoration scenario
+  output$scenario_text <- renderText({
+    paste("In this selected scenario, a total of", "<b>",parcels_avail(), "km",tags$sup("2"),"</b>", " are projected to be abandoned by 2050. Of those,", "<b>",parcels_selected(), "km",tags$sup("2"),"</b>", " were prioritized for restoration.")
   })
+  
+  
+  ## Biome stats plot
+  # output$biome_stats_plot <- renderPlot(
+  #   ggplot(data = )
+  # )
+  
   
 }
 
