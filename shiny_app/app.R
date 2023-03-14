@@ -75,8 +75,9 @@ ssp5_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
 ssp_all_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
                               'ssp_all_solution_country.tif'))
 
-
-
+## Biome raster and vector
+biomes_rast <- rast(here('data/processed/brazil/biomes_rast.tif'))
+biomes_vect <- vect(here('data/processed/brazil/biomes_vect.shp'))
 
 
 ##### BEGIN UI ##### 
@@ -394,13 +395,31 @@ server <- function(input, output, session) {
     paste("In this selected scenario, a total of", "<b>",parcels_avail(), "km",tags$sup("2"),"</b>", " are projected to be abandoned by 2050. Of those,", "<b>",parcels_selected(), "km",tags$sup("2"),"</b>", " were prioritized for restoration.")
   })
   
+  ## create data for reactive plot
+  biome_data <- reactive({
+    ## read in seleted layer
+    x = raster_layer()
+    ## find zonal stats for planning units
+      ## reclassify raster so all values are 1
+      reclass_m = matrix(c(0,1,1), ncol = 3, byrow = TRUE)
+      x_rcl = terra::classify(x, reclass_m, include.lowest = TRUE)
+      pus_biome = terra::zonal(x_rcl, biomes_rast, 'sum', na.rm = TRUE) %>% 
+        rename(pus = 2)
+    ## find zonal stats for restoration
+    sol_biome = terra::zonal(x, biomes_rast, 'sum', na.rm = TRUE) %>% 
+      rename(sol = 2)
+    ## combine output into one df
+    stats_df = full_join(pus_biome, sol_biome, by = 'name_biome')
+    return(stats_df)
+  })
   
   ## Biome stats plot
-  # output$biome_stats_plot <- renderPlot(
-  #   ggplot(data = )
-  # )
-  
-  
+  output$biome_stats_plot <- renderPlot(
+    ggplot(data = biome_data(), aes(x = name_biome, y = sol)) +
+      geom_col() +
+      theme_minimal()
+  )
+
 }
 
 
