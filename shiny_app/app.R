@@ -153,10 +153,10 @@ ui <- fluidPage(
                                   tmapOutput(outputId = "ab_tmap"),
                                   p(strong("Figure 1:"),"Red indicates projected proportion of agricultural abandonment in a given pixel (square kilometers of abandonment/square kilometers in a pixel). Darker colors signal more abandonment in a given pixel. The blue represents carbon sequestration potential of land for 30 years following human disturbance."),
                                   p("Data Source:", a(href = "https://data.globalforestwatch.org/documents/gfw::carbon-accumulation-potential-from-natural-forest-regrowth-in-forest-and-savanna-biomes/about ", "Carbon Accumulation Potential"), ""),
-                                  h3("Biodiversity - Conservation Priorities"),
-                                  tmapOutput(outputId = "ab_tmap2"),
-                                  p(strong("Figure 1:"),"Red indicates projected proportion of agricultural abandonment in a given pixel (square kilometers of abandonment/square kilometers in a pixel). Darker colors signal more abandonment in a given pixel. The green represents biodiversity, with darker colors indicating a higher level of priority for conservation."),
-                                  p("Data Source:", a(href = "http://www.sparc-website.org/", "SPARC Conservation Priorities"), ""),
+                                  # h3("Biodiversity - Conservation Priorities"),
+                                  # tmapOutput(outputId = "ab_tmap2"),
+                                  # p(strong("Figure 1:"),"Red indicates projected proportion of agricultural abandonment in a given pixel (square kilometers of abandonment/square kilometers in a pixel). Darker colors signal more abandonment in a given pixel. The green represents biodiversity, with darker colors indicating a higher level of priority for conservation."),
+                                  # p("Data Source:", a(href = "http://www.sparc-website.org/", "SPARC Conservation Priorities"), ""),
                                   h3("Total Abandonment by Climate Scenario"),
                                   plotOutput(outputId = "total_abandonment_plot"),
                                   p(strong("Figure 2:"), "Total abandoned cropland globally in 2050 (km^2) by climate scenario. Percentages indicate the proportion of total cropland that is projected to be abandoned.")
@@ -221,6 +221,7 @@ ui <- fluidPage(
                         
                         mainPanel(tmapOutput(outputId = "ab_brazil_tmap", height = 800),
                                   p(strong("Figure 1:"),"Parcels projected to be abandoned between 2020-2050. Orange pixels represent parcels prioritized for restoration under based on user inputs, while blue pixels remain unselected abandoned parcels."),
+                                  textOutput('scenario')
                         ), # end main panel of tab 3
                         position = c('left', 'right'),
                         fluid = TRUE
@@ -237,9 +238,9 @@ ui <- fluidPage(
 ##### BEGIN SERVER #####
 
 # Define server logic required to draw a histogram
-server <- function(input, output) {
+server <- function(input, output, session) {
   
-  # START TAB 1
+  ### TAB 1 - Landing page ###
   
   ## intro tab image
   output$intropic <- renderPlot({
@@ -247,8 +248,9 @@ server <- function(input, output) {
       draw_image(here("ag.jpeg"))
   })
   
-  # START SECOND TAB
   
+  
+  ### TAB 2 - Background info ###
   
   ## Data table:
   
@@ -267,8 +269,11 @@ server <- function(input, output) {
   
   output$data_table <- renderTable(data_info, sanitize.text.function = function(x) x)
 
-  # START THIRD TAB
   
+  
+  ### TAB 3 - Global Abandonment ###
+  
+  ## radio buttons
   ssp_reactive <- reactive({
     x = switch(input$ssp_global_radio,
            "ssp1_global" = ssp1_global,
@@ -281,7 +286,7 @@ server <- function(input, output) {
     return(x)
   })
   
-  # TMAP 1 front page
+  ## TMAP 1: Carbon
   output$ab_tmap <- renderTmap({
     req(input$ssp_global_radio)
     message(input$ssp_global_radio)
@@ -294,27 +299,34 @@ server <- function(input, output) {
       tm_raster(title = "C seq. (mg/ha/yr)", 
                 palette = "Blues", 
                 style = "cont", 
-                alpha = input$carbon_slide) # + need to figure out what's going on with this downsampling - abandonment map comes up blank when max.raster is expanded
-    #  tmap_options(max.raster = c(plot = 1e10, view = 1e10)) 
-  }) # end tmap 1
-  
-  # TMAP 2 front page
-  
-  output$ab_tmap2 <- renderTmap({
-    req(input$ssp_global_radio)
-    message(input$ssp_global_radio)
-    tm_shape(shp = ssp_reactive()) + # *** need to find a way to make this reactive to different rasters input$ssp_global_radio
-      tm_raster(title = "Proportion abandoned",
-                palette = "Reds", 
-                style = "cont", 
-                alpha = input$abandon_slide) +
-      tm_shape(bio_global, raster.downsample = FALSE) +
+                alpha = input$carbon_slide) +
+      tm_shape(bio_global, raster.downsample = TRUE) +
       tm_raster(title = "Conservation Priorities",
                 palette = "Greens",
                 style = "cont",
                 alpha = input$bd_slide)
     
-  }) # end tmap 2
+    # + need to figure out what's going on with this downsampling - abandonment map comes up blank when max.raster is expanded
+    #  tmap_options(max.raster = c(plot = 1e10, view = 1e10)) 
+  }) # end tmap 1
+  
+  
+  # ## TMAP 2: Biodiversity
+  # output$ab_tmap2 <- renderTmap({
+  #   req(input$ssp_global_radio)
+  #   message(input$ssp_global_radio)
+  #   tm_shape(shp = ssp_reactive()) + # *** need to find a way to make this reactive to different rasters input$ssp_global_radio
+  #     tm_raster(title = "Proportion abandoned",
+  #               palette = "Reds", 
+  #               style = "cont", 
+  #               alpha = input$abandon_slide) +
+  #     tm_shape(bio_global, raster.downsample = TRUE) +
+  #     tm_raster(title = "Conservation Priorities",
+  #               palette = "Greens",
+  #               style = "cont",
+  #               alpha = input$bd_slide)
+  #   
+  # }) # end tmap 2
   
   # total abandonment ggplot panel 1
   output$total_abandonment_plot <- renderPlot({
@@ -363,6 +375,13 @@ server <- function(input, output) {
       # + need to figure out what's going on with this downsampling - abandonment map comes up blank when max.raster is expanded
     #  tmap_options(max.raster = c(plot = 1e10, view = 1e10)) 
   }) # end tmap 1
+  
+  parcels_avail <- reactive({terra::global(ssp_brazil_reactive, fun = 'sum', na.rm = TRUE)})
+    
+  # return stuff for restoration scenario
+  output$scenario <- renderText({
+    paste("This scenario contains", parcels_avail)
+  })
   
 }
 
