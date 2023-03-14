@@ -238,8 +238,25 @@ pantanal <- biomes %>%
   filter(code_biome == 6) %>% 
   st_transform(crs = crs(ssp1_brazil)) %>% 
   vect()
-
 ```
+
+We want both a vector of the biomes to display on the map as well as a raster of the biomes to perform zonal statistics. The pantanal biome is removed from the raster due to no carbon data.
+```{r}
+### save vector
+writeVector(biomes_vect, here('data/processed/brazil/biomes_vect.shp'),
+            overwrite = TRUE)
+
+### make raster with biome codes as values
+biomes_rast <- rasterize(x = biomes_vect,
+                         y = ssp1_brazil,
+                         field = "name_biome")       
+### remove pantanal biome
+biomes_rast_noPant <- mask(biomes_rast, pantanal, inverse = TRUE, updatevalue = NA)
+
+### save raster
+writeRaster(biomes_rast_noPant, here('data/processed/brazil/biomes_rast.tif'))
+```
+
 
 
 ## BIODIVERSITY
