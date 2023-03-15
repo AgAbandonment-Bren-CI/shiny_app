@@ -11,7 +11,13 @@ $(document).ready(function() {
 
       if (value === 1){ // enter your lowest slider value here
         return "Biodiversity";
-      }else{
+      } else if (value === 2) {
+        return " "
+      } else if (value === 3) {
+        return "Equal"
+      } else if (value === 4) {
+        return " "
+      } else {
         return "Carbon";
       }
     }
