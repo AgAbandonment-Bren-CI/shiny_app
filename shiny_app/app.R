@@ -5,6 +5,7 @@ library(here)
 library(tidyverse)
 library(tmap)
 library(terra)
+library(sf)
 library(shinythemes)
 library(shinyjs)
 library(htmltools)
@@ -75,6 +76,9 @@ ssp5_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
 ssp_all_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
                               'ssp_all_solution_country.tif'))
 
+## Biome raster and vector
+biomes_rast <- rast(here('data/processed/brazil/biomes_rast.tif'))
+biomes_vect <- read_sf(here('data/processed/brazil/biomes_vect.shp')) 
 
 
 
@@ -368,11 +372,16 @@ server <- function(input, output, session) {
   # TMAP Brazil
   output$ab_brazil_tmap <- renderTmap({
     tmap_mode('view')
-    tm_shape(shp = raster_layer(), raster.downsample = TRUE) + ##make downsample true for now
+    tm_shape(shp = raster_layer(), raster.downsample = TRUE) + 
       tm_raster(title = "Proportion abandoned",
                 palette = "Reds", 
                 style = "cont") +
+  +
+    # tm_shape(biomes_vect) +
+    #   tm_borders(lwd = 1) +
+    #   tmap_options(check.and.fix = TRUE) +
       tm_scale_bar(position = c('right', 'bottom'))
+
     # tm_view(set.view = c(-50, -11.6, 3))
     #tm_view(set.zoom.limits = c(10,20))
     # + need to figure out what's going on with this downsampling - abandonment map comes up blank when max.raster is expanded
@@ -405,12 +414,40 @@ server <- function(input, output, session) {
   })
   
   
+  
+  ## create data for reactive plot
+  biome_data <- reactive({
+    ## read in seleted layer
+    x = raster_layer()
+    
+    ## find zonal stats for planning units
+      ## reclassify raster so all values are 1
+      reclass_m = matrix(c(0,1,1), ncol = 3, byrow = TRUE)
+      x_rcl = terra::classify(x, reclass_m, include.lowest = TRUE)
+      pus_biome = terra::zonal(x_rcl, biomes_rast, 'sum', na.rm = TRUE) %>% 
+        rename(pus = 2)
+      
+    ## find zonal stats for restoration
+    sol_biome = terra::zonal(x, biomes_rast, 'sum', na.rm = TRUE) %>% 
+      rename(sol = 2)
+    
+    ## combine output into one df in tidy format
+    stats_df = full_join(pus_biome, sol_biome, by = 'name_biome') %>% 
+      pivot_longer(cols = 2:3,
+                   names_to = "category",
+                   values_to = "amount") %>% 
+      mutate(category = factor(category,
+                               levels = c('pus', 'sol')))
+    return(stats_df)
+  })
+  
   ## Biome stats plot
-  # output$biome_stats_plot <- renderPlot(
-  #   ggplot(data = )
-  # )
-  
-  
+  output$biome_stats_plot <- renderPlot(
+    ggplot(data = biome_data(), aes(x = name_biome, y = amount)) +
+      geom_col(aes(fill = category)) +
+      theme_minimal()
+  )
+
 }
 
 
