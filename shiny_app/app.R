@@ -178,7 +178,7 @@ ui <- fluidPage(
                         
                         # A plot of biodiversity/carbon/abandonment in the main panel
                         mainPanel(
-                                  tmapOutput(outputId = "ab_tmap"),
+                                  tmapOutput(outputId = "ab_tmap", height = 600),
                                   p(strong("Figure 1:"),"Red indicates projected proportion of agricultural abandonment in a given pixel (square kilometers of abandonment/square kilometers in a pixel). Darker colors signal more abandonment in a given pixel. The blue represents carbon sequestration potential of land for 30 years following human disturbance. The green represents biodiversity, with darker colors indicating a higher level of priority for conservation."),
                                   p("Data Sources:", a(href = "https://data.globalforestwatch.org/documents/gfw::carbon-accumulation-potential-from-natural-forest-regrowth-in-forest-and-savanna-biomes/about ", "Carbon Accumulation Potential, "), a(href = "http://www.sparc-website.org/", "SPARC Conservation Priorities"), ""),
                                   h3("Total Abandonment by Climate Scenario"),
