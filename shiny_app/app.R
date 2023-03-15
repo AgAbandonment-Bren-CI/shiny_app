@@ -115,8 +115,17 @@ ui <- fluidPage(
             tabPanel("Background/Data", icon = icon("info-circle"),
                      titlePanel("Background"),
                      mainPanel(width = 10,
-                               p(HTML("SSP info")),
-                               tableOutput('data_table')
+                               h4(strong("Shared Socioeconomic Pathways (SSPs)")),
+                               p(HTML("The SSP climate scenarios provide a way to explore varying levels of future greenhouse gas emissions under different global approaches to climate policy through 2100 (O’Neill et al., 2017). The five SSP scenarios outlined in Figure 1 represent distinct narratives describing various challenges to the mitigation of and adaptation to climate change. These narratives cover a wide range of potential futures and incorporate socio-economic, political, demographic, technological, and lifestyle trends. SSP1, “Sustainability”, depicts a gradual global shift towards environmentally friendly, inclusive development emphasizing human well-being instead of economic gain. SSP 5 on the other hand, depicts continued global economic development powered by fossil fuels and resource exploitation. SSP2 represents the “Middle of the Road” scenario, where slow progress is made toward sustainable development goals and income inequality persists (Riahi et al., 2017). This Shiny App uses SSP scenarios to project cropland abandonment under different levels of future climate change.")),
+                               plotOutput('ssppic'),
+                               p(""),
+                               p(strong("Figure 1: "),"The relative mitigation and adaptation challenges for each of the five SSP scenarios (O’Neill et al., 2017)."),
+                               p(""),
+                               h4(strong("Data Used")),
+                               tableOutput('data_table'),
+                               h4(strong("References")),
+                               p("O’Neill, B. C., Kriegler, E., Ebi, K. L., Kemp-Benedict, E., Riahi, K., Rothman, D. S., van Ruijven, B. J., van Vuuren, D. P., Birkmann, J., Kok, K., Levy, M., & Solecki, W. (2017). The roads ahead: Narratives for shared socioeconomic pathways describing world futures in the 21st century. Global Environmental Change, 42, 169–180. https://doi.org/10.1016/j.gloenvcha.2015.01.004"),
+                               p("Riahi, K., van Vuuren, D. P., Kriegler, E., Edmonds, J., O’Neill, B. C., Fujimori, S., Bauer, N., Calvin, K., Dellink, R., Fricko, O., Lutz, W., Popp, A., Cuaresma, J. C., Kc, S., Leimbach, M., Jiang, L., Kram, T., Rao, S., Emmerling, J., … Tavoni, M. (2017). The Shared Socioeconomic Pathways and their energy, land use, and greenhouse gas emissions implications: An overview. Global Environmental Change, 42, 153–168. https://doi.org/10.1016/j.gloenvcha.2016.05.009"),
                                #                             tags$style(".data_table th, .data_table td {
                                #   border: 1px solid #ddd;
                                #   padding: 8px;
@@ -128,7 +137,7 @@ ui <- fluidPage(
              ## THIRD TAB ##
              tabPanel("Global", icon = icon("globe"),
                       h1("Trends in Projected Global Cropland Abandonment"),
-                      fluidRow("Description"),
+                      fluidRow("Abandoned croplands occupy between 385 and 472 million hectares globally, equivalent to roughly 3% of earth’s land area (Yang et al., 2020). This phenomenon is driven by a host of ecological and socioeconomic factors, many of which will be exacerbated in a warming world. However, limited research has been conducted to project the future distribution of abandoned lands under climate change. This tab visualizes our global cropland abandonment projections based on the five SSPs. This analysis is especially useful in the context of biodiversity preservation and carbon sequestration, since the restoration of abandoned lands can help make progress towards these conservation goals. Therefore, this global analysis also highlights areas where projections of cropland abandonment overlap with areas of importance for biodiversity and carbon sequestration."),
                       headerPanel(""), ## add vertical space
                       
                       sidebarLayout(
@@ -174,7 +183,7 @@ ui <- fluidPage(
                                   p("Data Sources:", a(href = "https://data.globalforestwatch.org/documents/gfw::carbon-accumulation-potential-from-natural-forest-regrowth-in-forest-and-savanna-biomes/about ", "Carbon Accumulation Potential, "), a(href = "http://www.sparc-website.org/", "SPARC Conservation Priorities"), ""),
                                   h3("Total Abandonment by Climate Scenario"),
                                   plotOutput(outputId = "total_abandonment_plot"),
-                                  p(strong("Figure 2:"), "Total abandoned cropland globally in 2050 (km^2) by climate scenario. Percentages indicate the proportion of total cropland that is projected to be abandoned.")
+                                  p(strong("Figure 2:"), "Total abandoned cropland (km^2) globally in 2050 (blue) and total new cropland in 2050 (green) by climate scenario. We can see that total abandonment is greatest under SSP1 and lowest under SSP2. New cropland development is the highest under SSP3, while SSP1 depicts the least new cropland.")
                         ) # end main panel tab 1
                       ) # end sidebarlayout
              ), # END TAB 3
@@ -268,6 +277,13 @@ server <- function(input, output, session) {
   
   ### TAB 2 - Background info ###
   
+  ## ssp image
+  output$ssppic <- renderPlot({
+               ggdraw() + 
+                 draw_image(here("ssp.jpg")
+    )
+  })
+  
   ## Data table:
   
   link_land <- "<a href='https://zenodo.org/record/4584775#.Y_58_uzMJJV'>Chen et al., 2021</a>"
@@ -275,7 +291,7 @@ server <- function(input, output, session) {
   link_bd <- "<a href='http://www.sparc-website.org/'>SPARC Conservation Priorities</a>"
   
   data_info <- data.frame(
-    Data_Name = c("Future global land cover", "Carbon accumulation potential", "Biodiversity"),
+    Layer = c("Future global land cover", "Carbon accumulation potential", "Biodiversity"),
     Source = c(link_land, link_carbon, link_bd),
     Description = c("Future land cover at 1-km resolution based on the SSP-RCP scenarios, classified by plant functional types (PFTs),  including a “cropland” designation, which was the focus of this analysis.", "Global carbon accumulation potential from natural forest regrowth at 1-km. This dataset was used to visualize carbon sequestration potential from restoration.", "Global spatial dataset at 5km resolution displaying rank-ordered areas of high importance to biodiversity preservation. The rank order of importance was determined by examining current and future ranges of 17,000 vertebrate species and their relative extinction risks.") 
   )
@@ -338,7 +354,7 @@ server <- function(input, output, session) {
                color = 'grey20') +
       theme_minimal() + 
       labs(x = element_blank(),
-           y = "Millions km^2)")  +
+           y = "Cropland (Millions km^2)")  +
       # theme(legend.position = "none") +
       scale_fill_manual(values = c("forestgreen", "deepskyblue4"))
   })
