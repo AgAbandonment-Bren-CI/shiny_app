@@ -90,15 +90,19 @@ ui <- fluidPage(
              
              ## FIRST TAB ##
              tabPanel("Introduction", icon = icon("align-left"),
-                      titlePanel("Introduction"),
+                      h2("Projections of Future Cropland Abandonment: Impacts to Biodiversity and Carbon Sequestration"),
                       mainPanel(width = 10, h5(strong("Authors:"), 
                                                "Max Settineri |", 
                                                "Nickolas McManus |",
                                                "Lucas Boyd |", 
                                                "Michelle Geldin |", 
                                                "Shayan Kaveh"),
-                                p(HTML("This R Shiny web application presents projected abandoned cropland overlaid with carbon sequestration and biodiversity data to visualize major abandonment trends. First, we visualize global projections of abandoned croplands under five SSP scenarios in 2050 to examine the implications of abandonment to biodiversity and carbon sequestration. This analysis was performed at a global scale with the intent of identifying regions where abandoned lands are projected to overlap with areas of high importance for biodiversity and carbon storage. Next, we focus on Brazil and identify parcels of projected abandonment that could offer the highest benefits to biodiversity and carbon sequestration if actively restored.")),
                                 plotOutput('intropic'),
+                                h3("Introduction"),
+                                p("Socioeconomic shifts and environmental change are likely to drive shifts in the distribution of global agriculture, resulting in the large-scale abandonment of croplands. Abandonment is driven by various ecological, socioeconomic, and climatic factors that vary considerably by region. If done haphazardly, abandonment can cause soil erosion, inhibit nutrient cycling, increase wildfire risk, threaten local food security, and negatively impact species that have adapted to human agricultural landscapes."),
+                                p("However, abandoned lands may also be reforested or rewilded, though the best environmental outcomes generally require incentives. If managed strategically, the rewilding of abandoned lands can serve as a powerful natural climate solution, as revegetation sequesters carbon in the form of plant biomass. Moreover, allowing abandoned land to reforest can preserve biodiversity in some regions, including in the tropics."),
+                                p("Patterns of future cropland abandonment, and strategies for making use of abandoned lands are not well researched. Understanding where, and to what extent cropland abandonment will occur in the future can inform conservation strategies and land use planning. This R Shiny web application allows users to visualize projected trends in cropland abandonment globally, and explore the benefits to biodiversity and carbon sequestration that can be realized by conserving abandoned cropland in Brazil."),
+                                p(HTML("<ul><li>The ‘Global’ tab of this Shiny App presents projected abandoned cropland overlaid with carbon sequestration and biodiversity data to visualize major abandonment trends. Users can visualize global projections of abandoned croplands under five SSP scenarios in 2050 to examine the implications of abandonment to biodiversity and carbon sequestration. This analysis was performed at a global scale with the intent of identifying regions where abandoned lands are projected to overlap with areas of high importance for biodiversity and carbon storage.</li> <li>In the ‘Brazil’ tab, we focus our scope and identify parcels of projected abandoned cropland in Brazil that offer the highest benefits to biodiversity and carbon sequestration if actively restored. This tab explores the results of a prioritization analysis that weighs benefits to biodiversity and carbon sequestration against the cost of restoration for individual parcels.</li></ul>")),
                                 )), #END TAB 1
                
              
