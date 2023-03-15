@@ -146,17 +146,19 @@ ui <- fluidPage(
                           h3(strong("Climate scenario")),
                           h5(em("Choose one of the six options below to project abandoned cropland under a particular climate scenario. The first five options correspond with SSPs 1 through 5, while the sixth option represents parcels consistently projected to become abandoned in all five SSPs.")),
                           br(),
-                          # define alpha sliders for tmap 
-                          radioButtons(inputId = "ssp_global_radio", 
-                                       label = NULL,
-                                       choices = c("SSP 1" = "ssp1_global", 
-                                                   "SSP 2" = "ssp2_global", 
-                                                   "SSP 3" = "ssp3_global",
-                                                   "SSP 4" = "ssp4_global",
-                                                   "SSP 5" = "ssp5_global",
-                                                   "SSP Overlap" = "ssp_all_global"),
-                                       selected = "ssp1_global"),
-                                       hr(style = 'border-top: 2px solid #000000'),
+                          ## select SSP input
+                          selectInput(inputId = "ssp_global_select",
+                                      label = NULL,
+                                      choices = list("SSP1" = "ssp1_global", 
+                                                     "SSP2" = "ssp2_global", 
+                                                     "SSP3" = "ssp3_global",
+                                                     "SSP4" = "ssp4_global",
+                                                     "SSP5" = "ssp5_global",
+                                                     "SSP Overlap" = "ssp_all_global"),
+                                      selected = 'SSP1'),
+                          br(),
+                          
+                          ## define alpha sliders for tmap 
                           h3(strong("Layer transparency")),
                           h5(em("Use the sliders below to adjust the transparency of individual map layers")),
                           sliderInput("abandon_slide", label = h4("Abandonment"), 
@@ -200,15 +202,15 @@ ui <- fluidPage(
                                      
                                      ## SSP radio buttons:
                                      h3(strong("Step 1: Climate scenario")),
-                                     h5("Choose one of the six climate scenarios below. The first five options correspond with SSPs 1 through 5, while the sixth option represents parcels consistently projected to become abandoned in all five SSPs."),
+                                     h5(em("Choose one of the six climate scenarios below. The first five options correspond with SSPs 1 through 5, while the sixth option represents parcels consistently projected to become abandoned in all five SSPs.")),
                                      br(),
-                                     radioButtons(inputId = "ssp_brazil_radio", 
+                                     selectInput(inputId = "ssp_brazil_select", 
                                        label = NULL,
-                                       choices = c("SSP 1" = "ssp1_brazil", 
-                                                   "SSP 2" = "ssp2_brazil", 
-                                                   "SSP 3" = "ssp3_brazil",
-                                                   "SSP 4" = "ssp4_brazil",
-                                                   "SSP 5" = "ssp5_brazil",
+                                       choices = list("SSP1" = "ssp1_brazil", 
+                                                   "SSP2" = "ssp2_brazil", 
+                                                   "SSP3" = "ssp3_brazil",
+                                                   "SSP4" = "ssp4_brazil",
+                                                   "SSP5" = "ssp5_brazil",
                                                    "SSP Overlap" = "ssp_all_brazil"),
                                        selected = "ssp1_brazil"),
                                      hr(style = 'border-top: 1px solid #000000'),
@@ -221,8 +223,8 @@ ui <- fluidPage(
                                      includeScript("slider.js"),
                                      div(class="my_slider", # to be able to manipulate it with JQuery
                                          sliderInput("feat_weight",
-                                                     "Slider Value:", 
-                                                     ticks = F,
+                                                     "Feature weights:", 
+                                                     ticks = TRUE,
                                                      min = 1, max = 5, 
                                                      value = 3)),
                                      hr(style = 'border-top: 1px solid #000000'),
@@ -235,7 +237,7 @@ ui <- fluidPage(
                                                   label = NULL,
                                                   choices = c("Low (455 million BRL)" = "low_budget", 
                                                               "High (3.4 billion BRL)" = "high_budget"),
-                                                  selected = "low_budget"),
+                                                  selected = "high_budget"),
                         ), # end sidebar panel
                         
                         mainPanel(tmapOutput(outputId = "ab_brazil_tmap", height = 800),
@@ -312,25 +314,26 @@ server <- function(input, output, session) {
       kable_styling("striped", full_width = FALSE)
     }
   
+  
+  
   ### TAB 3 - Global Abandonment ###
   
   ## radio buttons
   ssp_reactive <- reactive({
-    x = switch(input$ssp_global_radio,
-           "ssp1_global" = ssp1_global,
-           "ssp2_global" = ssp2_global,
-           "ssp3_global" = ssp3_global,
-           "ssp4_global" = ssp4_global,
-           "ssp5_global" = ssp5_global,
-           "ssp_all_global" = ssp_all_global)
-    message('in ssp reactive, raster name = ', names(x))
+    x = switch(input$ssp_global_select,
+           'ssp1_global' = ssp1_global,
+           'ssp2_global' = ssp2_global,
+           'ssp3_global' = ssp3_global,
+           'ssp4_global' = ssp4_global,
+           'ssp5_global' = ssp5_global,
+           'ssp_all_global' = ssp_all_global)
     return(x)
   })
   
-  ## TMAP 1: Carbon
+  ## TMAP 1: Global layers
   output$ab_tmap <- renderTmap({
-    req(input$ssp_global_radio)
-    message(input$ssp_global_radio)
+    # req(input$ssp_global_radio)
+    # message(input$ssp_global_radio)
     tm_shape(shp = ssp_reactive()) + # *** need to find a way to make this reactive to different rasters input$ssp_radio
       tm_raster(title = "Proportion abandoned", 
                 palette = "Reds", 
@@ -372,12 +375,12 @@ server <- function(input, output, session) {
   
   
   
-  ### START FOURTH TAB ###
+  ### TAB 4 - Brazilian Restoration ###
   
   ## Reactive Prioritizr model outputs (for map and figure)
   raster_layer <- reactive({
     ## first choose which raster stack is selected
-    x = switch(input$ssp_brazil_radio,
+    x = switch(input$ssp_brazil_select,
                "ssp1_brazil" = ssp1_solution,
                "ssp2_brazil" = ssp2_solution,
                "ssp3_brazil" = ssp3_solution,
