@@ -140,11 +140,11 @@ ui <- fluidPage(
                       sidebarLayout(
                         sidebarPanel(
                           h2("Global Overlays of Cropland Abandonment, Biodiversity, and Carbon Sequestration:"),
-                          h5("Map layers can be toggled on and off using the layer icon on the map"),
+                          h5(em("Map layers can be toggled on and off using the layer icon on the map")),
                           hr(style = 'border-top: 2px solid #000000'),
                           
                           h3(strong("Climate scenario")),
-                          h5("Choose one of the six options below to project abandoned cropland under a particular climate scenario. The first five options correspond with SSPs 1 through 5, while the sixth option represents parcels consistently projected to become abandoned in all five SSPs."),
+                          h5(em("Choose one of the six options below to project abandoned cropland under a particular climate scenario. The first five options correspond with SSPs 1 through 5, while the sixth option represents parcels consistently projected to become abandoned in all five SSPs.")),
                           br(),
                           # define alpha sliders for tmap 
                           radioButtons(inputId = "ssp_global_radio", 
@@ -158,7 +158,7 @@ ui <- fluidPage(
                                        selected = "ssp1_global"),
                                        hr(style = 'border-top: 2px solid #000000'),
                           h3(strong("Layer transparency")),
-                          h5("Use the sliders below to adjust the transparency of individual map layers"),
+                          h5(em("Use the sliders below to adjust the transparency of individual map layers")),
                           sliderInput("abandon_slide", label = h4("Abandonment"), 
                                       min = 0, 
                                       max = 1, 
@@ -307,7 +307,7 @@ server <- function(input, output, session) {
   
   output$data_table <- function() {
     data_info %>%
-      mutate(Source = sanitize_text(Source)) %>% 
+      mutate(Source = sanitize_text(Source)) %>%
       knitr::kable("html", escape = FALSE) %>%
       kable_styling("striped", full_width = FALSE)
     }
