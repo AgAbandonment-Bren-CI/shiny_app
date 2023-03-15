@@ -7,6 +7,7 @@ library(tmap)
 library(terra)
 library(sf)
 library(shinythemes)
+library(shinyWidgets)
 library(shinyjs)
 library(htmltools)
 library(cowplot)
@@ -210,16 +211,14 @@ ui <- fluidPage(
                                      h3(strong("Step 2: Feature weights")),
                                      h5(em("Use the sliders to weigh the relative importance of biodiversity and carbon, respectively.")),
                                      br(),
-                                     sliderInput("bd_slide_brazil", 
-                                                 label = h4("Biodiversity"), 
-                                                 min = 0, 
-                                                 max = 3, 
-                                                 value = 1),
-                                     sliderInput("carbon_slide_brazil", 
-                                                 label = h4("Carbon"), 
-                                                 min = 0, 
-                                                 max = 3, 
-                                                 value = 1),
+                                     
+                                     includeScript("slider.js"),
+                                     div(class="my_slider", # to be able to manipulate it with JQuery
+                                         sliderInput("feat_weight",
+                                                     "Slider Value:", 
+                                                     ticks = F,
+                                                     min = 1, max = 5, 
+                                                     value = 3)),
                                      hr(style = 'border-top: 1px solid #000000'),
                                      
                                      ## Budget radio buttons:
@@ -376,11 +375,11 @@ server <- function(input, output, session) {
       tm_raster(title = "Proportion abandoned",
                 palette = "Reds", 
                 style = "cont") +
-  +
+      tm_scale_bar(position = c('right', 'bottom'))
     # tm_shape(biomes_vect) +
     #   tm_borders(lwd = 1) +
-    #   tmap_options(check.and.fix = TRUE) +
-      tm_scale_bar(position = c('right', 'bottom'))
+    #   tmap_options(check.and.fix = TRUE)
+     
 
     # tm_view(set.view = c(-50, -11.6, 3))
     #tm_view(set.zoom.limits = c(10,20))
