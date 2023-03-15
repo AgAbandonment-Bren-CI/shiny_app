@@ -11,6 +11,7 @@ library(shinyjs)
 library(htmltools)
 library(cowplot)
 library(magick)
+library(kableExtra)
 
 
 ##### READ IN DATA #####
@@ -125,11 +126,7 @@ ui <- fluidPage(
                                h4(strong("References")),
                                p("O’Neill, B. C., Kriegler, E., Ebi, K. L., Kemp-Benedict, E., Riahi, K., Rothman, D. S., van Ruijven, B. J., van Vuuren, D. P., Birkmann, J., Kok, K., Levy, M., & Solecki, W. (2017). The roads ahead: Narratives for shared socioeconomic pathways describing world futures in the 21st century. Global Environmental Change, 42, 169–180. https://doi.org/10.1016/j.gloenvcha.2015.01.004"),
                                p("Riahi, K., van Vuuren, D. P., Kriegler, E., Edmonds, J., O’Neill, B. C., Fujimori, S., Bauer, N., Calvin, K., Dellink, R., Fricko, O., Lutz, W., Popp, A., Cuaresma, J. C., Kc, S., Leimbach, M., Jiang, L., Kram, T., Rao, S., Emmerling, J., … Tavoni, M. (2017). The Shared Socioeconomic Pathways and their energy, land use, and greenhouse gas emissions implications: An overview. Global Environmental Change, 42, 153–168. https://doi.org/10.1016/j.gloenvcha.2016.05.009"),
-                               #                             tags$style(".data_table th, .data_table td {
-                               #   border: 1px solid #ddd;
-                               #   padding: 8px;
-                               #   text-align: left;
-                               # }"
+                               p("Yang, Y., Hobbie, S. E., Hernandez, R. R., Fargione, J., Grodsky, S. M., Tilman, D., Zhu, Y.-G., Luo, Y., Smith, T. M., Jungers, J. M., Yang, M., & Chen, W.-Q. (2020). Restoring Abandoned Farmland to Mitigate Climate Change on a Full Earth. One Earth, 3(2), 176–186. https://doi.org/10.1016/j.oneear.2020.07.019"),
                      )), #END TAB 2
              
              
@@ -300,9 +297,21 @@ server <- function(input, output, session) {
   data_info$Source <- as.character(data_info$Source) # convert factor to character
   data_info$Source <- gsub("[\n]", "", data_info$Source) # remove line breaks
   
-  output$data_table <- renderTable(data_info, sanitize.text.function = function(x) x)
+  # output$data_table <- renderTable(data_info, sanitize.text.function = function(x) x)
 
+  # create a function to sanitize text
+  sanitize_text <- function(x) {
+    x <- gsub("<", "&lt;", x)
+    x <- gsub(">", "&gt;", x)
+    return(x)
+  }
   
+  output$data_table <- function() {
+    data_info %>%
+      mutate(Source = sanitize_text(Source)) %>% 
+      knitr::kable("html", escape = FALSE) %>%
+      kable_styling("striped", full_width = FALSE)
+    }
   
   ### TAB 3 - Global Abandonment ###
   
@@ -356,8 +365,10 @@ server <- function(input, output, session) {
       theme_minimal() + 
       labs(x = element_blank(),
            y = "Cropland (Millions km^2)")  +
-      # theme(legend.position = "none") +
-      scale_fill_manual(values = c("forestgreen", "deepskyblue4"))
+      theme(legend.title = element_blank()) +
+      scale_fill_manual(values = c("forestgreen", "deepskyblue4"),
+                        labels = c("New Cropland", "Total Abandonment"))
+      
   })
   
   
