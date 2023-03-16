@@ -218,8 +218,8 @@ ui <- fluidPage(
              ## FOURTH TAB ##
              tabPanel("Brazil",  icon = icon("seedling"),
                       h1("Brazil Abandonment & Restoration"),
-                      fluidRow("Here, we turn our attention to the abandoned cropland in Brazil. As a country, Brazil stands out as a crucial contributor to climate resilience due to its vast carbon storage capacity and significance to biodiversity. To support global efforts aimed at safeguarding critical regions like the Amazon, we have singled out Brazil as the ideal location to pinpoint areas of projected abandonment that hold the potential for maximum benefits in terms of carbon sequestration and biodiversity if actively restored. This tool enables the user to identify the parcels most suitable for restoration under a specific climate scenario and budgetary constraint. \nFollow the steps on the left side panel to create your own restoration prioritization model."),
-                      fluidRow(column = 5, ### to make box align with text above but now header off....
+                      p("Here, we turn our attention to the abandoned cropland in Brazil. As a country, Brazil stands out as a crucial contributor to climate resilience due to its vast carbon storage capacity and significance to biodiversity. To support global efforts aimed at safeguarding critical regions like the Amazon, we have singled out Brazil as the ideal location to pinpoint areas of projected abandonment that hold the potential for maximum benefits in terms of carbon sequestration and biodiversity if actively restored. This tool enables the user to identify the parcels most suitable for restoration under a specific climate scenario and budgetary constraint. Follow the steps on the left side panel to create your own restoration prioritization model."),
+                      # fluidRow(column = 5, ### to make box align with text above but now header off....
                       headerPanel(""), ## add vertical space
                       sidebarLayout(
                         sidebarPanel(h2("Prioritization Model:"),
@@ -256,25 +256,24 @@ ui <- fluidPage(
                                      
                                      ## Budget radio buttons:
                                      h3(strong("Step 3: Budget")),
-                                     h5(em("Select a low or high end budget scenario for restoration. The low budget is based on historical trend of unused money allocated to Brazil's Ministry of the Environment management budget. The high budget is based on the current balance of the Amazon Fund.")),
+                                     h5(em("Select a low (455 million BRL) or high (3.4 billion BRL) budget scenario for restoration.")),
                                      br(),
                                      radioButtons(inputId = "budget",
                                                   label = NULL,
-                                                  choices = c("Low (455 million BRL)" = "low_budget", 
-                                                              "High (3.4 billion BRL)" = "high_budget"),
+                                                  choices = c("Low" = "low_budget", 
+                                                              "High" = "high_budget"),
                                                   selected = "high_budget"),
                         ), # end sidebar panel
                         
-                        mainPanel(tmapOutput(outputId = "ab_brazil_tmap", height = 800),
-                                  p(strong("Figure 1:"),"Parcels projected to be abandoned between 2020-2050. Orange pixels represent parcels prioritized for restoration under based on user inputs, while blue pixels remain unselected abandoned parcels."),
-                                  br(),
+                        mainPanel(tmapOutput(outputId = "ab_brazil_tmap", height = 700),
                                   htmlOutput('scenario_text'),
                                   br(),
-                                  plotOutput('biome_stats_plot', height = 600)
+                                  plotOutput('biome_stats_plot', height = 600),
+                                  p(strong("Figure 2:"), "Zonal statistics of cropland abandonment and restoration by Brazilian biome. Green bars represent the projected amount of abandonment by 2050 in each biome; purple bars represent the number of these parcels selected for restoration based on user inputs.")
                         ), # end main panel of tab 3
                         position = c('left', 'right'),
                         fluid = TRUE
-                      )) #end sidebar layout
+                      ) #end sidebar layout
              
              ) # END TAB 4
   ) # end navbarpage
@@ -463,13 +462,13 @@ server <- function(input, output, session) {
   output$ab_brazil_tmap <- renderTmap({
     tmap_mode('view') +
     tm_shape(biomes_vect) +
-      tm_borders(lwd = .5, col = 'gray25') +
+      tm_borders(lwd = .5, col = 'gray40') +
     tm_shape(shp = raster_layer(), raster.downsample = TRUE) + 
       tm_raster(title = "Proportion abandoned",
                 palette = c('darkseagreen3', 'darkorchid4'),
                 style = "cat") +
     tm_scale_bar(position = c('right', 'bottom')) +
-    tm_view(set.view = 4.6)
+    tm_view(set.view = 4.5)
   }) # end TMAP Brazil
   
   
@@ -494,9 +493,8 @@ server <- function(input, output, session) {
   
   ## return text for restoration scenario
   output$scenario_text <- renderText({
-    paste("In this selected scenario, a total of", "<b>",parcels_avail(), "km",tags$sup("2"),"</b>", " are projected to be abandoned by 2050. Of those,", "<b>",parcels_selected(), "km",tags$sup("2"),"</b>", " were prioritized for restoration.")
+    paste("<b>","Figure 1:","</b>","Parcels of projected abandonment between 2020-2050. In this selected scenario, a total of", "<b>",parcels_avail(), "km",tags$sup("2"),"</b>", " (green pixels) are projected to be abandoned by 2050. Of those,", "<b>",parcels_selected(), "km",tags$sup("2"),"</b>", " (purple pixels) were prioritized for restoration.")
   })
-  
   
   
   ## create data for reactive plot
