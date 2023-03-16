@@ -39,26 +39,10 @@ abandonment_total <- read_csv(here('data/processed/global/total_abandonment.csv'
   ## pivot longer for graphable format
   pivot_longer(2:3, names_to = 'statistic', values_to = 'amount')
 
-## ////I DON'T KNOW WHAT THIS IS FOR?? - NM/////////
-vec <- c("ssp1_global", "ssp2_global", "ssp3_global", "ssp4_global", "ssp5_global")
-
 
 ### BRAZIL:  ------------------------------------------------------
 
 ## Prioritizr solution rasters
-# ssp1_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
-#                            'ssp1_solution_country.tif'))
-# ssp2_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
-#                            'ssp2_solution_country.tif'))
-# ssp3_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
-#                            'ssp3_solution_country.tif'))
-# ssp4_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
-#                            'ssp4_solution_country.tif'))
-# ssp5_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
-#                            'ssp5_solution_country.tif'))
-# ssp_all_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
-#                               'ssp_all_solution_country.tif'))
-# 
 # 
 # ssp1_low <- rast(here('data/processed/brazil/prioritizr_outputs',
 #                       's1_lowBud.tif'))
@@ -85,10 +69,11 @@ vec <- c("ssp1_global", "ssp2_global", "ssp3_global", "ssp4_global", "ssp5_globa
 # ssp_all_high <- rast(here('data/processed/brazil/prioritizr_outputs',
 #                        's_all_highBud.tif'))
 
-
 ## Biome raster and vector
 biomes_rast <- rast(here('data/processed/brazil/biomes_rast.tif'))
 biomes_vect <- read_sf(here('data/processed/brazil/biome_vector/biomes_vect.shp'))
+
+
 
 
 
@@ -152,6 +137,7 @@ ui <- fluidPage(
                                tableOutput('data_table'),
                                br(),
                                h4(strong("References:")),
+                               tags$li("Beyer, H. L., Dujardin, Y., Watts, M. E., & Possingham, H. P. (2016). Solving conservation planning problems with integer linear programming. Ecological Modelling, 328, 14–22. https://doi.org/10.1016/j.ecolmodel.2016.02.005"),
                                tags$li("Cook-Patton, S. C., Leavitt, S. M., Gibbs, D. et al. (2020). Mapping carbon accumulation potential from global natural forest regrowth. Nature, 585(7826), 545–550. https://doi.org/10.1038/s41586-020-2686-x"),
                                tags$li("Hannah, L., Roehrdanz, P. R., Marquet, P. A., Enquist, B. J., Midgley, G., Foden, W., Lovett, J. C., Corlett, R. T., Corcoran, D., Butchart, S. H. M., Boyle, B., Feng, X., Maitner, B., Fajardo, J., McGill, B. J., Merow, C., Morueta-Holme, N., Newman, E. A., Park, D. S., … Svenning, J.-C. (2020). 30% land conservation and climate action reduces tropical extinction risk by more than 50%. Ecography, 43(7), 943–953. https://doi.org/10.1111/ecog.05166"),
                                tags$li("O’Neill, B. C., Kriegler, E., Ebi, K. L., Kemp-Benedict, E., Riahi, K., Rothman, D. S., van Ruijven, B. J., van Vuuren, D. P., Birkmann, J., Kok, K., Levy, M., & Solecki, W. (2017). The roads ahead: Narratives for shared socioeconomic pathways describing world futures in the 21st century. Global Environmental Change, 42, 169–180. https://doi.org/10.1016/j.gloenvcha.2015.01.004"),
@@ -209,7 +195,6 @@ ui <- fluidPage(
                         mainPanel(
                                   tmapOutput(outputId = "ab_tmap", height = 600),
                                   p(strong("Figure 1:"),"Red indicates projected proportion of agricultural abandonment in a given pixel (square kilometers of abandonment/square kilometers in a pixel). Darker colors signal more abandonment in a given pixel. The green represents carbon sequestration potential of land for 30 years following human disturbance. The blue represents biodiversity, with darker colors indicating a higher level of priority for conservation."),
-                                  p("Data Sources:", a(href = "https://data.globalforestwatch.org/documents/gfw::carbon-accumulation-potential-from-natural-forest-regrowth-in-forest-and-savanna-biomes/about ", "Carbon Accumulation Potential, "), a(href = "http://www.sparc-website.org/", "SPARC Conservation Priorities"), ""),
                                   h3("Total Abandonment by Climate Scenario"),
                                   plotOutput(outputId = "total_abandonment_plot"),
                                   p(strong("Figure 2:"), "Total amount of abandoned and new cropland globally (millions km",tags$sup("2"),") in 2050 by climate scenario. We can see that total abandonment (blue) is greatest under SSP1 and lowest under SSP2. New cropland development (green) is the highest under SSP3, while SSP1 depicts the least new cropland.")
@@ -386,13 +371,26 @@ server <- function(input, output, session) {
       geom_bar(aes(fill = statistic), 
                stat = 'identity', position = 'dodge', 
                alpha = 0.8,
-               color = 'grey20') +
+               color = 'grey30') +
+      ## figure this out later
+      # geom_text(aes(label = amount), vjust = -0.5, size = 4, fontface = 'bold') +
       theme_minimal() + 
-      ylab(bquote(bold('Cropland '(km^2)))) +
+      ylab(bquote(bold('Cropland (millions'~km^2~')'))) +
       labs(x = element_blank()) +
+      scale_x_discrete(labels = c('SSP1', 'SSP2', 'SSP3', 'SSP4', 'SSP5')) +
       theme(legend.title = element_blank()) +
       scale_fill_manual(values = c("forestgreen", "deepskyblue4"),
-                        labels = c("New Cropland", "Total Abandonment"))
+                        labels = c("New Cropland", "Total Abandonment")) +
+      theme(
+        axis.title.y = element_text(face = 'bold', size = 14),
+        axis.text.x = element_text(face = 'bold', size = 13, vjust = 7),
+        axis.text.y = element_text(size = 12),
+        panel.grid.major.x = element_blank(),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 11),
+        legend.title.align = 0.5,
+        legend.position = c(0.12, 0.89)
+      )
       
   })
   
