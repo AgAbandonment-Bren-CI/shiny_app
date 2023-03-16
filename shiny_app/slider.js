@@ -10,15 +10,11 @@ $(document).ready(function() {
     //  $('.my_slider').find('.irs-grid-text').remove(); // this is an alternative to ticks=F
 
       if (value === 1){ // enter your lowest slider value here
-        return "Biodiversity";
-      } else if (value === 2) {
-        return " "
-      } else if (value === 3) {
-        return "Equal"
-      } else if (value === 4) {
-        return " "
-      } else {
         return "Carbon";
+      } else if (value === 2) {
+        return "Equal"
+      } else {
+        return "Biodiversity"
       }
     }
 
