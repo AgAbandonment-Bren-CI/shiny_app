@@ -130,6 +130,13 @@ ui <- fluidPage(
                                p(""),
                                p(strong("Figure 1: "),"The relative mitigation and adaptation challenges for each of the five SSP scenarios (O’Neill et al., 2017)."),
                                p(""),
+                               h4(strong("Biodiversity and Carbon")),
+                               p(""),
+                               p("Biodiversity data was sourced from a study mapping global conservation priorities at 5 km resolution based on current and future species distribution models.; Tthese models evaluated over 17,000 terrestrial vertebrate species and future bioclimatic variables under the RCP2.6 and RCP8.5 climate scenarios (Roehrdanz et al., 2021). Aggregate extinction risk values were calculated based on the proportion of a species’ range conserved, then summed and normalized across all species (Hannah et al., 2020). To maximize the benefits to present and future biodiversity, and therefore reduce the risk of extinction, parcels with higher extinction risk values were prioritized for restoration. 
+"),
+                               p("The carbon dataset, originally created by Cook-Patton et al. and updated by Global Forest Watch, estimates the carbon sequestration rate in aboveground and belowground biomass during the first 30 years of natural forest regeneration. Spatial sequestration estimates include all forest and savanna biomes in units of MgC/ha/yr at 1 km resolution. Carbon data are missing for most of the Pantanal biome, a mainly large freshwater wetland in the southwestern portion of Brazil. As a result, this biome was removed from all other feature and planning unit layers."),
+                               h4(strong("Brazilian Restoration Budgets")),
+                               p("The restoration prioritization model can be run under two ends of the budget spectrum. The low-end budget was based on the historical trend of unused money allocated to the environmental management budget of Brazil's Ministry of the Environment. By applying this trend to the current (2023) budget, we found that restoration efforst could be financed by the potentialy unused 455 million Brazilian Reals (BRL). The high-end budget scenario of 3.4 billion BRL reflects the current balance of the Amazon Fund. This fund can be utilized by nonprofits, universities, and international and government projects that prevent, monitor, and reverse deforestation in Brazil."),
                                h4(strong("Data Used")),
                                tableOutput('data_table'),
                                h4(strong("References")),
@@ -196,12 +203,13 @@ ui <- fluidPage(
              ), # END TAB 3
              
              
+            
              
              
              ## FOURTH TAB ##
              tabPanel("Brazil",  icon = icon("seedling"),
                       h1("Brazil Abandonment & Restoration"),
-                      fluidRow("Here, we turn our attention to the abandoned cropland in Brazil. As a country, Brazil stands out as a crucial contributor to climate resilience due to its vast carbon storage capacity and significance to biodiversity. To support global efforts aimed at safeguarding critical regions like the Amazon, we have singled out Brazil as the ideal location to pinpoint areas of projected abandonment that hold the potential for maximum benefits in terms of carbon sequestration and biodiversity if actively restored. Furthermore, President Da Silva's commitment to halting deforestation in Brazil by 2030 further amplifies the importance of this tool, as it enables the identification of regions that are most suitable for restoration under budgetary constraints. Follow the steps with the left side panel to generate a map identifying which parcels should be prioritized for restoration."),
+                      fluidRow("Here, we turn our attention to the abandoned cropland in Brazil. As a country, Brazil stands out as a crucial contributor to climate resilience due to its vast carbon storage capacity and significance to biodiversity. To support global efforts aimed at safeguarding critical regions like the Amazon, we have singled out Brazil as the ideal location to pinpoint areas of projected abandonment that hold the potential for maximum benefits in terms of carbon sequestration and biodiversity if actively restored. This tool enables the user to identify the parcels most suitable for restoration under a specific climate scenario and budgetary constraint. \nFollow the steps on the left side panel to create your own restoration prioritization model."),
                       fluidRow(column = 5, ### to make box align with text above but now header off....
                       headerPanel(""), ## add vertical space
                       sidebarLayout(
@@ -210,7 +218,7 @@ ui <- fluidPage(
                                      
                                      ## SSP Select Input:
                                      h3(strong("Step 1: Climate scenario")),
-                                     h5(em("Choose one of the six climate scenarios below. The first five options correspond with SSPs 1 through 5, while the sixth option represents parcels consistently projected to become abandoned in all five SSPs.")),
+                                     h5(em("Choose from one of the six climate scenarios. The first five options correspond with SSPs 1 through 5, while the sixth option represents parcels consistently projected to become abandoned in all five SSPs.")),
                                      br(),
                                      selectInput(inputId = "ssp_brazil_select", 
                                        label = NULL,
@@ -225,9 +233,9 @@ ui <- fluidPage(
                                      
                                      ## Feature sliders:
                                      h3(strong("Step 2: Feature weights")),
-                                     h5(em("Use the sliders to weigh the relative importance of biodiversity and carbon, respectively.")),
+                                     h5(em("Use the slider to weigh the relative importance of carbon and biodiversity in this restoration model. A far left or right position assigns a higher importance to carbon or biodiversity, respectively.")),
                                      br(),
-                                     
+                                     ### read in custom slider script
                                      includeScript("slider.js"),
                                      div(class="my_slider", 
                                          sliderInput("feat_weight",
@@ -441,22 +449,19 @@ server <- function(input, output, session) {
     return(z)
   })
   
-  brazil <- c('darkseagreen3', 'darkorchid4')
-  # TMAP Brazil
+  ## TMAP Brazil
+  
   output$ab_brazil_tmap <- renderTmap({
     tmap_mode('view') +
     tm_shape(biomes_vect) +
       tm_borders(lwd = .5, col = 'gray25') +
     tm_shape(shp = raster_layer(), raster.downsample = TRUE) + 
       tm_raster(title = "Proportion abandoned",
-                palette = brazil,
+                palette = c('darkseagreen3', 'darkorchid4'),
                 style = "cat") +
-    tm_scale_bar(position = c('right', 'bottom'))
-    # tm_view(set.view = c(-50, -11.6, 3))
-    #tm_view(set.zoom.limits = c(10,20))
-    # + need to figure out what's going on with this downsampling - abandonment map comes up blank when max.raster is expanded
-    #  tmap_options(max.raster = c(plot = 1e10, view = 1e10)) 
-  }) # end tmap 1
+    tm_scale_bar(position = c('right', 'bottom')) +
+    tm_view(set.view = 4.6)
+  }) # end TMAP Brazil
   
   
   ## How many parcels are projected to be abandoned?
