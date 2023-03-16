@@ -44,39 +44,47 @@ vec <- c("ssp1_global", "ssp2_global", "ssp3_global", "ssp4_global", "ssp5_globa
 
 
 ### BRAZIL:  ------------------------------------------------------
-## Cropland abandonment
-ssp1_brazil <- rast(here('data/processed/brazil',
-                         'ssp1_abandoned_cropland_brazil.tif'))
-ssp2_brazil <- rast(here('data/processed/brazil',
-                         'ssp2_abandoned_cropland_brazil.tif'))
-ssp3_brazil <- rast(here('data/processed/brazil',
-                         'ssp3_abandoned_cropland_brazil.tif'))
-ssp4_brazil <- rast(here('data/processed/brazil',
-                         'ssp4_abandoned_cropland_brazil.tif'))
-ssp5_brazil <- rast(here('data/processed/brazil',
-                         'ssp5_abandoned_cropland_brazil.tif'))
-ssp_all_brazil <- rast(here('data/processed/brazil',
-                         'ssp_all_abandoned_cropland_brazil.tif'))
-
-## Carbon and biodiversity data
-carbon_brazil <- rast(here('data/processed/brazil',
-                           'carbon_brazil_noPant.tif'))
-bio_brazil <- rast(here('data/processed/brazil',
-                        'biodiversity_extrisk_brazil_noPant.tif'))
 
 ## Prioritizr solution rasters
-ssp1_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
-                           'ssp1_solution_country.tif'))
-ssp2_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
-                           'ssp2_solution_country.tif'))
-ssp3_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
-                           'ssp3_solution_country.tif'))
-ssp4_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
-                           'ssp4_solution_country.tif'))
-ssp5_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
-                           'ssp5_solution_country.tif'))
-ssp_all_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
-                              'ssp_all_solution_country.tif'))
+# ssp1_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
+#                            'ssp1_solution_country.tif'))
+# ssp2_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
+#                            'ssp2_solution_country.tif'))
+# ssp3_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
+#                            'ssp3_solution_country.tif'))
+# ssp4_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
+#                            'ssp4_solution_country.tif'))
+# ssp5_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
+#                            'ssp5_solution_country.tif'))
+# ssp_all_solution <- rast(here('data/processed/brazil/prioritizr_outputs',
+#                               'ssp_all_solution_country.tif'))
+# 
+# 
+# ssp1_low <- rast(here('data/processed/brazil/prioritizr_outputs',
+#                       's1_lowBud.tif'))
+# ssp1_high <- rast(here('data/processed/brazil/prioritizr_outputs',
+#                        's1_highBud.tif'))
+# ssp2_low <- rast(here('data/processed/brazil/prioritizr_outputs',
+#                        's2_lowBud.tif'))
+# ssp2_high <- rast(here('data/processed/brazil/prioritizr_outputs',
+#                        's2_highBud.tif'))
+# ssp3_low <- rast(here('data/processed/brazil/prioritizr_outputs',
+#                        's3_lowBud.tif'))
+# ssp3_high <- rast(here('data/processed/brazil/prioritizr_outputs',
+#                        's3_highBud.tif'))
+# ssp4_low <- rast(here('data/processed/brazil/prioritizr_outputs',
+#                       's4_lowBud.tif'))
+# ssp4_high <- rast(here('data/processed/brazil/prioritizr_outputs',
+#                        's4_highBud.tif'))
+# ssp5_low <- rast(here('data/processed/brazil/prioritizr_outputs',
+#                       's5_lowBud.tif'))
+# ssp5_high <- rast(here('data/processed/brazil/prioritizr_outputs',
+#                        's5_highBud.tif'))
+# ssp_all_low <- rast(here('data/processed/brazil/prioritizr_outputs',
+#                       's_all_lowBud.tif'))
+# ssp_all_high <- rast(here('data/processed/brazil/prioritizr_outputs',
+#                        's_all_highBud.tif'))
+
 
 ## Biome raster and vector
 biomes_rast <- rast(here('data/processed/brazil/biomes_rast.tif'))
@@ -200,7 +208,7 @@ ui <- fluidPage(
                         sidebarPanel(h2("Prioritization Model:"),
                                      hr(style = 'border-top: 2px solid #000000'),
                                      
-                                     ## SSP radio buttons:
+                                     ## SSP Select Input:
                                      h3(strong("Step 1: Climate scenario")),
                                      h5(em("Choose one of the six climate scenarios below. The first five options correspond with SSPs 1 through 5, while the sixth option represents parcels consistently projected to become abandoned in all five SSPs.")),
                                      br(),
@@ -221,12 +229,12 @@ ui <- fluidPage(
                                      br(),
                                      
                                      includeScript("slider.js"),
-                                     div(class="my_slider", # to be able to manipulate it with JQuery
+                                     div(class="my_slider", 
                                          sliderInput("feat_weight",
                                                      "Feature weights:", 
                                                      ticks = TRUE,
-                                                     min = 1, max = 5, 
-                                                     value = 3)),
+                                                     min = 1, max = 3, 
+                                                     value = 2)),
                                      hr(style = 'border-top: 1px solid #000000'),
                                      
                                      ## Budget radio buttons:
@@ -318,7 +326,7 @@ server <- function(input, output, session) {
   
   ### TAB 3 - Global Abandonment ###
   
-  ## radio buttons
+  ## Abandonment raster for map
   ssp_reactive <- reactive({
     x = switch(input$ssp_global_select,
            'ssp1_global' = ssp1_global,
@@ -379,24 +387,60 @@ server <- function(input, output, session) {
   
   ## Reactive Prioritizr model outputs (for map and figure)
   raster_layer <- reactive({
-    ## first choose which raster stack is selected
-    x = switch(input$ssp_brazil_select,
-               "ssp1_brazil" = ssp1_solution,
-               "ssp2_brazil" = ssp2_solution,
-               "ssp3_brazil" = ssp3_solution,
-               "ssp4_brazil" = ssp4_solution,
-               "ssp5_brazil" = ssp5_solution,
-               "ssp_all_brazil" = ssp_all_solution)
     
-    ## then choose the layer based on budget
+    ## assign SSP selection to variable
+    x = input$ssp_brazil_select
+    ## Load in raster stack based on budget AND ssp (x)
     y = switch(input$budget,
-               "low_budget" = x$lowBud,
-               "high_budget" = x$highBud)
+               "low_budget" = if(x == 'ssp1_brazil') {
+                 ssp1_low <- rast(here('data/processed/brazil',
+                                       'prioritizr_outputs/s1_lowBud.tif'))
+                 } else if (x == 'ssp2_brazil') {
+                   ssp2_low <- rast(here('data/processed/brazil',
+                                         'prioritizr_outputs/s2_lowBud.tif'))
+                 } else  if (x == 'ssp3_brazil') {
+                   ssp3_low <-rast(here('data/processed/brazil',
+                                        'prioritizr_outputs/s3_lowBud.tif'))
+                 } else if (x == 'ssp4_brazil') {
+                   ssp4_low <- rast(here('data/processed/brazil',
+                                         'prioritizr_outputs/s4_lowBud.tif'))
+                 } else if (x == 'ssp5_brazil') {
+                   ssp5_low <- rast(here('data/processed/brazil',
+                                         'prioritizr_outputs/s5_lowBud.tif'))
+                 } else {ssp_all_low <- rast(here('data/processed/brazil',
+                                                  'prioritizr_outputs/s_all_lowBud.tif'))},
+               
+               "high_budget" = if(x == 'ssp1_brazil') {
+                 ssp1_high <- rast(here('data/processed/brazil',
+                                        'prioritizr_outputs/s1_highBud.tif'))
+                 } else if (x == 'ssp2_brazil') {
+                   ssp2_high <- rast(here('data/processed/brazil', 
+                                          'prioritizr_outputs/s2_highBud.tif'))
+                 } else if (x == 'ssp3_brazil') {
+                   ssp3_high <- rast(here('data/processed/brazil', 
+                                          'prioritizr_outputs/s3_highBud.tif'))
+                 } else if (x == 'ssp4_brazil') {
+                   ssp4_high <- rast(here('data/processed/brazil', 
+                                          'prioritizr_outputs/s4_highBud.tif'))
+                 } else if (x == 'ssp5_brazil') {
+                   ssp5_high <- rast(here('data/processed/brazil',
+                                          'prioritizr_outputs/s5_highBud.tif'))
+                 } else {ssp_all_high <- rast(here('data/processed/brazil',
+                                                   'prioritizr_outputs/s_all_highBud.tif'))}
+               )
+    ## assign variable to slider value
+    val = input$feat_weight
+    ## choose layer in raster stack (y) based on val
+    z = if(val == 1) {
+      y$feat_15
+    } else if (val == 2) {
+      y$feat_33
+    } else {y$feat_51}
     
     ## return the specific layer for map and figure
-    return(y)
+    return(z)
   })
-
+  
   
   # TMAP Brazil
   output$ab_brazil_tmap <- renderTmap({
