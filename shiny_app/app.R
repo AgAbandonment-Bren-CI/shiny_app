@@ -122,20 +122,36 @@ ui <- fluidPage(
              
             ## SECOND TAB ##
             tabPanel("Background/Data", icon = icon("info-circle"),
-                     titlePanel("Background"),
                      mainPanel(width = 10,
+                               h2(strong("Background")),
                                h4(strong("Shared Socioeconomic Pathways (SSPs)")),
                                p(HTML("The SSP climate scenarios provide a way to explore varying levels of future greenhouse gas emissions under different global approaches to climate policy through 2100 (O’Neill et al., 2017). The five SSP scenarios outlined in Figure 1 represent distinct narratives describing various challenges to the mitigation of and adaptation to climate change. These narratives cover a wide range of potential futures and incorporate socio-economic, political, demographic, technological, and lifestyle trends. SSP1, “Sustainability”, depicts a gradual global shift towards environmentally friendly, inclusive development emphasizing human well-being instead of economic gain. SSP 5 on the other hand, depicts continued global economic development powered by fossil fuels and resource exploitation. SSP2 represents the “Middle of the Road” scenario, where slow progress is made toward sustainable development goals and income inequality persists (Riahi et al., 2017). This Shiny App uses SSP scenarios to project cropland abandonment under different levels of future climate change.")),
                                plotOutput('ssppic'),
                                p(""),
                                p(strong("Figure 1: "),"The relative mitigation and adaptation challenges for each of the five SSP scenarios (O’Neill et al., 2017)."),
+                               br(),
+                               
+                               h2(strong("Data Descriptions")),
+                               h4(strong("Projected Land-use:")),
+                               p("This analysis used land-use data from Chen et al., 2021. This dataset projects future land cover out to 2100 in 5 year intervals under each SSP scenario. Current (2015) land-use was compared against future projections to determine where cropland abandonment may occur by 2050. For this analysis, any current cropland with a different future land-use classification is classified as 'abandoned', with the exception of land that has been urbanized. Urbanized cropland is excluded as these parcels cannot realistically be restored to their pre-agricultural land cover type."),
                                p(""),
+                               h4(strong("Biodiversity and Carbon:")),
+                               p("Biodiversity data was sourced from a study mapping global conservation priorities at 5 km resolution based on current and future species distribution models.; Tthese models evaluated over 17,000 terrestrial vertebrate species and future bioclimatic variables under the RCP2.6 and RCP8.5 climate scenarios (Roehrdanz et al., 2021). Aggregate extinction risk values were calculated based on the proportion of a species’ range conserved, then summed and normalized across all species (Hannah et al., 2020). To maximize the benefits to present and future biodiversity, and therefore reduce the risk of extinction, parcels with higher extinction risk values were prioritized for restoration. 
+"),
+                               p("The carbon dataset, originally created by Cook-Patton et al. and updated by Global Forest Watch, estimates the carbon sequestration rate in aboveground and belowground biomass during the first 30 years of natural forest regeneration. Spatial sequestration estimates include all forest and savanna biomes in units of MgC/ha/yr at 1 km resolution. Carbon data are missing for most of the Pantanal biome, a mainly large freshwater wetland in the southwestern portion of Brazil. As a result, this biome was removed from all other feature and planning unit layers."),
+                               h4(strong("Brazilian Restoration Budgets:")),
+                               p("The restoration prioritization model can be run under two ends of the budget spectrum. The low-end budget was based on the historical trend of unused money allocated to the environmental management budget of Brazil's Ministry of the Environment. By applying this trend to the current (2023) budget, we found that restoration efforst could be financed by the potentialy unused 455 million Brazilian Reals (BRL). The high-end budget scenario of 3.4 billion BRL reflects the current balance of the Amazon Fund. This fund can be utilized by nonprofits, universities, and international and government projects that prevent, monitor, and reverse deforestation in Brazil."),
+                               br(),
                                h4(strong("Data Used")),
                                tableOutput('data_table'),
-                               h4(strong("References")),
-                               p("O’Neill, B. C., Kriegler, E., Ebi, K. L., Kemp-Benedict, E., Riahi, K., Rothman, D. S., van Ruijven, B. J., van Vuuren, D. P., Birkmann, J., Kok, K., Levy, M., & Solecki, W. (2017). The roads ahead: Narratives for shared socioeconomic pathways describing world futures in the 21st century. Global Environmental Change, 42, 169–180. https://doi.org/10.1016/j.gloenvcha.2015.01.004"),
-                               p("Riahi, K., van Vuuren, D. P., Kriegler, E., Edmonds, J., O’Neill, B. C., Fujimori, S., Bauer, N., Calvin, K., Dellink, R., Fricko, O., Lutz, W., Popp, A., Cuaresma, J. C., Kc, S., Leimbach, M., Jiang, L., Kram, T., Rao, S., Emmerling, J., … Tavoni, M. (2017). The Shared Socioeconomic Pathways and their energy, land use, and greenhouse gas emissions implications: An overview. Global Environmental Change, 42, 153–168. https://doi.org/10.1016/j.gloenvcha.2016.05.009"),
-                               p("Yang, Y., Hobbie, S. E., Hernandez, R. R., Fargione, J., Grodsky, S. M., Tilman, D., Zhu, Y.-G., Luo, Y., Smith, T. M., Jungers, J. M., Yang, M., & Chen, W.-Q. (2020). Restoring Abandoned Farmland to Mitigate Climate Change on a Full Earth. One Earth, 3(2), 176–186. https://doi.org/10.1016/j.oneear.2020.07.019"),
+                               br(),
+                               h4(strong("References:")),
+                               tags$li("Cook-Patton, S. C., Leavitt, S. M., Gibbs, D. et al. (2020). Mapping carbon accumulation potential from global natural forest regrowth. Nature, 585(7826), 545–550. https://doi.org/10.1038/s41586-020-2686-x"),
+                               tags$li("Hannah, L., Roehrdanz, P. R., Marquet, P. A., Enquist, B. J., Midgley, G., Foden, W., Lovett, J. C., Corlett, R. T., Corcoran, D., Butchart, S. H. M., Boyle, B., Feng, X., Maitner, B., Fajardo, J., McGill, B. J., Merow, C., Morueta-Holme, N., Newman, E. A., Park, D. S., … Svenning, J.-C. (2020). 30% land conservation and climate action reduces tropical extinction risk by more than 50%. Ecography, 43(7), 943–953. https://doi.org/10.1111/ecog.05166"),
+                               tags$li("O’Neill, B. C., Kriegler, E., Ebi, K. L., Kemp-Benedict, E., Riahi, K., Rothman, D. S., van Ruijven, B. J., van Vuuren, D. P., Birkmann, J., Kok, K., Levy, M., & Solecki, W. (2017). The roads ahead: Narratives for shared socioeconomic pathways describing world futures in the 21st century. Global Environmental Change, 42, 169–180. https://doi.org/10.1016/j.gloenvcha.2015.01.004"),
+                               tags$li("Riahi, K., van Vuuren, D. P., Kriegler, E., Edmonds, J., O’Neill, B. C., Fujimori, S., Bauer, N., Calvin, K., Dellink, R., Fricko, O., Lutz, W., Popp, A., Cuaresma, J. C., Kc, S., Leimbach, M., Jiang, L., Kram, T., Rao, S., Emmerling, J., … Tavoni, M. (2017). The Shared Socioeconomic Pathways and their energy, land use, and greenhouse gas emissions implications: An overview. Global Environmental Change, 42, 153–168. https://doi.org/10.1016/j.gloenvcha.2016.05.009"),
+                               tags$li("Roehrdanz, P., Hannah, L., Corcoran, D., Corlett, R., Enquist, B., Fajardo, J., Feng, X., Foden, W., Lovett, J., Maitner, B., Marquet, P., Merow, C., & Midgley, G. (2021). Strategic Conservation of Global Vertebrates in Response to Climate Change. SSRN Electronic Journal: Preprints. https://doi.org/10.2139/ssrn.3854499"),
+                               tags$li("Yang, Y., Hobbie, S. E., Hernandez, R. R., Fargione, J., Grodsky, S. M., Tilman, D., Zhu, Y.-G., Luo, Y., Smith, T. M., Jungers, J. M., Yang, M., & Chen, W.-Q. (2020). Restoring Abandoned Farmland to Mitigate Climate Change on a Full Earth. One Earth, 3(2), 176–186. https://doi.org/10.1016/j.oneear.2020.07.019"),
                      )), #END TAB 2
              
              
@@ -196,13 +212,14 @@ ui <- fluidPage(
              ), # END TAB 3
              
              
+            
              
              
              ## FOURTH TAB ##
              tabPanel("Brazil",  icon = icon("seedling"),
                       h1("Brazil Abandonment & Restoration"),
-                      fluidRow("Here, we turn our attention to the abandoned cropland in Brazil. As a country, Brazil stands out as a crucial contributor to climate resilience due to its vast carbon storage capacity and significance to biodiversity. To support global efforts aimed at safeguarding critical regions like the Amazon, we have singled out Brazil as the ideal location to pinpoint areas of projected abandonment that hold the potential for maximum benefits in terms of carbon sequestration and biodiversity if actively restored. Furthermore, President Da Silva's commitment to halting deforestation in Brazil by 2030 further amplifies the importance of this tool, as it enables the identification of regions that are most suitable for restoration under budgetary constraints. Follow the steps with the left side panel to generate a map identifying which parcels should be prioritized for restoration."),
-                      fluidRow(column = 5, ### to make box align with text above but now header off....
+                      p("Here, we turn our attention to the abandoned cropland in Brazil. As a country, Brazil stands out as a crucial contributor to climate resilience due to its vast carbon storage capacity and significance to biodiversity. To support global efforts aimed at safeguarding critical regions like the Amazon, we have singled out Brazil as the ideal location to pinpoint areas of projected abandonment that hold the potential for maximum benefits in terms of carbon sequestration and biodiversity if actively restored. This tool enables the user to identify the parcels most suitable for restoration under a specific climate scenario and budgetary constraint. Follow the steps on the left side panel to create your own restoration prioritization model."),
+                      # fluidRow(column = 5, ### to make box align with text above but now header off....
                       headerPanel(""), ## add vertical space
                       sidebarLayout(
                         sidebarPanel(h2("Prioritization Model:"),
@@ -210,7 +227,7 @@ ui <- fluidPage(
                                      
                                      ## SSP Select Input:
                                      h3(strong("Step 1: Climate scenario")),
-                                     h5(em("Choose one of the six climate scenarios below. The first five options correspond with SSPs 1 through 5, while the sixth option represents parcels consistently projected to become abandoned in all five SSPs.")),
+                                     h5(em("Choose from one of the six climate scenarios. The first five options correspond with SSPs 1 through 5, while the sixth option represents parcels consistently projected to become abandoned in all five SSPs.")),
                                      br(),
                                      selectInput(inputId = "ssp_brazil_select", 
                                        label = NULL,
@@ -225,9 +242,9 @@ ui <- fluidPage(
                                      
                                      ## Feature sliders:
                                      h3(strong("Step 2: Feature weights")),
-                                     h5(em("Use the sliders to weigh the relative importance of biodiversity and carbon, respectively.")),
+                                     h5(em("Use the slider to weigh the relative importance of carbon and biodiversity in this restoration model. A far left or right position assigns a higher importance to carbon or biodiversity, respectively.")),
                                      br(),
-                                     
+                                     ### read in custom slider script
                                      includeScript("slider.js"),
                                      div(class="my_slider", 
                                          sliderInput("feat_weight",
@@ -239,25 +256,24 @@ ui <- fluidPage(
                                      
                                      ## Budget radio buttons:
                                      h3(strong("Step 3: Budget")),
-                                     h5(em("Select a low or high end budget scenario for restoration. The low budget is based on historical trend of unused money allocated to Brazil's Ministry of the Environment management budget. The high budget is based on the current balance of the Amazon Fund.")),
+                                     h5(em("Select a low (455 million BRL) or high (3.4 billion BRL) budget scenario for restoration.")),
                                      br(),
                                      radioButtons(inputId = "budget",
                                                   label = NULL,
-                                                  choices = c("Low (455 million BRL)" = "low_budget", 
-                                                              "High (3.4 billion BRL)" = "high_budget"),
+                                                  choices = c("Low" = "low_budget", 
+                                                              "High" = "high_budget"),
                                                   selected = "high_budget"),
                         ), # end sidebar panel
                         
-                        mainPanel(tmapOutput(outputId = "ab_brazil_tmap", height = 800),
-                                  p(strong("Figure 1:"),"Parcels projected to be abandoned between 2020-2050. Orange pixels represent parcels prioritized for restoration under based on user inputs, while blue pixels remain unselected abandoned parcels."),
-                                  br(),
+                        mainPanel(tmapOutput(outputId = "ab_brazil_tmap", height = 700),
                                   htmlOutput('scenario_text'),
                                   br(),
-                                  plotOutput('biome_stats_plot', height = 600)
+                                  plotOutput('biome_stats_plot', height = 600),
+                                  p(strong("Figure 2:"), "Zonal statistics of cropland abandonment and restoration by Brazilian biome. Green bars represent the projected amount of abandonment by 2050 in each biome; purple bars represent the number of these parcels selected for restoration based on user inputs.")
                         ), # end main panel of tab 3
                         position = c('left', 'right'),
                         fluid = TRUE
-                      )) #end sidebar layout
+                      ) #end sidebar layout
              
              ) # END TAB 4
   ) # end navbarpage
@@ -306,7 +322,7 @@ server <- function(input, output, session) {
       knitr::kable(format = "html", escape = FALSE) %>%
       kable_styling("striped", full_width = FALSE)
   }
-  
+
   ### TAB 3 - Global Abandonment ###
   
   ## Abandonment raster for map
@@ -424,22 +440,19 @@ server <- function(input, output, session) {
     return(z)
   })
   
-  brazil <- c('darkseagreen3', 'darkorchid4')
-  # TMAP Brazil
+  ## TMAP Brazil
+  
   output$ab_brazil_tmap <- renderTmap({
     tmap_mode('view') +
     tm_shape(biomes_vect) +
-      tm_borders(lwd = .5, col = 'gray25') +
+      tm_borders(lwd = .5, col = 'gray40') +
     tm_shape(shp = raster_layer(), raster.downsample = TRUE) + 
       tm_raster(title = "Proportion abandoned",
-                palette = brazil,
+                palette = c('darkseagreen3', 'darkorchid4'),
                 style = "cat") +
-    tm_scale_bar(position = c('right', 'bottom'))
-    # tm_view(set.view = c(-50, -11.6, 3))
-    #tm_view(set.zoom.limits = c(10,20))
-    # + need to figure out what's going on with this downsampling - abandonment map comes up blank when max.raster is expanded
-    #  tmap_options(max.raster = c(plot = 1e10, view = 1e10)) 
-  }) # end tmap 1
+    tm_scale_bar(position = c('right', 'bottom')) +
+    tm_view(set.view = 4.5)
+  }) # end TMAP Brazil
   
   
   ## How many parcels are projected to be abandoned?
@@ -463,9 +476,8 @@ server <- function(input, output, session) {
   
   ## return text for restoration scenario
   output$scenario_text <- renderText({
-    paste("In this selected scenario, a total of", "<b>",parcels_avail(), "km",tags$sup("2"),"</b>", " are projected to be abandoned by 2050. Of those,", "<b>",parcels_selected(), "km",tags$sup("2"),"</b>", " were prioritized for restoration.")
+    paste("<b>","Figure 1:","</b>","Parcels of projected abandonment between 2020-2050. In this selected scenario, a total of", "<b>",parcels_avail(), "km",tags$sup("2"),"</b>", " (green pixels) are projected to be abandoned by 2050. Of those,", "<b>",parcels_selected(), "km",tags$sup("2"),"</b>", " (purple pixels) were prioritized for restoration.")
   })
-  
   
   
   ## create data for reactive plot
