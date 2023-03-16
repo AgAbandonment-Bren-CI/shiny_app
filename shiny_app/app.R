@@ -131,6 +131,12 @@ ui <- fluidPage(
                                p(strong("Figure 1: "),"The relative mitigation and adaptation challenges for each of the five SSP scenarios (O’Neill et al., 2017)."),
                                br(),
                                
+                               h4(strong("Brazil Prioritization Model")),
+                               p("The Brazil tab of this Shiny App allows users to examine raster outputs from a prioritization model. The prioritization software requires the input of the features and cost to be evaluated for each planning unit, specific targets for how much of each feature should be represented in the solution, and a primary objective for solving the problem (Figure 2). The spatial restoration prioritization was computed using the prioritizr package (version 7.2.2) in R. This software uses mixed integer linear programming and provides greater flexibility in building and solving spatial planning problems than similar conservation tools, such as Marxan (Beyer et al., 2016).  A separate problem was formulated for each SSP scenario and their associated planning units and features data."),
+                               plotOutput('priorpic'),
+                               p(" "),
+                               p(strong("Figure 2: "), "Here we see the required inputs and process flow for the Prioritizr model."),
+                               
                                h2(strong("Data Descriptions")),
                                h4(strong("Projected Land-use:")),
                                p("This analysis used land-use data from Chen et al., 2021. This dataset projects future land cover out to 2100 in 5 year intervals under each SSP scenario. Current (2015) land-use was compared against future projections to determine where cropland abandonment may occur by 2050. For this analysis, any current cropland with a different future land-use classification is classified as 'abandoned', with the exception of land that has been urbanized. Urbanized cropland is excluded as these parcels cannot realistically be restored to their pre-agricultural land cover type."),
@@ -307,6 +313,14 @@ server <- function(input, output, session) {
     )
   })
   
+  ## prioritizer image
+  
+  output$priorpic <- renderPlot({
+    ggdraw() + 
+      draw_image(here("prioritizer.png")
+      )
+  })               
+
   ## Data table:
   
   data_info <- data.frame(
