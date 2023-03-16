@@ -158,7 +158,7 @@ ui <- fluidPage(
              ## THIRD TAB ##
              tabPanel("Global", icon = icon("globe"),
                       h1("Trends in Projected Global Cropland Abandonment"),
-                      fluidRow("Abandoned croplands occupy between 385 and 472 million hectares globally, equivalent to roughly 3% of earth’s land area (Yang et al., 2020). This phenomenon is driven by a host of ecological and socioeconomic factors, many of which will be exacerbated in a warming world. However, limited research has been conducted to project the future distribution of abandoned lands under climate change. This tab visualizes our global cropland abandonment projections based on the five SSPs. This analysis is especially useful in the context of biodiversity preservation and carbon sequestration, since the restoration of abandoned lands can help make progress towards these conservation goals. Therefore, this global analysis also highlights areas where projections of cropland abandonment overlap with areas of importance for biodiversity and carbon sequestration."),
+                      p("Abandoned croplands occupy between 385 and 472 million hectares globally, equivalent to roughly 3% of earth’s land area (Yang et al., 2020). This phenomenon is driven by a host of ecological and socioeconomic factors, many of which will be exacerbated in a warming world. However, limited research has been conducted to project the future distribution of abandoned lands under climate change. This tab visualizes our global cropland abandonment projections based on the five SSPs. This analysis is especially useful in the context of biodiversity preservation and carbon sequestration, since the restoration of abandoned lands can help make progress towards these conservation goals. Therefore, this global analysis also highlights areas where projections of cropland abandonment overlap with areas of importance for biodiversity and carbon sequestration."),
                       headerPanel(""), ## add vertical space
                       
                       sidebarLayout(
@@ -202,11 +202,11 @@ ui <- fluidPage(
                         # A plot of biodiversity/carbon/abandonment in the main panel
                         mainPanel(
                                   tmapOutput(outputId = "ab_tmap", height = 600),
-                                  p(strong("Figure 1:"),"Red indicates projected proportion of agricultural abandonment in a given pixel (square kilometers of abandonment/square kilometers in a pixel). Darker colors signal more abandonment in a given pixel. The blue represents carbon sequestration potential of land for 30 years following human disturbance. The green represents biodiversity, with darker colors indicating a higher level of priority for conservation."),
+                                  p(strong("Figure 1:"),"Red indicates projected proportion of agricultural abandonment in a given pixel (square kilometers of abandonment/square kilometers in a pixel). Darker colors signal more abandonment in a given pixel. The green represents carbon sequestration potential of land for 30 years following human disturbance. The blue represents biodiversity, with darker colors indicating a higher level of priority for conservation."),
                                   p("Data Sources:", a(href = "https://data.globalforestwatch.org/documents/gfw::carbon-accumulation-potential-from-natural-forest-regrowth-in-forest-and-savanna-biomes/about ", "Carbon Accumulation Potential, "), a(href = "http://www.sparc-website.org/", "SPARC Conservation Priorities"), ""),
                                   h3("Total Abandonment by Climate Scenario"),
                                   plotOutput(outputId = "total_abandonment_plot"),
-                                  p(strong("Figure 2:"), "Total abandoned cropland (km^2) globally in 2050 (blue) and total new cropland in 2050 (green) by climate scenario. We can see that total abandonment is greatest under SSP1 and lowest under SSP2. New cropland development is the highest under SSP3, while SSP1 depicts the least new cropland.")
+                                  p(strong("Figure 2:"), "Total amount of abandoned and new cropland globally (millions km",tags$sup("2"),") in 2050 by climate scenario. We can see that total abandonment (blue) is greatest under SSP1 and lowest under SSP2. New cropland development (green) is the highest under SSP3, while SSP1 depicts the least new cropland.")
                         ) # end main panel tab 1
                       ) # end sidebarlayout
              ), # END TAB 3
@@ -348,14 +348,16 @@ server <- function(input, output, session) {
                 alpha = input$abandon_slide) +
       tm_shape(carbon_global, raster.downsample = TRUE) +
       tm_raster(title = "C seq. (mg/ha/yr)", 
-                palette = "Blues", 
+                palette = "Greens", 
                 style = "cont", 
                 alpha = input$carbon_slide) +
       tm_shape(bio_global, raster.downsample = TRUE) +
       tm_raster(title = "Conservation Priorities",
-                palette = "Greens",
+                palette = "Blues",
                 style = "cont",
-                alpha = input$bd_slide) 
+                alpha = input$bd_slide) +
+      tm_layout(legend.stack = 'vertical') +
+      tm_view(set.view = 2)
     #  tmap_options(max.raster = c(plot = 1e10, view = 1e10))
   }) # end tmap 1
   
@@ -372,8 +374,8 @@ server <- function(input, output, session) {
                alpha = 0.8,
                color = 'grey20') +
       theme_minimal() + 
-      labs(x = element_blank(),
-           y = "Cropland (Millions km^2)")  +
+      ylab(bquote(bold('Cropland '(km^2)))) +
+      labs(x = element_blank()) +
       theme(legend.title = element_blank()) +
       scale_fill_manual(values = c("forestgreen", "deepskyblue4"),
                         labels = c("New Cropland", "Total Abandonment"))
