@@ -294,18 +294,18 @@ server <- function(input, output, session) {
   ## Data table:
   
   data_info <- data.frame(
-      Layer = c("Future global land cover", "Carbon accumulation potential", "Biodiversity"),
-      Source = c("<a href='https://zenodo.org/record/4584775#.Y_58_uzMJJV'>Chen et al., 2021</a>", "<a href='https://data.globalforestwatch.org/documents/gfw::carbon-accumulation-potential-from-natural-forest-regrowth-in-forest-and-savanna-biomes/about'>Cook-Patton et al., 2020</a>", "<a href='http://www.sparc-website.org/'>SPARC Conservation Priorities</a>"),
-      Description = c("Future land cover at 1-km resolution based on the SSP-RCP scenarios, classified by plant functional types (PFTs),  including a “cropland” designation, which was the focus of this analysis.", "Global carbon accumulation potential from natural forest regrowth at 1-km. This dataset was used to visualize carbon sequestration potential from restoration.", "Global spatial dataset at 5km resolution displaying rank-ordered areas of high importance to biodiversity preservation. The rank order of importance was determined by examining current and future ranges of 17,000 vertebrate species and their relative extinction risks.")
-    )
+    Layer = c("Future global land cover", "Carbon accumulation potential", "Biodiversity"),
+    Source = c("https://zenodo.org/record/4584775#.Y_58_uzMJJV", "https://data.globalforestwatch.org/documents/gfw::carbon-accumulation-potential-from-natural-forest-regrowth-in-forest-and-savanna-biomes/about", "http://www.sparc-website.org/"),
+    Description = c("Future land cover at 1-km resolution based on the SSP-RCP scenarios, classified by plant functional types (PFTs),  including a “cropland” designation, which was the focus of this analysis.", "Global carbon accumulation potential from natural forest regrowth at 1-km. This dataset was used to visualize carbon sequestration potential from restoration.", "Global spatial dataset at 5km resolution displaying rank-ordered areas of high importance to biodiversity preservation. The rank order of importance was determined by examining current and future ranges of 17,000 vertebrate species and their relative extinction risks.")
+  )
   
   output$data_table <- function() {
     data_info <- data_info %>% 
-      mutate(Source = sprintf("<a href = '%s </a>", Source, Layer))
+      mutate(Source = sprintf("<a href='%s'>%s</a>", Source, Layer))
     data_info %>%
-        knitr::kable(format = "html", escape = FALSE) %>%
-        kable_styling("striped", full_width = FALSE)
-      }
+      knitr::kable(format = "html", escape = FALSE) %>%
+      kable_styling("striped", full_width = FALSE)
+  }
   
   ### TAB 3 - Global Abandonment ###
   
