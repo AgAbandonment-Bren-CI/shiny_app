@@ -122,27 +122,36 @@ ui <- fluidPage(
              
             ## SECOND TAB ##
             tabPanel("Background/Data", icon = icon("info-circle"),
-                     titlePanel("Background"),
                      mainPanel(width = 10,
+                               h2(strong("Background")),
                                h4(strong("Shared Socioeconomic Pathways (SSPs)")),
                                p(HTML("The SSP climate scenarios provide a way to explore varying levels of future greenhouse gas emissions under different global approaches to climate policy through 2100 (O’Neill et al., 2017). The five SSP scenarios outlined in Figure 1 represent distinct narratives describing various challenges to the mitigation of and adaptation to climate change. These narratives cover a wide range of potential futures and incorporate socio-economic, political, demographic, technological, and lifestyle trends. SSP1, “Sustainability”, depicts a gradual global shift towards environmentally friendly, inclusive development emphasizing human well-being instead of economic gain. SSP 5 on the other hand, depicts continued global economic development powered by fossil fuels and resource exploitation. SSP2 represents the “Middle of the Road” scenario, where slow progress is made toward sustainable development goals and income inequality persists (Riahi et al., 2017). This Shiny App uses SSP scenarios to project cropland abandonment under different levels of future climate change.")),
                                plotOutput('ssppic'),
                                p(""),
                                p(strong("Figure 1: "),"The relative mitigation and adaptation challenges for each of the five SSP scenarios (O’Neill et al., 2017)."),
+                               br(),
+                               
+                               h2(strong("Data Descriptions")),
+                               h4(strong("Projected Land-use:")),
+                               p("This analysis used land-use data from Chen et al., 2021. This dataset projects future land cover out to 2100 in 5 year intervals under each SSP scenario. Current (2015) land-use was compared against future projections to determine where cropland abandonment may occur by 2050. For this analysis, any current cropland with a different future land-use classification is classified as 'abandoned', with the exception of land that has been urbanized. Urbanized cropland is excluded as these parcels cannot realistically be restored to their pre-agricultural land cover type."),
                                p(""),
-                               h4(strong("Biodiversity and Carbon")),
-                               p(""),
+                               h4(strong("Biodiversity and Carbon:")),
                                p("Biodiversity data was sourced from a study mapping global conservation priorities at 5 km resolution based on current and future species distribution models.; Tthese models evaluated over 17,000 terrestrial vertebrate species and future bioclimatic variables under the RCP2.6 and RCP8.5 climate scenarios (Roehrdanz et al., 2021). Aggregate extinction risk values were calculated based on the proportion of a species’ range conserved, then summed and normalized across all species (Hannah et al., 2020). To maximize the benefits to present and future biodiversity, and therefore reduce the risk of extinction, parcels with higher extinction risk values were prioritized for restoration. 
 "),
                                p("The carbon dataset, originally created by Cook-Patton et al. and updated by Global Forest Watch, estimates the carbon sequestration rate in aboveground and belowground biomass during the first 30 years of natural forest regeneration. Spatial sequestration estimates include all forest and savanna biomes in units of MgC/ha/yr at 1 km resolution. Carbon data are missing for most of the Pantanal biome, a mainly large freshwater wetland in the southwestern portion of Brazil. As a result, this biome was removed from all other feature and planning unit layers."),
-                               h4(strong("Brazilian Restoration Budgets")),
+                               h4(strong("Brazilian Restoration Budgets:")),
                                p("The restoration prioritization model can be run under two ends of the budget spectrum. The low-end budget was based on the historical trend of unused money allocated to the environmental management budget of Brazil's Ministry of the Environment. By applying this trend to the current (2023) budget, we found that restoration efforst could be financed by the potentialy unused 455 million Brazilian Reals (BRL). The high-end budget scenario of 3.4 billion BRL reflects the current balance of the Amazon Fund. This fund can be utilized by nonprofits, universities, and international and government projects that prevent, monitor, and reverse deforestation in Brazil."),
+                               br(),
                                h4(strong("Data Used")),
                                tableOutput('data_table'),
-                               h4(strong("References")),
-                               p("O’Neill, B. C., Kriegler, E., Ebi, K. L., Kemp-Benedict, E., Riahi, K., Rothman, D. S., van Ruijven, B. J., van Vuuren, D. P., Birkmann, J., Kok, K., Levy, M., & Solecki, W. (2017). The roads ahead: Narratives for shared socioeconomic pathways describing world futures in the 21st century. Global Environmental Change, 42, 169–180. https://doi.org/10.1016/j.gloenvcha.2015.01.004"),
-                               p("Riahi, K., van Vuuren, D. P., Kriegler, E., Edmonds, J., O’Neill, B. C., Fujimori, S., Bauer, N., Calvin, K., Dellink, R., Fricko, O., Lutz, W., Popp, A., Cuaresma, J. C., Kc, S., Leimbach, M., Jiang, L., Kram, T., Rao, S., Emmerling, J., … Tavoni, M. (2017). The Shared Socioeconomic Pathways and their energy, land use, and greenhouse gas emissions implications: An overview. Global Environmental Change, 42, 153–168. https://doi.org/10.1016/j.gloenvcha.2016.05.009"),
-                               p("Yang, Y., Hobbie, S. E., Hernandez, R. R., Fargione, J., Grodsky, S. M., Tilman, D., Zhu, Y.-G., Luo, Y., Smith, T. M., Jungers, J. M., Yang, M., & Chen, W.-Q. (2020). Restoring Abandoned Farmland to Mitigate Climate Change on a Full Earth. One Earth, 3(2), 176–186. https://doi.org/10.1016/j.oneear.2020.07.019"),
+                               br(),
+                               h4(strong("References:")),
+                               tags$li("Cook-Patton, S. C., Leavitt, S. M., Gibbs, D. et al. (2020). Mapping carbon accumulation potential from global natural forest regrowth. Nature, 585(7826), 545–550. https://doi.org/10.1038/s41586-020-2686-x"),
+                               tags$li("Hannah, L., Roehrdanz, P. R., Marquet, P. A., Enquist, B. J., Midgley, G., Foden, W., Lovett, J. C., Corlett, R. T., Corcoran, D., Butchart, S. H. M., Boyle, B., Feng, X., Maitner, B., Fajardo, J., McGill, B. J., Merow, C., Morueta-Holme, N., Newman, E. A., Park, D. S., … Svenning, J.-C. (2020). 30% land conservation and climate action reduces tropical extinction risk by more than 50%. Ecography, 43(7), 943–953. https://doi.org/10.1111/ecog.05166"),
+                               tags$li("O’Neill, B. C., Kriegler, E., Ebi, K. L., Kemp-Benedict, E., Riahi, K., Rothman, D. S., van Ruijven, B. J., van Vuuren, D. P., Birkmann, J., Kok, K., Levy, M., & Solecki, W. (2017). The roads ahead: Narratives for shared socioeconomic pathways describing world futures in the 21st century. Global Environmental Change, 42, 169–180. https://doi.org/10.1016/j.gloenvcha.2015.01.004"),
+                               tags$li("Riahi, K., van Vuuren, D. P., Kriegler, E., Edmonds, J., O’Neill, B. C., Fujimori, S., Bauer, N., Calvin, K., Dellink, R., Fricko, O., Lutz, W., Popp, A., Cuaresma, J. C., Kc, S., Leimbach, M., Jiang, L., Kram, T., Rao, S., Emmerling, J., … Tavoni, M. (2017). The Shared Socioeconomic Pathways and their energy, land use, and greenhouse gas emissions implications: An overview. Global Environmental Change, 42, 153–168. https://doi.org/10.1016/j.gloenvcha.2016.05.009"),
+                               tags$li("Roehrdanz, P., Hannah, L., Corcoran, D., Corlett, R., Enquist, B., Fajardo, J., Feng, X., Foden, W., Lovett, J., Maitner, B., Marquet, P., Merow, C., & Midgley, G. (2021). Strategic Conservation of Global Vertebrates in Response to Climate Change. SSRN Electronic Journal: Preprints. https://doi.org/10.2139/ssrn.3854499"),
+                               tags$li("Yang, Y., Hobbie, S. E., Hernandez, R. R., Fargione, J., Grodsky, S. M., Tilman, D., Zhu, Y.-G., Luo, Y., Smith, T. M., Jungers, J. M., Yang, M., & Chen, W.-Q. (2020). Restoring Abandoned Farmland to Mitigate Climate Change on a Full Earth. One Earth, 3(2), 176–186. https://doi.org/10.1016/j.oneear.2020.07.019"),
                      )), #END TAB 2
              
              
@@ -301,19 +310,36 @@ server <- function(input, output, session) {
   
   ## Data table:
   
+  link_land <- "<a href='https://zenodo.org/record/4584775#.Y_58_uzMJJV'>Chen et al., 2021</a>"
+  link_carbon <- "<a href='https://data.globalforestwatch.org/documents/gfw::carbon-accumulation-potential-from-natural-forest-regrowth-in-forest-and-savanna-biomes/about'>Cook-Patton et al., 2020</a>"
+  link_bd <- "<a href='http://www.sparc-website.org/'>SPARC Conservation Priorities</a>"
+  
   data_info <- data.frame(
-      Layer = c("Future global land cover", "Carbon accumulation potential", "Biodiversity"),
-      Source = c("<a href='https://zenodo.org/record/4584775#.Y_58_uzMJJV'>Chen et al., 2021</a>", "<a href='https://data.globalforestwatch.org/documents/gfw::carbon-accumulation-potential-from-natural-forest-regrowth-in-forest-and-savanna-biomes/about'>Cook-Patton et al., 2020</a>", "<a href='http://www.sparc-website.org/'>SPARC Conservation Priorities</a>"),
-      Description = c("Future land cover at 1-km resolution based on the SSP-RCP scenarios, classified by plant functional types (PFTs),  including a “cropland” designation, which was the focus of this analysis.", "Global carbon accumulation potential from natural forest regrowth at 1-km. This dataset was used to visualize carbon sequestration potential from restoration.", "Global spatial dataset at 5km resolution displaying rank-ordered areas of high importance to biodiversity preservation. The rank order of importance was determined by examining current and future ranges of 17,000 vertebrate species and their relative extinction risks.")
-    )
+    Layer = c("Future global land cover", "Carbon accumulation potential", "Biodiversity"),
+    Source = c(link_land, link_carbon, link_bd),
+    Description = c("Future land cover at 1-km resolution based on the SSP-RCP scenarios, classified by plant functional types (PFTs),  including a “cropland” designation, which was the focus of this analysis.", "Global carbon accumulation potential from natural forest regrowth at 1-km. This dataset was used to visualize carbon sequestration potential from restoration.", "Global spatial dataset at 5km resolution displaying rank-ordered areas of high importance to biodiversity preservation. The rank order of importance was determined by examining current and future ranges of 17,000 vertebrate species and their relative extinction risks.") 
+  )
+  
+  data_info$Source <- as.character(data_info$Source) # convert factor to character
+  data_info$Source <- gsub("[\n]", "", data_info$Source) # remove line breaks
+  
+  # output$data_table <- renderTable(data_info, sanitize.text.function = function(x) x)
+
+  # create a function to sanitize text
+  sanitize_text <- function(x) {
+    x <- gsub("<", "&lt;", x)
+    x <- gsub(">", "&gt;", x)
+    return(x)
+  }
   
   output$data_table <- function() {
-    data_info <- data_info %>% 
-      mutate(Source = sprintf("<a href = '%s </a>", Source, Layer))
     data_info %>%
-        knitr::kable(format = "html", escape = FALSE) %>%
-        kable_styling("striped", full_width = FALSE)
-      }
+      mutate(Source = sanitize_text(Source)) %>%
+      knitr::kable("html", escape = FALSE) %>%
+      kable_styling("striped", full_width = FALSE)
+    }
+  
+  
   
   ### TAB 3 - Global Abandonment ###
   
