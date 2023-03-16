@@ -293,36 +293,19 @@ server <- function(input, output, session) {
   
   ## Data table:
   
-  link_land <- "<a href='https://zenodo.org/record/4584775#.Y_58_uzMJJV'>Chen et al., 2021</a>"
-  link_carbon <- "<a href='https://data.globalforestwatch.org/documents/gfw::carbon-accumulation-potential-from-natural-forest-regrowth-in-forest-and-savanna-biomes/about'>Cook-Patton et al., 2020</a>"
-  link_bd <- "<a href='http://www.sparc-website.org/'>SPARC Conservation Priorities</a>"
-  
   data_info <- data.frame(
-    Layer = c("Future global land cover", "Carbon accumulation potential", "Biodiversity"),
-    Source = c(link_land, link_carbon, link_bd),
-    Description = c("Future land cover at 1-km resolution based on the SSP-RCP scenarios, classified by plant functional types (PFTs),  including a “cropland” designation, which was the focus of this analysis.", "Global carbon accumulation potential from natural forest regrowth at 1-km. This dataset was used to visualize carbon sequestration potential from restoration.", "Global spatial dataset at 5km resolution displaying rank-ordered areas of high importance to biodiversity preservation. The rank order of importance was determined by examining current and future ranges of 17,000 vertebrate species and their relative extinction risks.") 
-  )
-  
-  data_info$Source <- as.character(data_info$Source) # convert factor to character
-  data_info$Source <- gsub("[\n]", "", data_info$Source) # remove line breaks
-  
-  # output$data_table <- renderTable(data_info, sanitize.text.function = function(x) x)
-
-  # create a function to sanitize text
-  sanitize_text <- function(x) {
-    x <- gsub("<", "&lt;", x)
-    x <- gsub(">", "&gt;", x)
-    return(x)
-  }
+      Layer = c("Future global land cover", "Carbon accumulation potential", "Biodiversity"),
+      Source = c("<a href='https://zenodo.org/record/4584775#.Y_58_uzMJJV'>Chen et al., 2021</a>", "<a href='https://data.globalforestwatch.org/documents/gfw::carbon-accumulation-potential-from-natural-forest-regrowth-in-forest-and-savanna-biomes/about'>Cook-Patton et al., 2020</a>", "<a href='http://www.sparc-website.org/'>SPARC Conservation Priorities</a>"),
+      Description = c("Future land cover at 1-km resolution based on the SSP-RCP scenarios, classified by plant functional types (PFTs),  including a “cropland” designation, which was the focus of this analysis.", "Global carbon accumulation potential from natural forest regrowth at 1-km. This dataset was used to visualize carbon sequestration potential from restoration.", "Global spatial dataset at 5km resolution displaying rank-ordered areas of high importance to biodiversity preservation. The rank order of importance was determined by examining current and future ranges of 17,000 vertebrate species and their relative extinction risks.")
+    )
   
   output$data_table <- function() {
+    data_info <- data_info %>% 
+      mutate(Source = sprintf("<a href = '%s </a>", Source, Layer))
     data_info %>%
-      mutate(Source = sanitize_text(Source)) %>%
-      knitr::kable("html", escape = FALSE) %>%
-      kable_styling("striped", full_width = FALSE)
-    }
-  
-  
+        knitr::kable(format = "html", escape = FALSE) %>%
+        kable_styling("striped", full_width = FALSE)
+      }
   
   ### TAB 3 - Global Abandonment ###
   
