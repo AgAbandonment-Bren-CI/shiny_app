@@ -88,7 +88,7 @@ vec <- c("ssp1_global", "ssp2_global", "ssp3_global", "ssp4_global", "ssp5_globa
 
 ## Biome raster and vector
 biomes_rast <- rast(here('data/processed/brazil/biomes_rast.tif'))
-biomes_vect <- read_sf(here('data/processed/brazil/biomes_vect.shp')) 
+biomes_vect <- read_sf(here('data/processed/brazil/biome_vector/biomes_vect.shp'))
 
 
 
@@ -253,7 +253,7 @@ ui <- fluidPage(
                                   br(),
                                   htmlOutput('scenario_text'),
                                   br(),
-                                  plotOutput('biome_stats_plot')
+                                  plotOutput('biome_stats_plot', height = 600)
                         ), # end main panel of tab 3
                         position = c('left', 'right'),
                         fluid = TRUE
@@ -441,20 +441,17 @@ server <- function(input, output, session) {
     return(z)
   })
   
-  
+  brazil <- c('darkseagreen3', 'darkorchid4')
   # TMAP Brazil
   output$ab_brazil_tmap <- renderTmap({
-    tmap_mode('view')
+    tmap_mode('view') +
+    tm_shape(biomes_vect) +
+      tm_borders(lwd = .5, col = 'gray25') +
     tm_shape(shp = raster_layer(), raster.downsample = TRUE) + 
       tm_raster(title = "Proportion abandoned",
-                palette = "Reds", 
-                style = "cont") +
-      tm_scale_bar(position = c('right', 'bottom'))
-    # tm_shape(biomes_vect) +
-    #   tm_borders(lwd = 1) +
-    #   tmap_options(check.and.fix = TRUE)
-     
-
+                palette = brazil,
+                style = "cat") +
+    tm_scale_bar(position = c('right', 'bottom'))
     # tm_view(set.view = c(-50, -11.6, 3))
     #tm_view(set.zoom.limits = c(10,20))
     # + need to figure out what's going on with this downsampling - abandonment map comes up blank when max.raster is expanded
@@ -517,8 +514,25 @@ server <- function(input, output, session) {
   ## Biome stats plot
   output$biome_stats_plot <- renderPlot(
     ggplot(data = biome_data(), aes(x = name_biome, y = amount)) +
-      geom_col(aes(fill = category)) +
-      theme_minimal()
+      geom_col(aes(fill = category), 
+               position = 'identity', 
+               color = 'lightsteelblue4') +
+      scale_fill_manual(values = c('darkseagreen3', 'darkorchid4'),
+                        labels = c('Total abandonment', 'Restoration')) +
+      geom_text(aes(label = amount), vjust = -0.5, size = 4, fontface = 'bold') +
+      ylab(bquote(bold('Area '(km^2)))) +
+      xlab('Biome') +
+      theme_minimal() +
+      theme(
+        axis.title.x = element_text(face = 'bold', size = 14, vjust = 5),
+        axis.title.y = element_text(face = 'bold', size = 14),
+        axis.text.x = element_text(face = 'bold', size = 13, vjust = 9),
+        panel.grid.major.x = element_blank(),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 11),
+        legend.title.align = 0.5,
+        legend.position = c(0.89, 0.93)
+      )
   )
 
 }
