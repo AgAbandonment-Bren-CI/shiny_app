@@ -238,7 +238,7 @@ ui <- fluidPage(
                                      includeScript("slider.js"),
                                      div(class="my_slider", 
                                          sliderInput("feat_weight",
-                                                     "Feature weights:", 
+                                                     label = NULL, 
                                                      ticks = TRUE,
                                                      min = 1, max = 3, 
                                                      value = 2)),
@@ -458,7 +458,7 @@ server <- function(input, output, session) {
     tm_shape(biomes_vect) +
       tm_borders(lwd = .5, col = 'gray40') +
     tm_shape(shp = raster_layer(), raster.downsample = TRUE) + 
-      tm_raster(title = "Proportion abandoned",
+      tm_raster(title = "Restoration priorities",
                 palette = c('lightsalmon', 'dodgerblue3'),
                 style = "cat") +
     tm_scale_bar(position = c('right', 'bottom')) 
