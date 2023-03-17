@@ -376,7 +376,7 @@ server <- function(input, output, session) {
       labs(x = element_blank()) +
       scale_x_discrete(labels = c('SSP1', 'SSP2', 'SSP3', 'SSP4', 'SSP5')) +
       theme(legend.title = element_blank()) +
-      scale_fill_manual(values = c("goldenrod1", "tomato2"),
+      scale_fill_manual(values = c("wheat", "tomato3"),
                         labels = c("New Cropland", "Total Abandonment")) +
       theme(
         axis.title.y = element_text(face = 'bold', size = 14),
