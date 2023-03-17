@@ -127,7 +127,7 @@ ui <- fluidPage(
                                p("This analysis used land-use data from Chen et al., 2021. This dataset projects future land cover out to 2100 in 5 year intervals under each SSP scenario. Current (2015) land-use was compared against future projections to determine where cropland abandonment may occur by 2050. For this analysis, any current cropland with a different future land-use classification is classified as 'abandoned', with the exception of land that has been urbanized. Urbanized cropland is excluded as these parcels cannot realistically be restored to their pre-agricultural land cover type."),
                                p(""),
                                h4(strong("Biodiversity and Carbon:")),
-                               p("Biodiversity data was sourced from a study mapping global conservation priorities at 5 km resolution based on current and future species distribution models.; Tthese models evaluated over 17,000 terrestrial vertebrate species and future bioclimatic variables under the RCP2.6 and RCP8.5 climate scenarios (Roehrdanz et al., 2021). Aggregate extinction risk values were calculated based on the proportion of a species’ range conserved, then summed and normalized across all species (Hannah et al., 2020). To maximize the benefits to present and future biodiversity, and therefore reduce the risk of extinction, parcels with higher extinction risk values were prioritized for restoration. 
+                               p("Biodiversity data was sourced from a study mapping global conservation priorities at 5 km resolution based on current and future species distribution models. These models evaluated over 17,000 terrestrial vertebrate species and future bioclimatic variables under the RCP2.6 and RCP8.5 climate scenarios (Roehrdanz et al., 2021). Aggregate extinction risk values were calculated based on the proportion of a species’ range conserved, then summed and normalized across all species (Hannah et al., 2020). To maximize the benefits to present and future biodiversity, and therefore reduce the risk of extinction, parcels with higher extinction risk values were prioritized for restoration. 
 "),
                                p("The carbon dataset, originally created by Cook-Patton et al. and updated by Global Forest Watch, estimates the carbon sequestration rate in aboveground and belowground biomass during the first 30 years of natural forest regeneration. Spatial sequestration estimates include all forest and savanna biomes in units of MgC/ha/yr at 1 km resolution. Carbon data are missing for most of the Pantanal biome, a mainly large freshwater wetland in the southwestern portion of Brazil. As a result, this biome was removed from all other feature and planning unit layers."),
                                h4(strong("Brazilian Restoration Budgets:")),
@@ -197,7 +197,7 @@ ui <- fluidPage(
                                   p(strong("Figure 1:"),"Red indicates projected proportion of agricultural abandonment in a given pixel (square kilometers of abandonment/square kilometers in a pixel). Darker colors signal more abandonment in a given pixel. The green represents carbon sequestration potential of land for 30 years following human disturbance. The blue represents biodiversity, with darker colors indicating a higher level of priority for conservation."),
                                   h3("Total Abandonment by Climate Scenario"),
                                   plotOutput(outputId = "total_abandonment_plot"),
-                                  p(strong("Figure 2:"), "Total amount of abandoned and new cropland globally (millions km",tags$sup("2"),") in 2050 by climate scenario. We can see that total abandonment (blue) is greatest under SSP1 and lowest under SSP2. New cropland development (green) is the highest under SSP3, while SSP1 depicts the least new cropland.")
+                                  p(strong("Figure 2:"), "Total amount of abandoned and new cropland globally (millions km",tags$sup("2"),") in 2050 by climate scenario. We can see that total abandonment (red) is greatest under SSP1 and lowest under SSP2. New cropland development (yellow) is the highest under SSP3, while SSP1 depicts the least new cropland.")
                         ) # end main panel tab 1
                       ) # end sidebarlayout
              ), # END TAB 3
@@ -210,7 +210,6 @@ ui <- fluidPage(
              tabPanel("Brazil",  icon = icon("seedling"),
                       h1("Brazil Abandonment & Restoration"),
                       p("Here, we turn our attention to the abandoned cropland in Brazil. As a country, Brazil stands out as a crucial contributor to climate resilience due to its vast carbon storage capacity and significance to biodiversity. To support global efforts aimed at safeguarding critical regions like the Amazon, we have singled out Brazil as the ideal location to pinpoint areas of projected abandonment that hold the potential for maximum benefits in terms of carbon sequestration and biodiversity if actively restored. This tool enables the user to identify the parcels most suitable for restoration under a specific climate scenario and budgetary constraint. Follow the steps on the left side panel to create your own restoration prioritization model."),
-                      # fluidRow(column = 5, ### to make box align with text above but now header off....
                       headerPanel(""), ## add vertical space
                       sidebarLayout(
                         sidebarPanel(h2("Prioritization Model:"),
@@ -260,7 +259,7 @@ ui <- fluidPage(
                                   htmlOutput('scenario_text'),
                                   br(),
                                   plotOutput('biome_stats_plot', height = 600),
-                                  p(strong("Figure 2:"), "Zonal statistics of cropland abandonment and restoration by Brazilian biome. Green bars represent the projected amount of abandonment by 2050 in each biome; purple bars represent the number of these parcels selected for restoration based on user inputs.")
+                                  p(strong("Figure 2:"), "Zonal statistics of cropland abandonment and restoration by Brazilian biome. Pink bars represent the projected amount of abandonment by 2050 in each biome; blue bars represent the number of these parcels selected for restoration based on user inputs.")
                         ), # end main panel of tab 3
                         position = c('left', 'right'),
                         fluid = TRUE
@@ -281,13 +280,12 @@ server <- function(input, output, session) {
   
   ### TAB 1 - Landing page ###
   
-  ## intro tab image
+  # intro tab image
   output$intropic <- renderPlot({
     ggdraw ()+
-      draw_image(here("ag.jpeg"))
+      draw_image(here("deforest.jpg"))
   })
-  
-  
+
   
   ### TAB 2 - Background info ###
   
@@ -319,7 +317,7 @@ server <- function(input, output, session) {
       mutate(Source = sprintf("<a href='%s'>%s</a>", Source, Layer))
     data_info %>%
       knitr::kable(format = "html", escape = FALSE) %>%
-      kable_styling("striped", full_width = FALSE)
+      kable_styling(bootstrap_options = "striped", full_width = FALSE)
   }
 
   ### TAB 3 - Global Abandonment ###
@@ -372,14 +370,13 @@ server <- function(input, output, session) {
                stat = 'identity', position = 'dodge', 
                alpha = 0.8,
                color = 'grey30') +
-      ## figure this out later
-      # geom_text(aes(label = amount), vjust = -0.5, size = 4, fontface = 'bold') +
+      geom_text(aes(label = round(amount,3), group = statistic), vjust = -0.5, size = 4, fontface = 'bold', position = position_dodge(width = 0.9)) +
       theme_minimal() + 
       ylab(bquote(bold('Cropland (millions'~km^2~')'))) +
       labs(x = element_blank()) +
       scale_x_discrete(labels = c('SSP1', 'SSP2', 'SSP3', 'SSP4', 'SSP5')) +
       theme(legend.title = element_blank()) +
-      scale_fill_manual(values = c("forestgreen", "deepskyblue4"),
+      scale_fill_manual(values = c("goldenrod1", "tomato2"),
                         labels = c("New Cropland", "Total Abandonment")) +
       theme(
         axis.title.y = element_text(face = 'bold', size = 14),
@@ -462,10 +459,9 @@ server <- function(input, output, session) {
       tm_borders(lwd = .5, col = 'gray40') +
     tm_shape(shp = raster_layer(), raster.downsample = TRUE) + 
       tm_raster(title = "Proportion abandoned",
-                palette = c('darkseagreen3', 'darkorchid4'),
+                palette = c('lightsalmon', 'dodgerblue3'),
                 style = "cat") +
-    tm_scale_bar(position = c('right', 'bottom')) +
-    tm_view(set.view = 4.5)
+    tm_scale_bar(position = c('right', 'bottom')) 
   }) # end TMAP Brazil
   
   
@@ -490,7 +486,7 @@ server <- function(input, output, session) {
   
   ## return text for restoration scenario
   output$scenario_text <- renderText({
-    paste("<b>","Figure 1:","</b>","Parcels of projected abandonment between 2020-2050. In this selected scenario, a total of", "<b>",parcels_avail(), "km",tags$sup("2"),"</b>", " (green pixels) are projected to be abandoned by 2050. Of those,", "<b>",parcels_selected(), "km",tags$sup("2"),"</b>", " (purple pixels) were prioritized for restoration.")
+    paste("<b>","Figure 1:","</b>","Parcels of projected abandonment between 2020-2050. In this selected scenario, a total of", "<b>",parcels_avail(), "km",tags$sup("2"),"</b>", " (pink pixels) are projected to be abandoned by 2050. Of those,", "<b>",parcels_selected(), "km",tags$sup("2"),"</b>", " (blue pixels) were prioritized for restoration.")
   })
   
   
@@ -526,7 +522,7 @@ server <- function(input, output, session) {
       geom_col(aes(fill = category), 
                position = 'identity', 
                color = 'lightsteelblue4') +
-      scale_fill_manual(values = c('darkseagreen3', 'darkorchid4'),
+      scale_fill_manual(values = c('lightsalmon', 'dodgerblue3'),
                         labels = c('Total abandonment', 'Restoration')) +
       geom_text(aes(label = amount), vjust = -0.5, size = 4, fontface = 'bold') +
       ylab(bquote(bold('Area '(km^2)))) +
