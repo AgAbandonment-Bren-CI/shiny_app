@@ -13,6 +13,8 @@ library(htmltools)
 library(cowplot)
 library(magick)
 library(kableExtra)
+library(rsconnect)
+
 
 
 ##### READ IN DATA #####
