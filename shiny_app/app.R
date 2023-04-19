@@ -76,7 +76,8 @@ ui <- fluidPage(
                                 br(),
                                 tags$div(
                                   style = "background-color: #ecf0f1; padding: 10px; padding-top: 1px; border-radius: 3px;",
-                                  h2("Projections of Future Cropland Abandonment:", br(), "Impacts to Biodiversity and Carbon Sequestration"),
+                                  h2(strong("Projections of Future Cropland Abandonment:"), br(), "Impacts to Biodiversity and Carbon Sequestration"),
+                                  p(" "),
                                   h5(strong("Authors:"), 
                                      "Max Settineri |", 
                                      "Nickolas McManus |",
@@ -137,18 +138,17 @@ ui <- fluidPage(
              
              ## THIRD TAB ##
              tabPanel("Global", icon = icon("globe"),
-                      h1("Trends in Projected Global Cropland Abandonment"),
-                      p("Abandoned croplands occupy between 385 and 472 million hectares globally, equivalent to roughly 3% of earth’s land area (Yang et al., 2020). This phenomenon is driven by a host of ecological and socioeconomic factors, many of which will be exacerbated in a warming world. However, limited research has been conducted to project the future distribution of abandoned lands under climate change. This tab visualizes our global cropland abandonment projections based on the five SSPs. This analysis is especially useful in the context of biodiversity preservation and carbon sequestration, since the restoration of abandoned lands can help make progress towards these conservation goals. Therefore, this global analysis also highlights areas where projections of cropland abandonment overlap with areas of importance for biodiversity and carbon sequestration."),
-                      headerPanel(""), ## add vertical space
-                      
+                      h1("Projected Global Cropland Abandonment for 2050"),
+                      p("Abandoned croplands occupy between 385 and 472 million hectares globally, equivalent to roughly 3% of earth’s land area (Yang et al., 2020). This phenomenon is driven by a host of ecological and socioeconomic factors, many of which will be exacerbated in a warming world. The interactive map in this tab visualizes global cropland abandonment in 2050 based on SSP climate scenarios. Additional biodiversity and carbon layers can be toggled on to highlight where projected cropland abandonment overlaps with areas important for biodiversity and carbon sequestration."),
+                      br(),
                       sidebarLayout(
                         sidebarPanel(
-                          h2("Global Overlays of Cropland Abandonment, Biodiversity, and Carbon Sequestration:"),
-                          h5(em("Map layers can be toggled on and off using the layer icon on the map")),
-                          hr(style = 'border-top: 2px solid #000000'),
+                          # h2("Global Overlays of Cropland Abandonment, Biodiversity, and Carbon Sequestration:"),
+                          # h5(em("Map layers can be toggled on and off using the layer icon on the map")),
+                          # hr(style = 'border-top: 2px solid #2d3e50'),
                           
-                          h3(strong("Climate scenario")),
-                          h5(em("Choose one of the six options below to project abandoned cropland under a particular climate scenario. The first five options correspond with SSPs 1 through 5, while the sixth option represents parcels consistently projected to become abandoned in all five SSPs.")),
+                          h3(strong("Climate scenario:")),
+                          h5(em("Select one of the six options below to project cropland abandonment under a particular climate scenario. The first five options correspond with SSPs 1 through 5, while the sixth option represents parcels consistently projected to become abandoned in all five SSPs.")),
                           br(),
                           ## select SSP input
                           selectInput(inputId = "ssp_global_select",
@@ -161,35 +161,47 @@ ui <- fluidPage(
                                                      "SSP Overlap" = "ssp_all_global"),
                                       selected = 'SSP1'),
                           br(),
+                          # hr(style = 'border-top: 1px dashed #2d3e50'),
                           
                           ## define alpha sliders for tmap 
-                          h3(strong("Layer transparency")),
+                          h3(strong("Layer transparency:")),
                           h5(em("Use the sliders below to adjust the transparency of individual map layers")),
-                          sliderInput("abandon_slide", label = h4("Abandonment"), 
+                          sliderInput("abandon_slide", label = h4("Abandonment:"), 
                                       min = 0, 
                                       max = 1, 
                                       step = 0.1,
-                                      value = 0.8),
-                          sliderInput("carbon_slide", label = h4("Carbon Sequestration Potential"), 
+                                      value = 0.8,
+                                      ticks = F),
+                          sliderInput("carbon_slide", label = h4("Carbon sequestration potential:"), 
                                       min = 0, 
                                       max = 1, 
                                       step = 0.1,
-                                      value = 0.5),
-                          sliderInput("bd_slide", label = h4("Biodiversity"), 
+                                      value = 0.5,
+                                      ticks = F),
+                          sliderInput("bd_slide", label = h4("Biodiversity:"), 
                                       min = 0, 
                                       max = 1, 
                                       step = 0.1,
-                                      value = 0.5) 
+                                      value = 0.5,
+                                      ticks = F) 
                         ), # end sidebar panel
                         
-                        # A plot of biodiversity/carbon/abandonment in the main panel
+                        # Map and figure 
                         mainPanel(
+                                  ## TMAP
+                          h3("Cropland Abandonment, Biodiversity, and Carbon Sequestration:"),
+                          h5(em("Map layers can be toggled on and off using the layer icon on the map. Use the left-hand panel to change map inputs.")),
+                          # hr(style = 'border-top: 2px solid #2d3e50'),
                                   tmapOutput(outputId = "ab_tmap", height = 600),
-                                  p(strong("Figure 1:"),"Red indicates projected proportion of agricultural abandonment in a given pixel (square kilometers of abandonment/square kilometers in a pixel). Darker colors signal more abandonment in a given pixel. The green represents carbon sequestration potential of land for 30 years following human disturbance. The blue represents biodiversity, with darker colors indicating a higher level of priority for conservation."),
-                                  h3("Total Abandonment by Climate Scenario"),
+                                  p(strong("Figure 1:"),"Red indicates the projected proportion of agricultural abandonment within a given pixel at 50km resolution. Darker colors signal a great proportion of abandonment. The green represents carbon sequestration potential of land for 30 years following human disturbance. The blue represents biodiversity, with darker colors indicating a higher level of priority for conservation."),
+                                  
+                                  ## Bar Graph
+                                  br(),
+                                  h3("Total Abandonment by Climate Scenario:"),
                                   plotOutput(outputId = "total_abandonment_plot"),
-                                  p(strong("Figure 2:"), "Total amount of abandoned and new cropland globally (millions km",tags$sup("2"),") in 2050 by climate scenario. We can see that total abandonment (red) is greatest under SSP1 and lowest under SSP2. New cropland development (yellow) is the highest under SSP3, while SSP1 depicts the least new cropland.")
-                        ) # end main panel tab 1
+                                  p(strong("Figure 2:"), "Total amount of abandoned and new cropland globally (millions km",tags$sup("2"),") in 2050 by climate scenario. Total abandonment (red) is greatest under SSP1 and lowest under SSP2. Newly developed cropland (yellow) is the highest under SSP3, while SSP1 depicts the least new cropland.")
+                        ), # end main panel tab 1
+                        
                       ) # end sidebarlayout
              ), # END TAB 3
              
@@ -203,12 +215,12 @@ ui <- fluidPage(
                       p("Here, we turn our attention to the abandoned cropland in Brazil. As a country, Brazil stands out as a crucial contributor to climate resilience due to its vast carbon storage capacity and significance to biodiversity. To support global efforts aimed at safeguarding critical regions like the Amazon, we have singled out Brazil as the ideal location to pinpoint areas of projected abandonment that hold the potential for maximum benefits in terms of carbon sequestration and biodiversity if actively restored. This tool enables the user to identify the parcels most suitable for restoration under a specific climate scenario and budgetary constraint. Follow the steps on the left side panel to create your own restoration prioritization model."),
                       headerPanel(""), ## add vertical space
                       sidebarLayout(
-                        sidebarPanel(h2("Prioritization Model:"),
-                                     hr(style = 'border-top: 2px solid #000000'),
+                        sidebarPanel(h2(strong("Prioritization Model:")),
+                                     hr(style = 'border-top: 2px solid #2d3e50'),
                                      
                                      ## SSP Select Input:
                                      h3(strong("Step 1: Climate scenario")),
-                                     h5(em("Choose from one of the six climate scenarios. The first five options correspond with SSPs 1 through 5, while the sixth option represents parcels consistently projected to become abandoned in all five SSPs.")),
+                                     h5(em("Select one of the six options below to project cropland abandonment under a particular climate scenario. The first five options correspond with SSPs 1 through 5, while the sixth option represents parcels consistently projected to become abandoned in all five SSPs.")),
                                      br(),
                                      selectInput(inputId = "ssp_brazil_select", 
                                        label = NULL,
@@ -219,11 +231,11 @@ ui <- fluidPage(
                                                    "SSP5" = "ssp5_",
                                                    "SSP Overlap" = "ssp_all_"),
                                        selected = "ssp1_"),
-                                     hr(style = 'border-top: 1px solid #000000'),
+                                     hr(style = 'border-top: 1px dashed #2d3e50'),
                                      
                                      ## Feature sliders:
                                      h3(strong("Step 2: Feature weights")),
-                                     h5(em("Use the slider to weigh the relative importance of carbon and biodiversity in this restoration model. A far left or right position assigns a higher importance to carbon or biodiversity, respectively.")),
+                                     h5(em("Weigh the relative importance of carbon and biodiversity in this restoration model by moving the slider farther left or right, respectively.")),
                                      br(),
                                      ### read in custom slider script
                                      includeScript("slider.js"),
@@ -233,7 +245,7 @@ ui <- fluidPage(
                                                      ticks = TRUE,
                                                      min = 1, max = 5, 
                                                      value = 3)),
-                                     hr(style = 'border-top: 1px solid #000000'),
+                                     hr(style = 'border-top: 1px dashed #2d3e50'),
                                      
                                      ## Budget radio buttons:
                                      h3(strong("Step 3: Budget")),
