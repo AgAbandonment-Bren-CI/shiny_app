@@ -145,7 +145,69 @@ ggplot(data = abandonment_longer, aes(x = ssp, y = amount)) +
 
 
 
+### Biome zonal stats
+Now we need to create and export a dataframe with zonal statistics for every prioritizr output raster.
 
+```{r}
+### Read in df of raster names
+names <- read_csv(here("data/processed/brazil/prioritizr_outputs/inputs.csv"))
+
+### Empty dataframe to store results
+stats_df <- data.frame()
+
+
+### Function to calculate zonal stats and output df ----------------------------
+biomes_stats <- function(ssp, bud, feat_weights) {
+  
+  ## read in correct raster based on row in df
+  file_name <- paste(ssp, bud, feat_weights, sep = "_") %>% 
+    paste0(".tif")
+  raster <- terra::rast(here("data/processed/brazil/prioritizr_outputs/1km", file_name))
+  
+  ## create matrix for reclassification
+  rcl_m <- matrix(c(0,1,1), ncol = 3, byrow = TRUE)
+  raster_rcl <- terra::classify(raster, rcl_m, include.lowest = TRUE)
+  pus_biome = terra::zonal(raster_rcl, biomes_rast, 'sum', na.rm = TRUE) %>%
+        rename(pus = 2)
+  
+  ## find zonal stats for restoration
+    sol_biome = terra::zonal(raster, biomes_rast, 'sum', na.rm = TRUE) %>%
+      rename(sol = 2)
+    
+  ## combine outputs into one df in tidy format
+    outputs_df = full_join(pus_biome, sol_biome, by = 'name_biome') %>%
+      pivot_longer(cols = 2:3,
+                   names_to = "category",
+                   values_to = "amount") %>%
+      mutate(category = factor(category,
+                               levels = c('pus', 'sol')),
+             ssp = ssp,
+             budget = bud,
+             feat = feat_weights)
+    
+  ## Now add all together to one df
+    stats_df <<- rbind(stats_df, outputs_df)
+  
+  return(stats_df)
+}
+### ----------------------------------------------------------------------------
+
+
+### create empty df to store for loop results
+biome_stats_df <- data.frame()
+
+### Run for loop
+for (i in 1:nrow(names)) {
+  biome_stats_df = biomes_stats(ssp = names$ssp[i],
+                                 bud = names$budget[i],
+                                 feat_weights = names$feat_weights[i])
+}
+
+
+### Finally export the df
+write_csv(biome_stats_df, here("data/processed/brazil/prioritizr_outputs/biome_stats.csv"))
+
+```
 
 
 
