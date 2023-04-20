@@ -10,7 +10,6 @@ library(shinythemes)
 library(shinyWidgets)
 library(shinyjs)
 library(htmltools)
-library(cowplot)
 library(magick)
 library(kableExtra)
 library(rsconnect)
@@ -20,13 +19,7 @@ library(rsconnect)
 ##### READ IN DATA #####
 
 ### GLOBAL:  --------------------------------------------------------
-## Cropland abandonment:
-ssp1_global <- rast(here('data/processed/global/ssp1_abandonment_global_50km.tif'))
-ssp2_global <- rast(here('data/processed/global/ssp2_abandonment_global_50km.tif'))
-ssp3_global <- rast(here('data/processed/global/ssp3_abandonment_global_50km.tif'))
-ssp4_global <- rast(here('data/processed/global/ssp4_abandonment_global_50km.tif'))
-ssp5_global <- rast(here('data/processed/global/ssp5_abandonment_global_50km.tif'))
-ssp_all_global <- rast(here('data/processed/global/ssp_all_abandonment_global_50km.tif'))
+
 ## Biodiversity and carbon:
 carbon_global <- rast(here('data/processed/global/carbon_global_50km.tif'))
 bio_global <- rast(here('data/processed/global/biodiversity_global_50km.tif'))
@@ -42,11 +35,14 @@ abandonment_total <- read_csv(here('data/processed/global/total_abandonment.csv'
   pivot_longer(2:3, names_to = 'statistic', values_to = 'amount')
 
 
-### BRAZIL:  ------------------------------------------------------
+### BRAZIL:  --------------------------------------------------------
 
 ## Biome raster and vector
 biomes_rast <- rast(here('data/processed/brazil/biomes_rast.tif'))
 biomes_vect <- read_sf(here('data/processed/brazil/biome_vector/biomes_vect.shp'))
+
+## Biome prioritizr stats (based on 1km res rasters)
+biome_stats <- read_csv(here('data/processed/brazil/prioritizr_outputs/biome_stats.csv'))
 
 
 ### Creating banner image
@@ -57,6 +53,9 @@ biomes_vect <- read_sf(here('data/processed/brazil/biome_vector/biomes_vect.shp'
 # ## Crop and save the image
 # banner_cropped <- image_crop(banner, crop_region)
 # image_write(banner_cropped, path = here("shiny_app/www/cropped_image.png"))
+
+
+
 
 
 ##### BEGIN UI ##### 
@@ -74,9 +73,11 @@ ui <- fluidPage(
              tabPanel("Introduction", icon = icon("align-left"),
                       mainPanel(width = 15, 
                                 br(),
+                                
+                                ### put text inside colored box
                                 tags$div(
                                   style = "background-color: #ecf0f1; padding: 10px; padding-top: 1px; border-radius: 3px;",
-                                  h2(strong("Projections of Future Cropland Abandonment:"), br(), "Impacts to Biodiversity and Carbon Sequestration"),
+                                  h2(strong("Projections of Future Cropland Abandonment:", br(), "Impacts to Biodiversity and Carbon Sequestration")),
                                   p(" "),
                                   h5(strong("Authors:"), 
                                      "Max Settineri |", 
@@ -84,7 +85,7 @@ ui <- fluidPage(
                                      "Lucas Boyd |", 
                                      "Michelle Geldin |", 
                                      "Shayan Kaveh"),
-                                  hr(style = "border-color: #2d3e50"),
+                                  hr(style = 'border-top: 2px solid #2d3e50'),
                                   p("Socioeconomic shifts and environmental change are likely to drive shifts in the distribution of global agriculture, resulting in the large-scale abandonment of croplands. Abandonment is driven by various ecological, socioeconomic, and climatic factors that vary considerably by region. If done haphazardly, abandonment can cause soil erosion, inhibit nutrient cycling, increase wildfire risk, threaten local food security, and negatively impact species that have adapted to human agricultural landscapes."),
                                   p("However, abandoned lands may also be reforested or rewilded, though the best environmental outcomes generally require incentives. If managed strategically, the rewilding of abandoned lands can serve as a powerful natural climate solution, as revegetation sequesters carbon in the form of plant biomass. Moreover, allowing abandoned land to reforest can preserve biodiversity in some regions, including in the tropics."),
                                   p("Patterns of future cropland abandonment, and strategies for making use of abandoned lands are not well researched. Understanding where, and to what extent cropland abandonment will occur in the future can inform conservation strategies and land use planning. This R Shiny web application allows users to visualize projected trends in cropland abandonment globally, and explore the benefits to biodiversity and carbon sequestration that can be realized by conserving abandoned cropland in Brazil."),
@@ -93,6 +94,7 @@ ui <- fluidPage(
                                 ) #end mainPanel
                       ), #END TAB 1
                
+             
              
             ## SECOND TAB ##
             tabPanel("Background/Data", icon = icon("info-circle"),
@@ -153,12 +155,12 @@ ui <- fluidPage(
                           ## select SSP input
                           selectInput(inputId = "ssp_global_select",
                                       label = NULL,
-                                      choices = list("SSP1" = "ssp1_global", 
-                                                     "SSP2" = "ssp2_global", 
-                                                     "SSP3" = "ssp3_global",
-                                                     "SSP4" = "ssp4_global",
-                                                     "SSP5" = "ssp5_global",
-                                                     "SSP Overlap" = "ssp_all_global"),
+                                      choices = list("SSP1" = "ssp1_abandonment_global_50km", 
+                                                     "SSP2" = "ssp2_abandonment_global_50km", 
+                                                     "SSP3" = "ssp3_abandonment_global_50km",
+                                                     "SSP4" = "ssp4_abandonment_global_50km",
+                                                     "SSP5" = "ssp5_abandonment_global_50km",
+                                                     "SSP Overlap" = "ssp_all_abandonment_global_50km"),
                                       selected = 'SSP1'),
                           br(),
                           # hr(style = 'border-top: 1px dashed #2d3e50'),
@@ -224,14 +226,14 @@ ui <- fluidPage(
                                      br(),
                                      selectInput(inputId = "ssp_brazil_select", 
                                        label = NULL,
-                                       choices = list("SSP1" = "ssp1_", 
-                                                   "SSP2" = "ssp2_", 
-                                                   "SSP3" = "ssp3_",
-                                                   "SSP4" = "ssp4_",
-                                                   "SSP5" = "ssp5_",
-                                                   "SSP Overlap" = "ssp_all_"),
+                                       choices = list("SSP1" = "ssp1", 
+                                                   "SSP2" = "ssp2", 
+                                                   "SSP3" = "ssp3",
+                                                   "SSP4" = "ssp4",
+                                                   "SSP5" = "ssp5",
+                                                   "SSP Overlap" = "ssp_all"),
                                        selected = "ssp1_"),
-                                     hr(style = 'border-top: 1px dashed #2d3e50'),
+                                     hr(style = 'border-top: 1px solid #2d3e50'),
                                      
                                      ## Feature sliders:
                                      h3(strong("Step 2: Feature weights")),
@@ -245,7 +247,7 @@ ui <- fluidPage(
                                                      ticks = TRUE,
                                                      min = 1, max = 5, 
                                                      value = 3)),
-                                     hr(style = 'border-top: 1px dashed #2d3e50'),
+                                     hr(style = 'border-top: 1px solid #2d3e50'),
                                      
                                      ## Budget radio buttons:
                                      h3(strong("Step 3: Budget")),
@@ -253,16 +255,16 @@ ui <- fluidPage(
                                      br(),
                                      radioButtons(inputId = "budget",
                                                   label = NULL,
-                                                  choices = c("Low" = "lowBud_", 
-                                                              "High" = "highBud_"),
-                                                  selected = "highBud_"),
+                                                  choices = c("Low" = "lowBud", 
+                                                              "High" = "highBud"),
+                                                  selected = "highBud"),
                         ), # end sidebar panel
                         
                         mainPanel(tmapOutput(outputId = "ab_brazil_tmap", height = 700),
                                   htmlOutput('scenario_text'),
                                   br(),
                                   plotOutput('biome_stats_plot', height = 600),
-                                  p(strong("Figure 2:"), "Zonal statistics of cropland abandonment and restoration by Brazilian biome. Pink bars represent the projected amount of abandonment by 2050 in each biome; blue bars represent the number of these parcels selected for restoration based on user inputs.")
+                                  p(strong("Figure 2:"), "Zonal statistics of cropland abandonment and restoration by Brazilian biome. Orange bars represent the projected amount of abandonment by 2050 in each biome; blue bars represent the number of these parcels selected for restoration based on user inputs.")
                         ), # end main panel of tab 3
                         position = c('left', 'right'),
                         fluid = TRUE
@@ -281,7 +283,7 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
   
-  ### TAB 1 - Landing page ###
+  ### TAB 1 - Landing page ###  ------------------------------------------------
   
   # intro tab image
   # output$intropic <- renderPlot({
@@ -290,7 +292,9 @@ server <- function(input, output, session) {
   # })
 
   
-  ### TAB 2 - Background info ###
+  
+  
+  ### TAB 2 - Background info ###  ---------------------------------------------
   
   ## ssp image
   output$ssppic <- renderPlot({
@@ -323,24 +327,27 @@ server <- function(input, output, session) {
       kable_styling(bootstrap_options = "striped", full_width = FALSE)
   }
 
-  ### TAB 3 - Global Abandonment ###
   
-  ## Abandonment raster for map
+  
+  
+  ### TAB 3 - Global Abandonment ### -------------------------------------------
+  
+  ## Abandonment raster for tmap
   ssp_reactive <- reactive({
-    x = switch(input$ssp_global_select,
-           'ssp1_global' = ssp1_global,
-           'ssp2_global' = ssp2_global,
-           'ssp3_global' = ssp3_global,
-           'ssp4_global' = ssp4_global,
-           'ssp5_global' = ssp5_global,
-           'ssp_all_global' = ssp_all_global)
-    return(x)
+    ## select raster layer by SSP
+    x = input$ssp_global_select
+    ## read in raster
+    file_name = paste0(x, ".tif") 
+    raster = rast(here("data/processed/global/", file_name))
+    
+    return(raster)
   })
   
-  ## TMAP 1: Global layers
+  
+  ## TMAP 1: Global layers for abandonment, carbon, and bio
   output$ab_tmap <- renderTmap({
     tm_shape(shp = ssp_reactive(), name = "Abandoned cropland",
-             ##t hese rasters won't load unless downsampled
+             ##these rasters won't load unless downsampled
              raster.downsample = T) + 
       tm_raster(title = "Proportion abandoned", 
                 palette = "Reds", 
@@ -360,14 +367,12 @@ server <- function(input, output, session) {
                 alpha = input$bd_slide) +
       tm_layout(legend.stack = 'vertical') +
       tm_view(set.view = 2)
-  }) # end tmap 1
+  }) # End TMAP 1
   
-    
-    # + need to figure out what's going on with this downsampling - abandonment map comes up blank when max.raster is expanded
-    #  tmap_options(max.raster = c(plot = 1e10, view = 1e10)) 
+
   
   
-  # total abandonment ggplot panel 1
+  ## total abandonment ggplot (Fig 2)
   output$total_abandonment_plot <- renderPlot({
     ggplot(data = abandonment_total, aes(x = ssp, y = amount)) +
       geom_bar(aes(fill = statistic), 
@@ -397,44 +402,44 @@ server <- function(input, output, session) {
   
   
   
-  ### TAB 4 - Brazilian Restoration ###
+  ### TAB 4 - Brazilian Restoration ### ----------------------------------------
   
-  ## Reactive Prioritizr model outputs (for map and figure)
-  raster_layer <- reactive({
-    
+  
+  ## Read in 5km raster for TMAP based on "model" user inputs
+  raster_layer_5km <- reactive({
     ## assign SSP selection to variable
     x = input$ssp_brazil_select
     ## Load in raster stack based on budget AND ssp (x)
     y = input$budget
-
     ## assign variable to slider value
     val = input$feat_weight
     ## choose layer in raster stack (y) based on val
     z = if(val == 1) {
-      "feat15_5km.tif"
+      "feat15"
     } else if (val == 2) {
-      "feat24_5km.tif"
+      "feat24"
     } else if (val == 3) {
-      "feat33_5km.tif"
+      "feat33"
     } else if (val == 4) {
-      "feat42_5km.tif"
-    } else {"feat51_5km.tif"}
+      "feat42"
+    } else {"feat51"}
     
-    ## read in corresponding raster
-    file_name = paste0(x, y, z)
+    ## combine into raster file naming convention
+    file_name = paste(x, y, z, sep = "_") %>% 
+      paste0("_5km.tif")
     raster = rast(here("data/processed/brazil/prioritizr_outputs/5km", file_name))
     
-    ## return the specific layer for map and figure
     return(raster)
   })
   
-  ## TMAP Brazil
   
+  
+  ## TMAP Brazil
   output$ab_brazil_tmap <- renderTmap({
     tmap_mode('view') +
     tm_shape(shp = biomes_vect, name = "Biomes") +
       tm_borders(lwd = 1, col = 'gray40') +
-    tm_shape(shp = raster_layer(), name = "Model output",
+    tm_shape(shp = raster_layer_5km(), name = "Model output",
              raster.downsample = F) + 
       tm_raster(palette = c('#F67D4B', '#1A5EAB'),
                 style = "cat",
@@ -444,64 +449,73 @@ server <- function(input, output, session) {
   }) # end TMAP Brazil
   
   
-  ## How many parcels are projected to be abandoned?
-  parcels_avail <- reactive({
-    ## grab specific raster layer
-    x = raster_layer()
-    ## return the total number of parcels
-    z = sum(freq(x)[3])
-    return(z)
+  
+  ## Filter biome stats according to user inputs
+  biome_stats_filtered <- reactive({
+    ## assign the inputs
+    x = input$ssp_brazil_select
+    y = input$budget
+    val = input$feat_weight
+    z = if(val == 1) {
+      "feat15"
+    } else if (val == 2) {
+      "feat24"
+    } else if (val == 3) {
+      "feat33"
+    } else if (val == 4) {
+      "feat42"
+    } else {"feat51"}
+    
+    ## filter df by inputs
+    stats_filtered <- biome_stats %>% 
+      filter(ssp == x,
+             budget == y,
+             feat == z)
+    
+    return(stats_filtered)
   })
   
-  ## How many parcels should be restored?
-  parcels_selected <- reactive({
-    ## grab specific raster layer
-    x = raster_layer()
-    ## return sum of value 1 parcels (selected)
-    z = terra::global(x, fun = 'sum', na.rm = TRUE)
-    return(z)
-  })
+  
+  ## Generate stats for TMAP caption
+  
+      ## How many parcels are projected to be abandoned?
+      parcels_avail <- reactive({
+        ## grab specific raster layer
+        x = biome_stats_filtered()
+        ## filter further to select only planning units
+        x_pus <- x %>% 
+          filter(category == "pus")
+        ## sum and return total count of pus
+        pus = sum(x_pus$amount)
+        return(pus)
+      })
+  
+      ## How many parcels should be restored?
+      parcels_selected <- reactive({
+        ## grab specific raster layer
+        x = biome_stats_filtered()
+        ## filter further to select only solution parcels
+        x_sol <- x %>% 
+          filter(category == "sol")
+        ## sum and return total count of selected parcels
+        sol = sum(x_sol$amount)
+        return(sol)
+      })
     
   
-  ## return text for restoration scenario
+  ## Reactive caption for TMAP
   output$scenario_text <- renderText({
-    paste("<b>","Figure 1:","</b>","Parcels of projected abandonment between 2020-2050. In this selected scenario, a total of", "<b>",parcels_avail(), "km",tags$sup("2"),"</b>", " (pink pixels) are projected to be abandoned by 2050. Of those,", "<b>",parcels_selected(), "km",tags$sup("2"),"</b>", " (blue pixels) were prioritized for restoration.")
+    paste("<b>","Figure 1:","</b>","Parcels of projected abandonment between 2020-2050 at 5km resolution. In this selected scenario, a total of", "<b>",parcels_avail(), "km",tags$sup("2"),"</b>", " (orange pixels) are projected to be abandoned by 2050. Of those,", "<b>",parcels_selected(), "km",tags$sup("2"),"</b>", " (blue pixels) were prioritized for restoration.")
   })
-  
-  
-  ## create data for reactive plot
-  biome_data <- reactive({
-    ## read in selected layer
-    x = raster_layer()
 
-    ## find zonal stats for planning units
-      ## reclassify raster so all values are 1
-      reclass_m = matrix(c(0,1,1), ncol = 3, byrow = TRUE)
-      x_rcl = terra::classify(x, reclass_m, include.lowest = TRUE)
-      pus_biome = terra::zonal(x_rcl, biomes_rast, 'sum', na.rm = TRUE) %>%
-        rename(pus = 2)
-
-    ## find zonal stats for restoration
-    sol_biome = terra::zonal(x, biomes_rast, 'sum', na.rm = TRUE) %>%
-      rename(sol = 2)
-
-    ## combine output into one df in tidy format
-    stats_df = full_join(pus_biome, sol_biome, by = 'name_biome') %>%
-      pivot_longer(cols = 2:3,
-                   names_to = "category",
-                   values_to = "amount") %>%
-      mutate(category = factor(category,
-                               levels = c('pus', 'sol')))
-    return(stats_df)
-  })
   
-  ## Biome stats plot
+  ## Biome stats plot (Fig 2)
   output$biome_stats_plot <- renderPlot(
-    ggplot(data = biome_data(), aes(x = name_biome, y = amount)) +
+    ggplot(data = biome_stats_filtered(), aes(x = name_biome, y = amount)) +
       geom_col(aes(fill = category), 
                position = 'identity', 
                color = 'lightsteelblue4') +
-      scale_fill_manual(values = c('lightsalmon', 'dodgerblue3'),
+      scale_fill_manual(values = c('lightsalmon', '#1A5EAB'),
                         labels = c('Total abandonment', 'Restoration')) +
       geom_text(aes(label = amount), vjust = -0.5, size = 4, fontface = 'bold') +
       ylab(bquote(bold('Area '(km^2)))) +
@@ -511,6 +525,7 @@ server <- function(input, output, session) {
         axis.title.x = element_text(face = 'bold', size = 14, vjust = 5),
         axis.title.y = element_text(face = 'bold', size = 14),
         axis.text.x = element_text(face = 'bold', size = 13, vjust = 9),
+        axis.text.y = element_text(size = 10),
         panel.grid.major.x = element_blank(),
         legend.title = element_blank(),
         legend.text = element_text(size = 11),
