@@ -150,7 +150,7 @@ Now we need to create and export a dataframe with zonal statistics for every pri
 
 ```{r}
 ### Read in df of raster names
-names <- read_csv(here("data/processed/brazil/prioritizr_outputs/inputs.csv"))
+names <- read_csv(here("data/raw/inputs.csv"))
 
 ### Empty dataframe to store results
 stats_df <- data.frame()
