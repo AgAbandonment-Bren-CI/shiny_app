@@ -1,0 +1,14 @@
+name: cropland_abandonment_shiny_app
+title: cropland_abandonment_shiny_app
+username:
+account: maxsettineri
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 8636302
+bundleId: 6989977
+url: https://maxsettineri.shinyapps.io/cropland_abandonment_shiny_app/
+when: 1679448095.27345
+lastSyncTime: 1679448095.27346
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: slider.js

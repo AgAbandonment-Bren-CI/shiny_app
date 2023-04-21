@@ -16,7 +16,6 @@ library(kableExtra)
 library(rsconnect)
 
 
-
 ##### READ IN DATA #####
 
 ### GLOBAL:  --------------------------------------------------------
@@ -279,6 +278,7 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
+  
   
   ### TAB 1 - Landing page ###
   
@@ -543,7 +543,6 @@ server <- function(input, output, session) {
   )
 
 }
-
 
 
 # Run the application 
