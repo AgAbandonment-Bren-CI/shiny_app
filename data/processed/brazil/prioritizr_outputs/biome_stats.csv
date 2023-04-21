@@ -1,0 +1,601 @@
+name_biome,category,amount,ssp,budget,feat
+Amazônia,pus,97992,ssp1,lowBud,feat15
+Amazônia,sol,252,ssp1,lowBud,feat15
+Caatinga,pus,43471,ssp1,lowBud,feat15
+Caatinga,sol,146,ssp1,lowBud,feat15
+Cerrado,pus,77673,ssp1,lowBud,feat15
+Cerrado,sol,110,ssp1,lowBud,feat15
+Mata Atlântica,pus,39763,ssp1,lowBud,feat15
+Mata Atlântica,sol,1067,ssp1,lowBud,feat15
+Pampa,pus,9755,ssp1,lowBud,feat15
+Pampa,sol,0,ssp1,lowBud,feat15
+Amazônia,pus,97992,ssp1,lowBud,feat24
+Amazônia,sol,257,ssp1,lowBud,feat24
+Caatinga,pus,43471,ssp1,lowBud,feat24
+Caatinga,sol,142,ssp1,lowBud,feat24
+Cerrado,pus,77673,ssp1,lowBud,feat24
+Cerrado,sol,110,ssp1,lowBud,feat24
+Mata Atlântica,pus,39763,ssp1,lowBud,feat24
+Mata Atlântica,sol,1067,ssp1,lowBud,feat24
+Pampa,pus,9755,ssp1,lowBud,feat24
+Pampa,sol,0,ssp1,lowBud,feat24
+Amazônia,pus,97992,ssp1,lowBud,feat33
+Amazônia,sol,259,ssp1,lowBud,feat33
+Caatinga,pus,43471,ssp1,lowBud,feat33
+Caatinga,sol,141,ssp1,lowBud,feat33
+Cerrado,pus,77673,ssp1,lowBud,feat33
+Cerrado,sol,107,ssp1,lowBud,feat33
+Mata Atlântica,pus,39763,ssp1,lowBud,feat33
+Mata Atlântica,sol,1069,ssp1,lowBud,feat33
+Pampa,pus,9755,ssp1,lowBud,feat33
+Pampa,sol,0,ssp1,lowBud,feat33
+Amazônia,pus,97992,ssp1,lowBud,feat42
+Amazônia,sol,274,ssp1,lowBud,feat42
+Caatinga,pus,43471,ssp1,lowBud,feat42
+Caatinga,sol,137,ssp1,lowBud,feat42
+Cerrado,pus,77673,ssp1,lowBud,feat42
+Cerrado,sol,105,ssp1,lowBud,feat42
+Mata Atlântica,pus,39763,ssp1,lowBud,feat42
+Mata Atlântica,sol,1062,ssp1,lowBud,feat42
+Pampa,pus,9755,ssp1,lowBud,feat42
+Pampa,sol,0,ssp1,lowBud,feat42
+Amazônia,pus,97992,ssp1,lowBud,feat51
+Amazônia,sol,0,ssp1,lowBud,feat51
+Caatinga,pus,43471,ssp1,lowBud,feat51
+Caatinga,sol,0,ssp1,lowBud,feat51
+Cerrado,pus,77673,ssp1,lowBud,feat51
+Cerrado,sol,0,ssp1,lowBud,feat51
+Mata Atlântica,pus,39763,ssp1,lowBud,feat51
+Mata Atlântica,sol,0,ssp1,lowBud,feat51
+Pampa,pus,9755,ssp1,lowBud,feat51
+Pampa,sol,0,ssp1,lowBud,feat51
+Amazônia,pus,97992,ssp1,highBud,feat15
+Amazônia,sol,683,ssp1,highBud,feat15
+Caatinga,pus,43471,ssp1,highBud,feat15
+Caatinga,sol,926,ssp1,highBud,feat15
+Cerrado,pus,77673,ssp1,highBud,feat15
+Cerrado,sol,2201,ssp1,highBud,feat15
+Mata Atlântica,pus,39763,ssp1,highBud,feat15
+Mata Atlântica,sol,7760,ssp1,highBud,feat15
+Pampa,pus,9755,ssp1,highBud,feat15
+Pampa,sol,78,ssp1,highBud,feat15
+Amazônia,pus,97992,ssp1,highBud,feat24
+Amazônia,sol,848,ssp1,highBud,feat24
+Caatinga,pus,43471,ssp1,highBud,feat24
+Caatinga,sol,900,ssp1,highBud,feat24
+Cerrado,pus,77673,ssp1,highBud,feat24
+Cerrado,sol,2155,ssp1,highBud,feat24
+Mata Atlântica,pus,39763,ssp1,highBud,feat24
+Mata Atlântica,sol,7734,ssp1,highBud,feat24
+Pampa,pus,9755,ssp1,highBud,feat24
+Pampa,sol,38,ssp1,highBud,feat24
+Amazônia,pus,97992,ssp1,highBud,feat33
+Amazônia,sol,1260,ssp1,highBud,feat33
+Caatinga,pus,43471,ssp1,highBud,feat33
+Caatinga,sol,860,ssp1,highBud,feat33
+Cerrado,pus,77673,ssp1,highBud,feat33
+Cerrado,sol,2024,ssp1,highBud,feat33
+Mata Atlântica,pus,39763,ssp1,highBud,feat33
+Mata Atlântica,sol,7580,ssp1,highBud,feat33
+Pampa,pus,9755,ssp1,highBud,feat33
+Pampa,sol,33,ssp1,highBud,feat33
+Amazônia,pus,97992,ssp1,highBud,feat42
+Amazônia,sol,2085,ssp1,highBud,feat42
+Caatinga,pus,43471,ssp1,highBud,feat42
+Caatinga,sol,764,ssp1,highBud,feat42
+Cerrado,pus,77673,ssp1,highBud,feat42
+Cerrado,sol,1784,ssp1,highBud,feat42
+Mata Atlântica,pus,39763,ssp1,highBud,feat42
+Mata Atlântica,sol,7257,ssp1,highBud,feat42
+Pampa,pus,9755,ssp1,highBud,feat42
+Pampa,sol,29,ssp1,highBud,feat42
+Amazônia,pus,97992,ssp1,highBud,feat51
+Amazônia,sol,6094,ssp1,highBud,feat51
+Caatinga,pus,43471,ssp1,highBud,feat51
+Caatinga,sol,504,ssp1,highBud,feat51
+Cerrado,pus,77673,ssp1,highBud,feat51
+Cerrado,sol,693,ssp1,highBud,feat51
+Mata Atlântica,pus,39763,ssp1,highBud,feat51
+Mata Atlântica,sol,5423,ssp1,highBud,feat51
+Pampa,pus,9755,ssp1,highBud,feat51
+Pampa,sol,15,ssp1,highBud,feat51
+Amazônia,pus,82506,ssp2,lowBud,feat15
+Amazônia,sol,233,ssp2,lowBud,feat15
+Caatinga,pus,34571,ssp2,lowBud,feat15
+Caatinga,sol,154,ssp2,lowBud,feat15
+Cerrado,pus,59092,ssp2,lowBud,feat15
+Cerrado,sol,105,ssp2,lowBud,feat15
+Mata Atlântica,pus,31501,ssp2,lowBud,feat15
+Mata Atlântica,sol,1081,ssp2,lowBud,feat15
+Pampa,pus,6926,ssp2,lowBud,feat15
+Pampa,sol,0,ssp2,lowBud,feat15
+Amazônia,pus,82506,ssp2,lowBud,feat24
+Amazônia,sol,236,ssp2,lowBud,feat24
+Caatinga,pus,34571,ssp2,lowBud,feat24
+Caatinga,sol,154,ssp2,lowBud,feat24
+Cerrado,pus,59092,ssp2,lowBud,feat24
+Cerrado,sol,104,ssp2,lowBud,feat24
+Mata Atlântica,pus,31501,ssp2,lowBud,feat24
+Mata Atlântica,sol,1080,ssp2,lowBud,feat24
+Pampa,pus,6926,ssp2,lowBud,feat24
+Pampa,sol,0,ssp2,lowBud,feat24
+Amazônia,pus,82506,ssp2,lowBud,feat33
+Amazônia,sol,245,ssp2,lowBud,feat33
+Caatinga,pus,34571,ssp2,lowBud,feat33
+Caatinga,sol,149,ssp2,lowBud,feat33
+Cerrado,pus,59092,ssp2,lowBud,feat33
+Cerrado,sol,104,ssp2,lowBud,feat33
+Mata Atlântica,pus,31501,ssp2,lowBud,feat33
+Mata Atlântica,sol,1077,ssp2,lowBud,feat33
+Pampa,pus,6926,ssp2,lowBud,feat33
+Pampa,sol,0,ssp2,lowBud,feat33
+Amazônia,pus,82506,ssp2,lowBud,feat42
+Amazônia,sol,260,ssp2,lowBud,feat42
+Caatinga,pus,34571,ssp2,lowBud,feat42
+Caatinga,sol,142,ssp2,lowBud,feat42
+Cerrado,pus,59092,ssp2,lowBud,feat42
+Cerrado,sol,96,ssp2,lowBud,feat42
+Mata Atlântica,pus,31501,ssp2,lowBud,feat42
+Mata Atlântica,sol,1079,ssp2,lowBud,feat42
+Pampa,pus,6926,ssp2,lowBud,feat42
+Pampa,sol,0,ssp2,lowBud,feat42
+Amazônia,pus,82506,ssp2,lowBud,feat51
+Amazônia,sol,0,ssp2,lowBud,feat51
+Caatinga,pus,34571,ssp2,lowBud,feat51
+Caatinga,sol,0,ssp2,lowBud,feat51
+Cerrado,pus,59092,ssp2,lowBud,feat51
+Cerrado,sol,0,ssp2,lowBud,feat51
+Mata Atlântica,pus,31501,ssp2,lowBud,feat51
+Mata Atlântica,sol,0,ssp2,lowBud,feat51
+Pampa,pus,6926,ssp2,lowBud,feat51
+Pampa,sol,0,ssp2,lowBud,feat51
+Amazônia,pus,82506,ssp2,highBud,feat15
+Amazônia,sol,1142,ssp2,highBud,feat15
+Caatinga,pus,34571,ssp2,highBud,feat15
+Caatinga,sol,936,ssp2,highBud,feat15
+Cerrado,pus,59092,ssp2,highBud,feat15
+Cerrado,sol,1932,ssp2,highBud,feat15
+Mata Atlântica,pus,31501,ssp2,highBud,feat15
+Mata Atlântica,sol,7585,ssp2,highBud,feat15
+Pampa,pus,6926,ssp2,highBud,feat15
+Pampa,sol,173,ssp2,highBud,feat15
+Amazônia,pus,82506,ssp2,highBud,feat24
+Amazônia,sol,1413,ssp2,highBud,feat24
+Caatinga,pus,34571,ssp2,highBud,feat24
+Caatinga,sol,893,ssp2,highBud,feat24
+Cerrado,pus,59092,ssp2,highBud,feat24
+Cerrado,sol,1878,ssp2,highBud,feat24
+Mata Atlântica,pus,31501,ssp2,highBud,feat24
+Mata Atlântica,sol,7486,ssp2,highBud,feat24
+Pampa,pus,6926,ssp2,highBud,feat24
+Pampa,sol,145,ssp2,highBud,feat24
+Amazônia,pus,82506,ssp2,highBud,feat33
+Amazônia,sol,1809,ssp2,highBud,feat33
+Caatinga,pus,34571,ssp2,highBud,feat33
+Caatinga,sol,854,ssp2,highBud,feat33
+Cerrado,pus,59092,ssp2,highBud,feat33
+Cerrado,sol,1771,ssp2,highBud,feat33
+Mata Atlântica,pus,31501,ssp2,highBud,feat33
+Mata Atlântica,sol,7366,ssp2,highBud,feat33
+Pampa,pus,6926,ssp2,highBud,feat33
+Pampa,sol,87,ssp2,highBud,feat33
+Amazônia,pus,82506,ssp2,highBud,feat42
+Amazônia,sol,2560,ssp2,highBud,feat42
+Caatinga,pus,34571,ssp2,highBud,feat42
+Caatinga,sol,767,ssp2,highBud,feat42
+Cerrado,pus,59092,ssp2,highBud,feat42
+Cerrado,sol,1589,ssp2,highBud,feat42
+Mata Atlântica,pus,31501,ssp2,highBud,feat42
+Mata Atlântica,sol,7083,ssp2,highBud,feat42
+Pampa,pus,6926,ssp2,highBud,feat42
+Pampa,sol,26,ssp2,highBud,feat42
+Amazônia,pus,82506,ssp2,highBud,feat51
+Amazônia,sol,6816,ssp2,highBud,feat51
+Caatinga,pus,34571,ssp2,highBud,feat51
+Caatinga,sol,425,ssp2,highBud,feat51
+Cerrado,pus,59092,ssp2,highBud,feat51
+Cerrado,sol,658,ssp2,highBud,feat51
+Mata Atlântica,pus,31501,ssp2,highBud,feat51
+Mata Atlântica,sol,4948,ssp2,highBud,feat51
+Pampa,pus,6926,ssp2,highBud,feat51
+Pampa,sol,10,ssp2,highBud,feat51
+Amazônia,pus,91636,ssp3,lowBud,feat15
+Amazônia,sol,253,ssp3,lowBud,feat15
+Caatinga,pus,39701,ssp3,lowBud,feat15
+Caatinga,sol,162,ssp3,lowBud,feat15
+Cerrado,pus,67266,ssp3,lowBud,feat15
+Cerrado,sol,106,ssp3,lowBud,feat15
+Mata Atlântica,pus,35982,ssp3,lowBud,feat15
+Mata Atlântica,sol,1057,ssp3,lowBud,feat15
+Pampa,pus,8323,ssp3,lowBud,feat15
+Pampa,sol,0,ssp3,lowBud,feat15
+Amazônia,pus,91636,ssp3,lowBud,feat24
+Amazônia,sol,256,ssp3,lowBud,feat24
+Caatinga,pus,39701,ssp3,lowBud,feat24
+Caatinga,sol,157,ssp3,lowBud,feat24
+Cerrado,pus,67266,ssp3,lowBud,feat24
+Cerrado,sol,105,ssp3,lowBud,feat24
+Mata Atlântica,pus,35982,ssp3,lowBud,feat24
+Mata Atlântica,sol,1060,ssp3,lowBud,feat24
+Pampa,pus,8323,ssp3,lowBud,feat24
+Pampa,sol,0,ssp3,lowBud,feat24
+Amazônia,pus,91636,ssp3,lowBud,feat33
+Amazônia,sol,261,ssp3,lowBud,feat33
+Caatinga,pus,39701,ssp3,lowBud,feat33
+Caatinga,sol,154,ssp3,lowBud,feat33
+Cerrado,pus,67266,ssp3,lowBud,feat33
+Cerrado,sol,105,ssp3,lowBud,feat33
+Mata Atlântica,pus,35982,ssp3,lowBud,feat33
+Mata Atlântica,sol,1058,ssp3,lowBud,feat33
+Pampa,pus,8323,ssp3,lowBud,feat33
+Pampa,sol,0,ssp3,lowBud,feat33
+Amazônia,pus,91636,ssp3,lowBud,feat42
+Amazônia,sol,278,ssp3,lowBud,feat42
+Caatinga,pus,39701,ssp3,lowBud,feat42
+Caatinga,sol,148,ssp3,lowBud,feat42
+Cerrado,pus,67266,ssp3,lowBud,feat42
+Cerrado,sol,102,ssp3,lowBud,feat42
+Mata Atlântica,pus,35982,ssp3,lowBud,feat42
+Mata Atlântica,sol,1053,ssp3,lowBud,feat42
+Pampa,pus,8323,ssp3,lowBud,feat42
+Pampa,sol,0,ssp3,lowBud,feat42
+Amazônia,pus,91636,ssp3,lowBud,feat51
+Amazônia,sol,0,ssp3,lowBud,feat51
+Caatinga,pus,39701,ssp3,lowBud,feat51
+Caatinga,sol,0,ssp3,lowBud,feat51
+Cerrado,pus,67266,ssp3,lowBud,feat51
+Cerrado,sol,0,ssp3,lowBud,feat51
+Mata Atlântica,pus,35982,ssp3,lowBud,feat51
+Mata Atlântica,sol,0,ssp3,lowBud,feat51
+Pampa,pus,8323,ssp3,lowBud,feat51
+Pampa,sol,0,ssp3,lowBud,feat51
+Amazônia,pus,91636,ssp3,highBud,feat15
+Amazônia,sol,739,ssp3,highBud,feat15
+Caatinga,pus,39701,ssp3,highBud,feat15
+Caatinga,sol,955,ssp3,highBud,feat15
+Cerrado,pus,67266,ssp3,highBud,feat15
+Cerrado,sol,2084,ssp3,highBud,feat15
+Mata Atlântica,pus,35982,ssp3,highBud,feat15
+Mata Atlântica,sol,7795,ssp3,highBud,feat15
+Pampa,pus,8323,ssp3,highBud,feat15
+Pampa,sol,102,ssp3,highBud,feat15
+Amazônia,pus,91636,ssp3,highBud,feat24
+Amazônia,sol,956,ssp3,highBud,feat24
+Caatinga,pus,39701,ssp3,highBud,feat24
+Caatinga,sol,935,ssp3,highBud,feat24
+Cerrado,pus,67266,ssp3,highBud,feat24
+Cerrado,sol,2027,ssp3,highBud,feat24
+Mata Atlântica,pus,35982,ssp3,highBud,feat24
+Mata Atlântica,sol,7732,ssp3,highBud,feat24
+Pampa,pus,8323,ssp3,highBud,feat24
+Pampa,sol,64,ssp3,highBud,feat24
+Amazônia,pus,91636,ssp3,highBud,feat33
+Amazônia,sol,1403,ssp3,highBud,feat33
+Caatinga,pus,39701,ssp3,highBud,feat33
+Caatinga,sol,886,ssp3,highBud,feat33
+Cerrado,pus,67266,ssp3,highBud,feat33
+Cerrado,sol,1910,ssp3,highBud,feat33
+Mata Atlântica,pus,35982,ssp3,highBud,feat33
+Mata Atlântica,sol,7573,ssp3,highBud,feat33
+Pampa,pus,8323,ssp3,highBud,feat33
+Pampa,sol,25,ssp3,highBud,feat33
+Amazônia,pus,91636,ssp3,highBud,feat42
+Amazônia,sol,2185,ssp3,highBud,feat42
+Caatinga,pus,39701,ssp3,highBud,feat42
+Caatinga,sol,793,ssp3,highBud,feat42
+Cerrado,pus,67266,ssp3,highBud,feat42
+Cerrado,sol,1697,ssp3,highBud,feat42
+Mata Atlântica,pus,35982,ssp3,highBud,feat42
+Mata Atlântica,sol,7254,ssp3,highBud,feat42
+Pampa,pus,8323,ssp3,highBud,feat42
+Pampa,sol,20,ssp3,highBud,feat42
+Amazônia,pus,91636,ssp3,highBud,feat51
+Amazônia,sol,6264,ssp3,highBud,feat51
+Caatinga,pus,39701,ssp3,highBud,feat51
+Caatinga,sol,509,ssp3,highBud,feat51
+Cerrado,pus,67266,ssp3,highBud,feat51
+Cerrado,sol,663,ssp3,highBud,feat51
+Mata Atlântica,pus,35982,ssp3,highBud,feat51
+Mata Atlântica,sol,5316,ssp3,highBud,feat51
+Pampa,pus,8323,ssp3,highBud,feat51
+Pampa,sol,12,ssp3,highBud,feat51
+Amazônia,pus,126438,ssp4,lowBud,feat15
+Amazônia,sol,217,ssp4,lowBud,feat15
+Caatinga,pus,58719,ssp4,lowBud,feat15
+Caatinga,sol,185,ssp4,lowBud,feat15
+Cerrado,pus,105339,ssp4,lowBud,feat15
+Cerrado,sol,132,ssp4,lowBud,feat15
+Mata Atlântica,pus,50746,ssp4,lowBud,feat15
+Mata Atlântica,sol,1038,ssp4,lowBud,feat15
+Pampa,pus,12752,ssp4,lowBud,feat15
+Pampa,sol,0,ssp4,lowBud,feat15
+Amazônia,pus,126438,ssp4,lowBud,feat24
+Amazônia,sol,226,ssp4,lowBud,feat24
+Caatinga,pus,58719,ssp4,lowBud,feat24
+Caatinga,sol,182,ssp4,lowBud,feat24
+Cerrado,pus,105339,ssp4,lowBud,feat24
+Cerrado,sol,132,ssp4,lowBud,feat24
+Mata Atlântica,pus,50746,ssp4,lowBud,feat24
+Mata Atlântica,sol,1034,ssp4,lowBud,feat24
+Pampa,pus,12752,ssp4,lowBud,feat24
+Pampa,sol,0,ssp4,lowBud,feat24
+Amazônia,pus,126438,ssp4,lowBud,feat33
+Amazônia,sol,240,ssp4,lowBud,feat33
+Caatinga,pus,58719,ssp4,lowBud,feat33
+Caatinga,sol,180,ssp4,lowBud,feat33
+Cerrado,pus,105339,ssp4,lowBud,feat33
+Cerrado,sol,129,ssp4,lowBud,feat33
+Mata Atlântica,pus,50746,ssp4,lowBud,feat33
+Mata Atlântica,sol,1027,ssp4,lowBud,feat33
+Pampa,pus,12752,ssp4,lowBud,feat33
+Pampa,sol,0,ssp4,lowBud,feat33
+Amazônia,pus,126438,ssp4,lowBud,feat42
+Amazônia,sol,0,ssp4,lowBud,feat42
+Caatinga,pus,58719,ssp4,lowBud,feat42
+Caatinga,sol,0,ssp4,lowBud,feat42
+Cerrado,pus,105339,ssp4,lowBud,feat42
+Cerrado,sol,0,ssp4,lowBud,feat42
+Mata Atlântica,pus,50746,ssp4,lowBud,feat42
+Mata Atlântica,sol,0,ssp4,lowBud,feat42
+Pampa,pus,12752,ssp4,lowBud,feat42
+Pampa,sol,0,ssp4,lowBud,feat42
+Amazônia,pus,126438,ssp4,lowBud,feat51
+Amazônia,sol,0,ssp4,lowBud,feat51
+Caatinga,pus,58719,ssp4,lowBud,feat51
+Caatinga,sol,0,ssp4,lowBud,feat51
+Cerrado,pus,105339,ssp4,lowBud,feat51
+Cerrado,sol,0,ssp4,lowBud,feat51
+Mata Atlântica,pus,50746,ssp4,lowBud,feat51
+Mata Atlântica,sol,0,ssp4,lowBud,feat51
+Pampa,pus,12752,ssp4,lowBud,feat51
+Pampa,sol,0,ssp4,lowBud,feat51
+Amazônia,pus,126438,ssp4,highBud,feat15
+Amazônia,sol,548,ssp4,highBud,feat15
+Caatinga,pus,58719,ssp4,highBud,feat15
+Caatinga,sol,892,ssp4,highBud,feat15
+Cerrado,pus,105339,ssp4,highBud,feat15
+Cerrado,sol,2385,ssp4,highBud,feat15
+Mata Atlântica,pus,50746,ssp4,highBud,feat15
+Mata Atlântica,sol,7744,ssp4,highBud,feat15
+Pampa,pus,12752,ssp4,highBud,feat15
+Pampa,sol,27,ssp4,highBud,feat15
+Amazônia,pus,126438,ssp4,highBud,feat24
+Amazônia,sol,594,ssp4,highBud,feat24
+Caatinga,pus,58719,ssp4,highBud,feat24
+Caatinga,sol,882,ssp4,highBud,feat24
+Cerrado,pus,105339,ssp4,highBud,feat24
+Cerrado,sol,2331,ssp4,highBud,feat24
+Mata Atlântica,pus,50746,ssp4,highBud,feat24
+Mata Atlântica,sol,7774,ssp4,highBud,feat24
+Pampa,pus,12752,ssp4,highBud,feat24
+Pampa,sol,27,ssp4,highBud,feat24
+Amazônia,pus,126438,ssp4,highBud,feat33
+Amazônia,sol,696,ssp4,highBud,feat33
+Caatinga,pus,58719,ssp4,highBud,feat33
+Caatinga,sol,862,ssp4,highBud,feat33
+Cerrado,pus,105339,ssp4,highBud,feat33
+Cerrado,sol,2236,ssp4,highBud,feat33
+Mata Atlântica,pus,50746,ssp4,highBud,feat33
+Mata Atlântica,sol,7812,ssp4,highBud,feat33
+Pampa,pus,12752,ssp4,highBud,feat33
+Pampa,sol,27,ssp4,highBud,feat33
+Amazônia,pus,126438,ssp4,highBud,feat42
+Amazônia,sol,1307,ssp4,highBud,feat42
+Caatinga,pus,58719,ssp4,highBud,feat42
+Caatinga,sol,810,ssp4,highBud,feat42
+Cerrado,pus,105339,ssp4,highBud,feat42
+Cerrado,sol,1958,ssp4,highBud,feat42
+Mata Atlântica,pus,50746,ssp4,highBud,feat42
+Mata Atlântica,sol,7663,ssp4,highBud,feat42
+Pampa,pus,12752,ssp4,highBud,feat42
+Pampa,sol,26,ssp4,highBud,feat42
+Amazônia,pus,126438,ssp4,highBud,feat51
+Amazônia,sol,5294,ssp4,highBud,feat51
+Caatinga,pus,58719,ssp4,highBud,feat51
+Caatinga,sol,607,ssp4,highBud,feat51
+Cerrado,pus,105339,ssp4,highBud,feat51
+Cerrado,sol,694,ssp4,highBud,feat51
+Mata Atlântica,pus,50746,ssp4,highBud,feat51
+Mata Atlântica,sol,5984,ssp4,highBud,feat51
+Pampa,pus,12752,ssp4,highBud,feat51
+Pampa,sol,14,ssp4,highBud,feat51
+Amazônia,pus,102521,ssp5,lowBud,feat15
+Amazônia,sol,246,ssp5,lowBud,feat15
+Caatinga,pus,48533,ssp5,lowBud,feat15
+Caatinga,sol,181,ssp5,lowBud,feat15
+Cerrado,pus,74824,ssp5,lowBud,feat15
+Cerrado,sol,116,ssp5,lowBud,feat15
+Mata Atlântica,pus,43159,ssp5,lowBud,feat15
+Mata Atlântica,sol,1035,ssp5,lowBud,feat15
+Pampa,pus,9960,ssp5,lowBud,feat15
+Pampa,sol,0,ssp5,lowBud,feat15
+Amazônia,pus,102521,ssp5,lowBud,feat24
+Amazônia,sol,253,ssp5,lowBud,feat24
+Caatinga,pus,48533,ssp5,lowBud,feat24
+Caatinga,sol,175,ssp5,lowBud,feat24
+Cerrado,pus,74824,ssp5,lowBud,feat24
+Cerrado,sol,113,ssp5,lowBud,feat24
+Mata Atlântica,pus,43159,ssp5,lowBud,feat24
+Mata Atlântica,sol,1038,ssp5,lowBud,feat24
+Pampa,pus,9960,ssp5,lowBud,feat24
+Pampa,sol,0,ssp5,lowBud,feat24
+Amazônia,pus,102521,ssp5,lowBud,feat33
+Amazônia,sol,270,ssp5,lowBud,feat33
+Caatinga,pus,48533,ssp5,lowBud,feat33
+Caatinga,sol,169,ssp5,lowBud,feat33
+Cerrado,pus,74824,ssp5,lowBud,feat33
+Cerrado,sol,111,ssp5,lowBud,feat33
+Mata Atlântica,pus,43159,ssp5,lowBud,feat33
+Mata Atlântica,sol,1032,ssp5,lowBud,feat33
+Pampa,pus,9960,ssp5,lowBud,feat33
+Pampa,sol,0,ssp5,lowBud,feat33
+Amazônia,pus,102521,ssp5,lowBud,feat42
+Amazônia,sol,285,ssp5,lowBud,feat42
+Caatinga,pus,48533,ssp5,lowBud,feat42
+Caatinga,sol,161,ssp5,lowBud,feat42
+Cerrado,pus,74824,ssp5,lowBud,feat42
+Cerrado,sol,109,ssp5,lowBud,feat42
+Mata Atlântica,pus,43159,ssp5,lowBud,feat42
+Mata Atlântica,sol,1029,ssp5,lowBud,feat42
+Pampa,pus,9960,ssp5,lowBud,feat42
+Pampa,sol,0,ssp5,lowBud,feat42
+Amazônia,pus,102521,ssp5,lowBud,feat51
+Amazônia,sol,0,ssp5,lowBud,feat51
+Caatinga,pus,48533,ssp5,lowBud,feat51
+Caatinga,sol,0,ssp5,lowBud,feat51
+Cerrado,pus,74824,ssp5,lowBud,feat51
+Cerrado,sol,0,ssp5,lowBud,feat51
+Mata Atlântica,pus,43159,ssp5,lowBud,feat51
+Mata Atlântica,sol,0,ssp5,lowBud,feat51
+Pampa,pus,9960,ssp5,lowBud,feat51
+Pampa,sol,0,ssp5,lowBud,feat51
+Amazônia,pus,102521,ssp5,highBud,feat15
+Amazônia,sol,622,ssp5,highBud,feat15
+Caatinga,pus,48533,ssp5,highBud,feat15
+Caatinga,sol,965,ssp5,highBud,feat15
+Cerrado,pus,74824,ssp5,highBud,feat15
+Cerrado,sol,1933,ssp5,highBud,feat15
+Mata Atlântica,pus,43159,ssp5,highBud,feat15
+Mata Atlântica,sol,8114,ssp5,highBud,feat15
+Pampa,pus,9960,ssp5,highBud,feat15
+Pampa,sol,25,ssp5,highBud,feat15
+Amazônia,pus,102521,ssp5,highBud,feat24
+Amazônia,sol,686,ssp5,highBud,feat24
+Caatinga,pus,48533,ssp5,highBud,feat24
+Caatinga,sol,954,ssp5,highBud,feat24
+Cerrado,pus,74824,ssp5,highBud,feat24
+Cerrado,sol,1890,ssp5,highBud,feat24
+Mata Atlântica,pus,43159,ssp5,highBud,feat24
+Mata Atlântica,sol,8118,ssp5,highBud,feat24
+Pampa,pus,9960,ssp5,highBud,feat24
+Pampa,sol,25,ssp5,highBud,feat24
+Amazônia,pus,102521,ssp5,highBud,feat33
+Amazônia,sol,949,ssp5,highBud,feat33
+Caatinga,pus,48533,ssp5,highBud,feat33
+Caatinga,sol,916,ssp5,highBud,feat33
+Cerrado,pus,74824,ssp5,highBud,feat33
+Cerrado,sol,1786,ssp5,highBud,feat33
+Mata Atlântica,pus,43159,ssp5,highBud,feat33
+Mata Atlântica,sol,8052,ssp5,highBud,feat33
+Pampa,pus,9960,ssp5,highBud,feat33
+Pampa,sol,23,ssp5,highBud,feat33
+Amazônia,pus,102521,ssp5,highBud,feat42
+Amazônia,sol,1769,ssp5,highBud,feat42
+Caatinga,pus,48533,ssp5,highBud,feat42
+Caatinga,sol,829,ssp5,highBud,feat42
+Cerrado,pus,74824,ssp5,highBud,feat42
+Cerrado,sol,1548,ssp5,highBud,feat42
+Mata Atlântica,pus,43159,ssp5,highBud,feat42
+Mata Atlântica,sol,7720,ssp5,highBud,feat42
+Pampa,pus,9960,ssp5,highBud,feat42
+Pampa,sol,22,ssp5,highBud,feat42
+Amazônia,pus,102521,ssp5,highBud,feat51
+Amazônia,sol,5760,ssp5,highBud,feat51
+Caatinga,pus,48533,ssp5,highBud,feat51
+Caatinga,sol,581,ssp5,highBud,feat51
+Cerrado,pus,74824,ssp5,highBud,feat51
+Cerrado,sol,548,ssp5,highBud,feat51
+Mata Atlântica,pus,43159,ssp5,highBud,feat51
+Mata Atlântica,sol,5790,ssp5,highBud,feat51
+Pampa,pus,9960,ssp5,highBud,feat51
+Pampa,sol,10,ssp5,highBud,feat51
+Amazônia,pus,53401,ssp_all,lowBud,feat15
+Amazônia,sol,249,ssp_all,lowBud,feat15
+Caatinga,pus,18841,ssp_all,lowBud,feat15
+Caatinga,sol,119,ssp_all,lowBud,feat15
+Cerrado,pus,29576,ssp_all,lowBud,feat15
+Cerrado,sol,141,ssp_all,lowBud,feat15
+Mata Atlântica,pus,18587,ssp_all,lowBud,feat15
+Mata Atlântica,sol,1059,ssp_all,lowBud,feat15
+Pampa,pus,3478,ssp_all,lowBud,feat15
+Pampa,sol,0,ssp_all,lowBud,feat15
+Amazônia,pus,53401,ssp_all,lowBud,feat24
+Amazônia,sol,257,ssp_all,lowBud,feat24
+Caatinga,pus,18841,ssp_all,lowBud,feat24
+Caatinga,sol,118,ssp_all,lowBud,feat24
+Cerrado,pus,29576,ssp_all,lowBud,feat24
+Cerrado,sol,131,ssp_all,lowBud,feat24
+Mata Atlântica,pus,18587,ssp_all,lowBud,feat24
+Mata Atlântica,sol,1064,ssp_all,lowBud,feat24
+Pampa,pus,3478,ssp_all,lowBud,feat24
+Pampa,sol,0,ssp_all,lowBud,feat24
+Amazônia,pus,53401,ssp_all,lowBud,feat33
+Amazônia,sol,269,ssp_all,lowBud,feat33
+Caatinga,pus,18841,ssp_all,lowBud,feat33
+Caatinga,sol,115,ssp_all,lowBud,feat33
+Cerrado,pus,29576,ssp_all,lowBud,feat33
+Cerrado,sol,126,ssp_all,lowBud,feat33
+Mata Atlântica,pus,18587,ssp_all,lowBud,feat33
+Mata Atlântica,sol,1063,ssp_all,lowBud,feat33
+Pampa,pus,3478,ssp_all,lowBud,feat33
+Pampa,sol,0,ssp_all,lowBud,feat33
+Amazônia,pus,53401,ssp_all,lowBud,feat42
+Amazônia,sol,298,ssp_all,lowBud,feat42
+Caatinga,pus,18841,ssp_all,lowBud,feat42
+Caatinga,sol,110,ssp_all,lowBud,feat42
+Cerrado,pus,29576,ssp_all,lowBud,feat42
+Cerrado,sol,112,ssp_all,lowBud,feat42
+Mata Atlântica,pus,18587,ssp_all,lowBud,feat42
+Mata Atlântica,sol,1059,ssp_all,lowBud,feat42
+Pampa,pus,3478,ssp_all,lowBud,feat42
+Pampa,sol,0,ssp_all,lowBud,feat42
+Amazônia,pus,53401,ssp_all,lowBud,feat51
+Amazônia,sol,569,ssp_all,lowBud,feat51
+Caatinga,pus,18841,ssp_all,lowBud,feat51
+Caatinga,sol,96,ssp_all,lowBud,feat51
+Cerrado,pus,29576,ssp_all,lowBud,feat51
+Cerrado,sol,69,ssp_all,lowBud,feat51
+Mata Atlântica,pus,18587,ssp_all,lowBud,feat51
+Mata Atlântica,sol,897,ssp_all,lowBud,feat51
+Pampa,pus,3478,ssp_all,lowBud,feat51
+Pampa,sol,0,ssp_all,lowBud,feat51
+Amazônia,pus,53401,ssp_all,highBud,feat15
+Amazônia,sol,2258,ssp_all,highBud,feat15
+Caatinga,pus,18841,ssp_all,highBud,feat15
+Caatinga,sol,983,ssp_all,highBud,feat15
+Cerrado,pus,29576,ssp_all,highBud,feat15
+Cerrado,sol,1167,ssp_all,highBud,feat15
+Mata Atlântica,pus,18587,ssp_all,highBud,feat15
+Mata Atlântica,sol,7362,ssp_all,highBud,feat15
+Pampa,pus,3478,ssp_all,highBud,feat15
+Pampa,sol,293,ssp_all,highBud,feat15
+Amazônia,pus,53401,ssp_all,highBud,feat24
+Amazônia,sol,2505,ssp_all,highBud,feat24
+Caatinga,pus,18841,ssp_all,highBud,feat24
+Caatinga,sol,940,ssp_all,highBud,feat24
+Cerrado,pus,29576,ssp_all,highBud,feat24
+Cerrado,sol,1146,ssp_all,highBud,feat24
+Mata Atlântica,pus,18587,ssp_all,highBud,feat24
+Mata Atlântica,sol,7247,ssp_all,highBud,feat24
+Pampa,pus,3478,ssp_all,highBud,feat24
+Pampa,sol,264,ssp_all,highBud,feat24
+Amazônia,pus,53401,ssp_all,highBud,feat33
+Amazônia,sol,3038,ssp_all,highBud,feat33
+Caatinga,pus,18841,ssp_all,highBud,feat33
+Caatinga,sol,867,ssp_all,highBud,feat33
+Cerrado,pus,29576,ssp_all,highBud,feat33
+Cerrado,sol,1092,ssp_all,highBud,feat33
+Mata Atlântica,pus,18587,ssp_all,highBud,feat33
+Mata Atlântica,sol,6968,ssp_all,highBud,feat33
+Pampa,pus,3478,ssp_all,highBud,feat33
+Pampa,sol,228,ssp_all,highBud,feat33
+Amazônia,pus,53401,ssp_all,highBud,feat42
+Amazônia,sol,4534,ssp_all,highBud,feat42
+Caatinga,pus,18841,ssp_all,highBud,feat42
+Caatinga,sol,697,ssp_all,highBud,feat42
+Cerrado,pus,29576,ssp_all,highBud,feat42
+Cerrado,sol,955,ssp_all,highBud,feat42
+Mata Atlântica,pus,18587,ssp_all,highBud,feat42
+Mata Atlântica,sol,6135,ssp_all,highBud,feat42
+Pampa,pus,3478,ssp_all,highBud,feat42
+Pampa,sol,132,ssp_all,highBud,feat42
+Amazônia,pus,53401,ssp_all,highBud,feat51
+Amazônia,sol,8574,ssp_all,highBud,feat51
+Caatinga,pus,18841,ssp_all,highBud,feat51
+Caatinga,sol,300,ssp_all,highBud,feat51
+Cerrado,pus,29576,ssp_all,highBud,feat51
+Cerrado,sol,463,ssp_all,highBud,feat51
+Mata Atlântica,pus,18587,ssp_all,highBud,feat51
+Mata Atlântica,sol,3843,ssp_all,highBud,feat51
+Pampa,pus,3478,ssp_all,highBud,feat51
+Pampa,sol,7,ssp_all,highBud,feat51

@@ -1,0 +1,13 @@
+name: cropland_abandonment_shiny
+title: cropland_abandonment_shiny
+username:
+account: n-mcmanus
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 8785900
+bundleId: 7058834
+url: https://n-mcmanus.shinyapps.io/cropland_abandonment_shiny/
+when: 1680810834.79428
+lastSyncTime: 1680810834.79432
+asMultiple: FALSE
+asStatic: FALSE

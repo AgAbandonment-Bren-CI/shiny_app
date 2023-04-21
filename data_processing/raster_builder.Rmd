@@ -366,6 +366,97 @@ writeRaster(carbon_brazil,
 ```
 
 
+## PRIORITIZR SOLUTIONS
+
+solutions are in 1km resolution. To increase shiny speed, we'll convert them to 5km resolution
+```{r}
+## function to automatically aggregate and save file
+downsample <- function(file_name) {
+  rast <- terra::rast(here(paste0("data/processed/brazil/prioritizr_outputs/", file_name, ".tif")))
+  
+  terra::aggregate(x = rast, fact = 5, fun = 'modal', na.rm = TRUE,
+  filename = here(paste0("data/processed/brazil/prioritizr_outputs/5km/", file_name, "_5km.tif")),  overwrite = TRUE)
+}
+
+
+## SSP1
+downsample("ssp1_lowBud_feat15")
+downsample("ssp1_lowBud_feat24")
+downsample("ssp1_lowBud_feat33")
+downsample("ssp1_lowBud_feat42")
+downsample("ssp1_lowBud_feat51")
+
+downsample("ssp1_highBud_feat15")
+downsample("ssp1_highBud_feat24")
+downsample("ssp1_highBud_feat33")
+downsample("ssp1_highBud_feat42")
+downsample("ssp1_highBud_feat51")
+
+## SSP2
+downsample("ssp2_lowBud_feat15")
+downsample("ssp2_lowBud_feat24")
+downsample("ssp2_lowBud_feat33")
+downsample("ssp2_lowBud_feat42")
+downsample("ssp2_lowBud_feat51")
+
+downsample("ssp2_highBud_feat15")
+downsample("ssp2_highBud_feat24")
+downsample("ssp2_highBud_feat33")
+downsample("ssp2_highBud_feat42")
+downsample("ssp2_highBud_feat51")
+
+## SSP3
+downsample("ssp3_lowBud_feat15")
+downsample("ssp3_lowBud_feat24")
+downsample("ssp3_lowBud_feat33")
+downsample("ssp3_lowBud_feat42")
+downsample("ssp3_lowBud_feat51")
+
+downsample("ssp3_highBud_feat15")
+downsample("ssp3_highBud_feat24")
+downsample("ssp3_highBud_feat33")
+downsample("ssp3_highBud_feat42")
+downsample("ssp3_highBud_feat51")
+
+## SSP4
+downsample("ssp4_lowBud_feat15")
+downsample("ssp4_lowBud_feat24")
+downsample("ssp4_lowBud_feat33")
+downsample("ssp4_lowBud_feat42")
+downsample("ssp4_lowBud_feat51")
+
+downsample("ssp4_highBud_feat15")
+downsample("ssp4_highBud_feat24")
+downsample("ssp4_highBud_feat33")
+downsample("ssp4_highBud_feat42")
+downsample("ssp4_highBud_feat51")
+
+## SSP5
+downsample("ssp5_lowBud_feat15")
+downsample("ssp5_lowBud_feat24")
+downsample("ssp5_lowBud_feat33")
+downsample("ssp5_lowBud_feat42")
+downsample("ssp5_lowBud_feat51")
+
+downsample("ssp5_highBud_feat15")
+downsample("ssp5_highBud_feat24")
+downsample("ssp5_highBud_feat33")
+downsample("ssp5_highBud_feat42")
+downsample("ssp5_highBud_feat51")
+
+## SSP overlap
+downsample("ssp_all_lowBud_feat15")
+downsample("ssp_all_lowBud_feat24")
+downsample("ssp_all_lowBud_feat33")
+downsample("ssp_all_lowBud_feat42")
+downsample("ssp_all_lowBud_feat51")
+
+downsample("ssp_all_highBud_feat15")
+downsample("ssp_all_highBud_feat24")
+downsample("ssp_all_highBud_feat33")
+downsample("ssp_all_highBud_feat42")
+downsample("ssp_all_highBud_feat51")
+```
 
 
 
