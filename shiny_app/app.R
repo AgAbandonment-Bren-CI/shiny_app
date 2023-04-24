@@ -282,13 +282,6 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
   
-<<<<<<< HEAD
-  
-  ### TAB 1 - Landing page ###
-=======
-  ### TAB 1 - Landing page ###  ------------------------------------------------
->>>>>>> a5f953b2b2bffd9289be10b31bcd880c3785afc1
-  
   # intro tab image
   # output$intropic <- renderPlot({
   #   ggdraw ()+
