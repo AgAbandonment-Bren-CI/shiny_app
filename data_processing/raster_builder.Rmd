@@ -372,7 +372,7 @@ solutions are in 1km resolution. To increase shiny speed, we'll convert them to 
 ```{r}
 ## function to automatically aggregate and save file
 downsample <- function(file_name) {
-  rast <- terra::rast(here(paste0("data/processed/brazil/prioritizr_outputs/", file_name, ".tif")))
+  rast <- terra::rast(here(paste0("data/processed/brazil/prioritizr_outputs/1km/", file_name, "_1km.tif")))
   
   terra::aggregate(x = rast, fact = 5, fun = 'modal', na.rm = TRUE,
   filename = here(paste0("data/processed/brazil/prioritizr_outputs/5km/", file_name, "_5km.tif")),  overwrite = TRUE)
