@@ -257,6 +257,17 @@ ui <- fluidPage(
                                                   choices = c("Low" = "lowBud", 
                                                               "High" = "highBud"),
                                                   selected = "highBud"),
+                                     hr(style = 'border-top: 1px solid #2d3e50'),
+                                     
+                                     ## Resolution buttons:
+                                     h3(strong("Step 4: Resolution")),
+                                     h5(em("Select the resolution of model results visualized on the map. (WARNING: 1km resolution has significantly longer loading times)")),
+                                     br(),
+                                     radioButtons(inputId = "resolution",
+                                                  label = NULL,
+                                                  choices = c("1 km" = "1km", 
+                                                              "5 km" = "5km"),
+                                                  selected = "5km"),
                         ), # end sidebar panel
                         
                         mainPanel(tmapOutput(outputId = "ab_brazil_tmap", height = 700),
@@ -421,10 +432,13 @@ server <- function(input, output, session) {
       "feat42"
     } else {"feat51"}
     
-    ## combine into raster file naming convention
+    ## Create file path/name based on resolution and other inputs
+    rez = input$resolution
     file_name = paste(x, y, z, sep = "_") %>% 
-      paste0("_5km.tif")
-    raster = rast(here("data/processed/brazil/prioritizr_outputs/5km", file_name))
+      paste0("_", rez, ".tif")
+    file_path = paste0("data/processed/brazil/prioritizr_outputs/", rez)
+    
+    raster = rast(here(file_path, file_name))
     
     return(raster)
   })
