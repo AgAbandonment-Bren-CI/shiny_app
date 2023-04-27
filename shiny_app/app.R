@@ -414,7 +414,8 @@ server <- function(input, output, session) {
   
   
   ## Read in 5km raster for TMAP based on "model" user inputs
-  raster_layer_5km <- reactive({
+  
+  raster_layer <- reactive({
     ## assign SSP selection to variable
     x = input$ssp_brazil_select
     ## Load in raster stack based on budget AND ssp (x)
@@ -450,13 +451,13 @@ server <- function(input, output, session) {
     tmap_mode('view') +
     tm_shape(shp = biomes_vect, name = "Biomes") +
       tm_borders(lwd = 1, col = 'gray40') +
-    tm_shape(shp = raster_layer_5km(), name = "Model output",
+    tm_shape(shp = raster_layer(), name = "Model output",
              raster.downsample = F) + 
       tm_raster(palette = c('#F67D4B', '#1A5EAB'),
                 style = "cat",
                 title = "Restoration model output:",
                 labels = c("Abandoned cropland", "Restoration priority")) +
-    tm_scale_bar(position = c('right', 'bottom')) 
+    tm_scale_bar(position = c('right', 'bottom'))
   }) # end TMAP Brazil
   
   
