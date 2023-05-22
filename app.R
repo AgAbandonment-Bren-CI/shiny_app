@@ -101,21 +101,20 @@ ui <- fluidPage(
                                h2(strong("Background")),
                                h4(strong("Shared Socioeconomic Pathways (SSPs)")),
                                p(HTML("The SSP climate scenarios provide a way to explore varying levels of future greenhouse gas emissions under different global approaches to climate policy through 2100 (O’Neill et al., 2017). The five SSP scenarios outlined in Figure 1 represent distinct narratives describing various challenges to the mitigation of and adaptation to climate change. These narratives cover a wide range of potential futures and incorporate socio-economic, political, demographic, technological, and lifestyle trends. SSP1, “Sustainability”, depicts a gradual global shift towards environmentally friendly, inclusive development emphasizing human well-being instead of economic gain. SSP 5 on the other hand, depicts continued global economic development powered by fossil fuels and resource exploitation. SSP2 represents the “Middle of the Road” scenario, where slow progress is made toward sustainable development goals and income inequality persists (Riahi et al., 2017). This Shiny App uses SSP scenarios to project cropland abandonment under different levels of future climate change.")),
-                               plotOutput('ssppic'),
-                               p(""),
+                               img(src = "ssp.jpg", height = "400"),
+                               p(" "),
                                p(strong("Figure 1: "),"The relative mitigation and adaptation challenges for each of the five SSP scenarios (O’Neill et al., 2017)."),
                                br(),
                                
                                h4(strong("Brazil Prioritization Model")),
                                p("The Brazil tab of this Shiny App allows users to examine raster outputs from a prioritization model. The prioritization software requires the input of the features and cost to be evaluated for each planning unit, specific targets for how much of each feature should be represented in the solution, and a primary objective for solving the problem (Figure 2). The spatial restoration prioritization was computed using the prioritizr package (version 7.2.2) in R. This software uses mixed integer linear programming and provides greater flexibility in building and solving spatial planning problems than similar conservation tools, such as Marxan (Beyer et al., 2016).  A separate problem was formulated for each SSP scenario and their associated planning units and features data."),
-                               plotOutput('priorpic'),
+                               img(src = "prioritizer.png", height = "400"),
                                p(" "),
                                p(strong("Figure 2: "), "Here we see the required inputs and process flow for the Prioritizr model."),
                                
                                h2(strong("Data Descriptions")),
                                h4(strong("Projected Land-use:")),
                                p("This analysis used land-use data from Chen et al., 2021. This dataset projects future land cover out to 2100 in 5 year intervals under each SSP scenario. Current (2015) land-use was compared against future projections to determine where cropland abandonment may occur by 2050. For this analysis, any current cropland with a different future land-use classification is classified as 'abandoned', with the exception of land that has been urbanized. Urbanized cropland is excluded as these parcels cannot realistically be restored to their pre-agricultural land cover type."),
-                               p(""),
                                h4(strong("Biodiversity and Carbon:")),
                                p("Biodiversity data was sourced from a study mapping global conservation priorities at 5 km resolution based on current and future species distribution models. These models evaluated over 17,000 terrestrial vertebrate species and future bioclimatic variables under the RCP2.6 and RCP8.5 climate scenarios (Roehrdanz et al., 2021). Aggregate extinction risk values were calculated based on the proportion of a species’ range conserved, then summed and normalized across all species (Hannah et al., 2020). To maximize the benefits to present and future biodiversity, and therefore reduce the risk of extinction, parcels with higher extinction risk values were prioritized for restoration. 
 "),
@@ -305,19 +304,19 @@ server <- function(input, output, session) {
   ### TAB 2 - Background info ###  ---------------------------------------------
   
   ## ssp image
-  output$ssppic <- renderPlot({
-               ggdraw() + 
-                 draw_image(here("ssp.jpg")
-    )
-  })
+  # output$ssppic <- renderPlot({
+  #              ggdraw() + 
+  #                draw_image(here("ssp.jpg")
+  #   )
+  # })
   
   ## prioritizer image
   
-  output$priorpic <- renderPlot({
-    ggdraw() + 
-      draw_image(here("prioritizer.png")
-      )
-  })               
+  # output$priorpic <- renderPlot({
+  #   ggdraw() + 
+  #     draw_image(here("prioritizer.png")
+  #     )
+  # })               
 
   ## Data table:
   
