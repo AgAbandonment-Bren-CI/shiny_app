@@ -448,7 +448,7 @@ server <- function(input, output, session) {
   ## TMAP Brazil
   output$ab_brazil_tmap <- renderTmap({
     tmap_mode('view') +
-    tm_shape(shp = biomes_vect, name = "Biomes") +
+    tm_shape(shp = biomes_vect, name = "Biomes", raster.downsample = FALSE) +
       tm_borders(lwd = 1, col = 'gray40') +
     tm_shape(shp = raster_layer(), name = "Model output",
              raster.downsample = F) + 
